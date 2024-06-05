@@ -23,7 +23,7 @@
             </form>
         </div>
         <div> 
-            <form method="get" action="/blahproject/loginServlet">
+            <form method="post" action="/blahproject/loginServlet?action=redirectSignup">
                 <input type="submit" value="Create New Account"/> <br>
             </form>
         </div>
