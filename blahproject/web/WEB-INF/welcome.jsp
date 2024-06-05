@@ -16,7 +16,8 @@
         <div>
             <form method="post" action="/blahproject/loginServlet">
                 <label for="email">Email:</label><br>
-                <input type="text" id="email" name="userEmail"><br>
+                <input type="text" id="email" name="userEmail" onkeyup="emailCheck()"><br>
+                <span id="emailWarning" style="color:red;"></span>
                 <label for="pass">Password:</label><br>
                 <input type="password" id="pass" name="passWord"><br>
                 <input type="submit" value="login"/> <br>
@@ -28,4 +29,5 @@
             </form>
         </div>
     </body>
+    <script src="assets/js/emailValidation.js"></script>
 </html>
