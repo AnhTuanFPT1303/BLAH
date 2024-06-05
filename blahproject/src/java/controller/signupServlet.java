@@ -84,7 +84,8 @@ public class signupServlet extends HttpServlet {
             user.setFirst_name(firstName);
             user.setLast_name(lastName);
             user.setPassword(password);
-            userDao.register(user);
+            String result = userDao.register(user);
+            request.setAttribute("msg", result);
             request.getRequestDispatcher("WEB-INF/welcome.jsp").forward(request, response);
         }
     }

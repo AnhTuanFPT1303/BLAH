@@ -8,7 +8,6 @@ import util.sqlConnect;
 import java.sql.*;
 import model.User;
 
-
 /**
  *
  * @author HELLO
@@ -40,19 +39,18 @@ public class userDAO {
             PreparedStatement st = conn.prepareStatement("INSERT INTO userAccount VALUES (?, ?, ?, ?)");
             st.setString(1, user.getFirst_name());
             st.setString(2, user.getLast_name());
-            st.setString(3, user.getPassword());
-            st.setString(4, user.getEmail());
+            st.setString(3, user.getEmail());
+            st.setString(4, user.getPassword());
             st.execute();
             return "Registration Successful.";
         } catch (SQLIntegrityConstraintViolationException e) {
-            e.printStackTrace();
-            return "Email alreay used.";
+            return "Email already used.";
         } catch (SQLException e) {
             e.printStackTrace();
-            return "Registration Failed.";
+            return "Email already used.";
         } catch (Exception e) {
             e.printStackTrace();
-            return "Unknow Exception";
+            return "Unknown Exception";
         }
     }
 
