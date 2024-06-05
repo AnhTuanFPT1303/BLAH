@@ -10,14 +10,22 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Login Page</title>
-    </head>
+    </head> 
     <body>
-        <form method="post" action="/blahproject/loginServlet">
-            <label for="email">Email:</label><br>
-            <input type="text" id="email" name="userEmail"><br>
-            <label for="pass">Password:</label><br>
-            <input type="password" id="pass" name="passWord"><br>
-            <input type="submit" value="login"/>
-        </form>
+        <p>${msg}</p>
+        <div>
+            <form method="post" action="/blahproject/loginServlet">
+                <label for="email">Email:</label><br>
+                <input type="text" id="email" name="userEmail"><br>
+                <label for="pass">Password:</label><br>
+                <input type="password" id="pass" name="passWord"><br>
+                <input type="submit" value="login"/> <br>
+            </form>
+        </div>
+        <div> 
+            <form method="post" action="/blahproject/loginServlet?action=redirectSignup">
+                <input type="submit" value="Create New Account"/> <br>
+            </form>
+        </div>
     </body>
 </html>

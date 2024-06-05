@@ -3,6 +3,7 @@ package util;
 import dao.userDAO;
 import java.io.IOException;
 import java.sql.*;
+import model.User;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -38,16 +39,10 @@ public class sqlConnect {
     public static sqlConnect getInstance() throws SQLException {
         if (instance == null) {
             instance = new sqlConnect();
-        } 
+        }
         return instance;
     }
 
-    
     public static void main(String[] args) throws SQLException {
-        userDAO userDao= new userDAO();
-        boolean test =userDao.login("admin123@gmail.com", "admin");
-        if(test) {
-            System.out.println("Success");
-        }
     }
 }

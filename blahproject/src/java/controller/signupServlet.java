@@ -5,12 +5,14 @@
 
 package controller;
 
+import dao.userDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import model.User;
 
 /**
  *
@@ -66,7 +68,25 @@ public class signupServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+        boolean status = false;
+        String firstName = request.getParameter("firstName");
+        String lastName = request.getParameter("lastName");
+        String email = request.getParameter("userEmail");
+        String password = request.getParameter("passWord");
+        status = !(firstName.equals("") || lastName.equals("") || email.equals("") || password.equals(""));
+        if(!status) {
+            request.setAttribute("msg", "No empty form allow.");
+            request.getRequestDispatcher("WEB-INF/welcome.jsp").forward(request, response);
+        } else {
+            User user = new User();
+            userDAO userDao = new userDAO();
+            user.setEmail(email);
+            user.setFirst_name(firstName);
+            user.setLast_name(lastName);
+            user.setPassword(password);
+            userDao.register(user);
+            request.getRequestDispatcher("WEB-INF/welcome.jsp").forward(request, response);
+        }
     }
 
     /** 
