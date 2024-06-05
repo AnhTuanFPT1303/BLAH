@@ -20,8 +20,12 @@
             <label for="email">Email:</label><br>
             <input type="text" id="email" name="userEmail"><br>
             <label for="pass">Password:</label><br>
-            <input type="password" id="pass" name="passWord"><br>
-            <input type="submit" value="signup"/> <br>
+            <input type="password" id="pass" name="passWord" onkeyup="passwordCheck()"><br>
+            <label for="confirm">Confirm Password:</label><br>
+            <input type="password" id="confirmPass" name="confirm" onkeyup="passwordCheck()"><br>
+            <span id="message"></span><br>
+            <input type="submit" id="signupButton" value="signup"/> <br>
         </form>
     </body>
+    <script src="assets/js/passwordValidation.js"></script>
 </html>
