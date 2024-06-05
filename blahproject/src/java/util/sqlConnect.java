@@ -26,21 +26,26 @@ public class sqlConnect {
     private String driverClass = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
     private String sqlUrl = "jdbc:sqlserver://LAPTOP-5D2CNVK4;databaseName=Blah;encrypt=false;trustServerCertificate=false";
 
-    public Connection javaconnectsql() throws Exception {
+    private sqlConnect() throws Exception {
         try {
             Class.forName(driverClass);
             connection = DriverManager.getConnection(sqlUrl, userName, passWord);
         } catch (SQLException s) {
             System.out.println("Connect Failed");
         }
-        return connection;
     }
 
-    public static sqlConnect getInstance() throws SQLException {
+    public static sqlConnect getInstance() throws SQLException, Exception {
         if (instance == null) {
+            instance = new sqlConnect();
+        } else if (instance.getConnection().isClosed()) {
             instance = new sqlConnect();
         }
         return instance;
+    }
+    
+    public Connection getConnection() {
+        return connection;
     }
 
     public static void main(String[] args) throws SQLException {

@@ -12,6 +12,10 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import model.User;
 
 /**
  *
@@ -99,9 +103,16 @@ public class loginServlet extends HttpServlet {
                 userDAO userDao = new userDAO();
                 boolean verify = userDao.login(email, passWord);
                 if (verify) {
-                    request.getSession().invalidate();
-                    HttpSession session = request.getSession(true);
-                    session.setMaxInactiveInterval(1800);
+                    try {
+                        User user = userDao.getUserByEmail(email);
+                        HttpSession session = request.getSession(true);
+                        session.setMaxInactiveInterval(1800);
+                        session.setAttribute("user_id", user.getUser_id());
+                        response.sendRedirect("home");
+                    } catch (SQLException e) {
+                        request.setAttribute("msg", "Login Failed.");
+                        request.getRequestDispatcher("WEB-INF/welcome.jsp").forward(request, response);
+                    }
                 } else {
                     request.setAttribute("msg", "Wrong username or password.");
                     request.getRequestDispatcher("WEB-INF/welcome.jsp").forward(request, response);

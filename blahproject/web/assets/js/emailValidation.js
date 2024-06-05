@@ -29,6 +29,6 @@ function emailCheck() {
     }
 
     // If all parts are valid
-    message.innerHTML = "Email is valid!<br>";
+    message.innerHTML = '';
     return true;
 }
