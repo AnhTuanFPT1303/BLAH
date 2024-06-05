@@ -4,9 +4,17 @@
         <servlet-name>loginServlet</servlet-name>
         <servlet-class>controller.loginServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>signupServlet</servlet-name>
+        <servlet-class>controller.signupServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>loginServlet</servlet-name>
         <url-pattern>/loginServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>signupServlet</servlet-name>
+        <url-pattern>/signupServlet</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>/WEB-INF/welcome.jsp</welcome-file>
