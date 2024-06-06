@@ -36,18 +36,26 @@ public class userDAO {
     public String register(User user) {
         try {
             Connection conn = sqlConnect.getInstance().getConnection();
-            PreparedStatement st = conn.prepareStatement("INSERT INTO userAccount VALUES (?, ?, ?, ?)");
-            st.setString(1, user.getFirst_name());
-            st.setString(2, user.getLast_name());
-            st.setString(3, user.getPassword());
-            st.setString(4, user.getEmail());
-            st.execute();
-            return "Registration Successful.";
-        } catch (SQLIntegrityConstraintViolationException e) {
-            return "Email already used.";
+            boolean result = checkDuplicateEmail(user.getEmail());
+            if (result) {
+                return "Duplicated Email";
+            } else {
+                conn.close();
+                conn = sqlConnect.getInstance().getConnection();
+                PreparedStatement st = conn.prepareStatement("INSERT INTO userAccount (first_name, last_name, password, email) VALUES (?, ?, ?, ?)");
+                st.setString(1, user.getFirst_name());
+                st.setString(2, user.getLast_name());
+                st.setString(3, user.getPassword());
+                st.setString(4, user.getEmail());
+                st.executeUpdate();
+                return "Registration Successful.";
+            }
         } catch (SQLException e) {
-            e.printStackTrace();
-            return "Email already used.";
+            if (e.getErrorCode() == 5000) {
+                return "Email Error.";
+            } else {
+                return "SQL Error";
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return "Unknown Exception";
@@ -75,5 +83,28 @@ public class userDAO {
         }
         return u;
     }
+
+   private boolean checkDuplicateEmail(String email) throws Exception {
+    boolean isDuplicate = false;
+    try (Connection connection = sqlConnect.getInstance().getConnection();
+         CallableStatement stmt = connection.prepareCall("{call checkDuplicateEmail(?)}")) {
+
+        stmt.setString(1, email);
+
+        try (ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                if(rs.getString("Message").equals("10000"))
+                isDuplicate = true;
+            }
+        }
+    } catch (SQLException e) {
+        if (e.getErrorCode() == 50000) {
+            isDuplicate = true;
+        } else {
+            e.printStackTrace();
+        }
+    }
+    return isDuplicate;
+}
 
 }
