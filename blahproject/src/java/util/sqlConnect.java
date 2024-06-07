@@ -47,7 +47,4 @@ public class sqlConnect {
     public Connection getConnection() {
         return connection;
     }
-
-    public static void main(String[] args) throws SQLException {
-    }
 }

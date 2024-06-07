@@ -36,18 +36,15 @@ public class userDAO {
     public String register(User user) {
         try {
             Connection conn = sqlConnect.getInstance().getConnection();
-            PreparedStatement st = conn.prepareStatement("INSERT INTO userAccount VALUES (?, ?, ?, ?)");
+            CallableStatement st = conn.prepareCall("{call registerUser(?,?,?,?)}"); //Call register procedure in SQL Server
             st.setString(1, user.getFirst_name());
             st.setString(2, user.getLast_name());
             st.setString(3, user.getPassword());
             st.setString(4, user.getEmail());
             st.execute();
             return "Registration Successful.";
-        } catch (SQLIntegrityConstraintViolationException e) {
-            return "Email already used.";
         } catch (SQLException e) {
-            e.printStackTrace();
-            return "Email already used.";
+            return "Duplicate Email.";
         } catch (Exception e) {
             e.printStackTrace();
             return "Unknown Exception";
@@ -76,4 +73,13 @@ public class userDAO {
         return u;
     }
 
+    public static void main(String[] args) {
+        User user = new User();
+        user.setEmail("anht111uan11231232332@gmail.com");
+        user.setFirst_name("Tuan");
+        user.setLast_name("Tet");
+        user.setPassword("123");
+        userDAO userdao = new userDAO();
+        System.out.println(userdao.register(user));
+    }
 }
