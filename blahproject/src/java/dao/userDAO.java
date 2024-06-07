@@ -13,7 +13,6 @@ import model.User;
  * @author HELLO
  */
 public class userDAO {
-
     public boolean login(String email, String password) {
         boolean result = false;
         try {
@@ -35,13 +34,11 @@ public class userDAO {
 
     public String register(User user) {
         try {
-            Connection conn = sqlConnect.getInstance().getConnection();
             boolean result = checkDuplicateEmail(user.getEmail());
             if (result) {
                 return "Duplicated Email";
-            } else {
-                conn.close();
-                conn = sqlConnect.getInstance().getConnection();
+            } else {    
+                Connection conn = sqlConnect.getInstance().getConnection();
                 PreparedStatement st = conn.prepareStatement("INSERT INTO userAccount (first_name, last_name, password, email) VALUES (?, ?, ?, ?)");
                 st.setString(1, user.getFirst_name());
                 st.setString(2, user.getLast_name());
@@ -83,28 +80,41 @@ public class userDAO {
         }
         return u;
     }
+    
+    public static void main(String[] args) {
+        User user = new User();
+        user.setEmail("anhtuan12332@gmail.com");
+        user.setFirst_name("Tuan");
+        user.setLast_name("Tet");
+        user.setPassword("123");
+        userDAO userdao = new userDAO();
+        System.out.println(userdao.register(user));
+    }
 
-   private boolean checkDuplicateEmail(String email) throws Exception {
-    boolean isDuplicate = false;
-    try (Connection connection = sqlConnect.getInstance().getConnection();
-         CallableStatement stmt = connection.prepareCall("{call checkDuplicateEmail(?)}")) {
+    private boolean checkDuplicateEmail(String email) throws Exception {
+        boolean isDuplicate = false;
+        Connection connection = sqlConnect.getInstance().getConnection();
+        CallableStatement stmt = connection.prepareCall("{call checkDuplicateEmail(?)}");
+        try {
+            stmt.setString(1, email);
 
-        stmt.setString(1, email);
-
-        try (ResultSet rs = stmt.executeQuery()) {
-            if (rs.next()) {
-                if(rs.getString("Message").equals("10000"))
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    if (rs.getString("Message").equals("10000")) {
+                        isDuplicate = true;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            if (e.getErrorCode() == 50000) {
                 isDuplicate = true;
+            } else {
+                e.printStackTrace();
             }
         }
-    } catch (SQLException e) {
-        if (e.getErrorCode() == 50000) {
-            isDuplicate = true;
-        } else {
-            e.printStackTrace();
-        }
+        connection.close();
+        stmt.close();
+        return isDuplicate;
     }
-    return isDuplicate;
-}
 
 }
