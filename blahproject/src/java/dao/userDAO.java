@@ -13,6 +13,7 @@ import model.User;
  * @author HELLO
  */
 public class userDAO {
+
     public boolean login(String email, String password) {
         boolean result = false;
         try {
@@ -34,25 +35,16 @@ public class userDAO {
 
     public String register(User user) {
         try {
-            boolean result = checkDuplicateEmail(user.getEmail());
-            if (result) {
-                return "Duplicated Email";
-            } else {    
-                Connection conn = sqlConnect.getInstance().getConnection();
-                PreparedStatement st = conn.prepareStatement("INSERT INTO userAccount (first_name, last_name, password, email) VALUES (?, ?, ?, ?)");
-                st.setString(1, user.getFirst_name());
-                st.setString(2, user.getLast_name());
-                st.setString(3, user.getPassword());
-                st.setString(4, user.getEmail());
-                st.executeUpdate();
-                return "Registration Successful.";
-            }
+            Connection conn = sqlConnect.getInstance().getConnection();
+            CallableStatement st = conn.prepareCall("{call registerUser(?,?,?,?)}");
+            st.setString(1, user.getFirst_name());
+            st.setString(2, user.getLast_name());
+            st.setString(3, user.getPassword());
+            st.setString(4, user.getEmail());
+            st.execute();
+            return "Registration Successful.";
         } catch (SQLException e) {
-            if (e.getErrorCode() == 5000) {
-                return "Email Error.";
-            } else {
-                return "SQL Error";
-            }
+            return "Duplicate Email.";
         } catch (Exception e) {
             e.printStackTrace();
             return "Unknown Exception";
@@ -80,10 +72,10 @@ public class userDAO {
         }
         return u;
     }
-    
+
     public static void main(String[] args) {
         User user = new User();
-        user.setEmail("anhtuan12332@gmail.com");
+        user.setEmail("anht111uan11231232332@gmail.com");
         user.setFirst_name("Tuan");
         user.setLast_name("Tet");
         user.setPassword("123");
