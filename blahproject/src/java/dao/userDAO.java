@@ -46,7 +46,6 @@ public class userDAO {
         } catch (SQLException e) {
             return "Duplicate Email.";
         } catch (Exception e) {
-            e.printStackTrace();
             return "Unknown Exception";
         }
     }

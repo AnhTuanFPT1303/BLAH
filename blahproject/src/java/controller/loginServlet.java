@@ -108,7 +108,7 @@ public class loginServlet extends HttpServlet {
                         HttpSession session = request.getSession(true);
                         session.setMaxInactiveInterval(1800);
                         session.setAttribute("user_id", user.getUser_id());
-                        response.sendRedirect("home");
+                        request.getRequestDispatcher("WEB-INF/home.jsp").forward(request, response);
                     } catch (SQLException e) {
                         request.setAttribute("msg", "Login Failed.");
                         request.getRequestDispatcher("WEB-INF/welcome.jsp").forward(request, response);
