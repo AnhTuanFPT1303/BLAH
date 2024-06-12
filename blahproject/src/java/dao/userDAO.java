@@ -71,14 +71,4 @@ public class userDAO {
         }
         return u;
     }
-
-    public static void main(String[] args) {
-        User user = new User();
-        user.setEmail("anht111uan11231232332@gmail.com");
-        user.setFirst_name("Tuan");
-        user.setLast_name("Tet");
-        user.setPassword("123");
-        userDAO userdao = new userDAO();
-        System.out.println(userdao.register(user));
-    }
 }
