@@ -23,9 +23,7 @@ public class userDAO {
             st.setString(2, password);
             ResultSet rs = st.executeQuery();
             if (rs.next()) {
-                if (rs.getString("email").equals(email) && rs.getString("password").equals(password)) {
-                    result = true;
-                }
+                result = true;
             }
         } catch (Exception e) {
             System.out.println("Connect Failed");
@@ -46,7 +44,6 @@ public class userDAO {
         } catch (SQLException e) {
             return "Duplicate Email.";
         } catch (Exception e) {
-            e.printStackTrace();
             return "Unknown Exception";
         }
     }
@@ -72,13 +69,4 @@ public class userDAO {
         }
         return u;
     }
-    public static void main(String[] args) {
-        User user = new User();
-        user.setEmail("anht111uan11231232332@gmail.com");
-        user.setFirst_name("Tuan");
-        user.setLast_name("Tet");
-        user.setPassword("123");
-        userDAO userdao = new userDAO();
-        System.out.println(userdao.register(user));
-        }
-    }
+}
