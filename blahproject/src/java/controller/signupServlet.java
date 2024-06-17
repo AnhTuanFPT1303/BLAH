@@ -77,24 +77,29 @@ public class signupServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        boolean status = false;
-        String firstName = request.getParameter("firstName");
-        String lastName = request.getParameter("lastName");
-        String email = request.getParameter("userEmail");
-        String password = request.getParameter("passWord");
-        status = !(firstName.equals("") || lastName.equals("") || email.equals("") || password.equals(""));
-        if (!status) {
-            request.setAttribute("msg", "No empty form allow.");
-            request.getRequestDispatcher("WEB-INF/welcome.jsp").forward(request, response);
+        String action = request.getParameter("action");
+        if (action.equals("login")) {
+            boolean status = false;
+            String firstName = request.getParameter("firstName");
+            String lastName = request.getParameter("lastName");
+            String email = request.getParameter("userEmail");
+            String password = request.getParameter("passWord");
+            status = !(firstName.equals("") || lastName.equals("") || email.equals("") || password.equals(""));
+            if (!status) {
+                request.setAttribute("msg", "No empty form allow.");
+                request.getRequestDispatcher("WEB-INF/welcome.jsp").forward(request, response);
+            } else {
+                User user = new User();
+                userDAO userDao = new userDAO();
+                user.setEmail(email);
+                user.setFirst_name(firstName);
+                user.setLast_name(lastName);
+                user.setPassword(password);
+                String result = userDao.register(user);
+                request.setAttribute("msg", result);
+                request.getRequestDispatcher("WEB-INF/welcome.jsp").forward(request, response);
+            }
         } else {
-            User user = new User();
-            userDAO userDao = new userDAO();
-            user.setEmail(email);
-            user.setFirst_name(firstName);
-            user.setLast_name(lastName);
-            user.setPassword(password);
-            String result = userDao.register(user);
-            request.setAttribute("msg", result);
             request.getRequestDispatcher("WEB-INF/welcome.jsp").forward(request, response);
         }
     }

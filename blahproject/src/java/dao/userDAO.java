@@ -23,9 +23,7 @@ public class userDAO {
             st.setString(2, password);
             ResultSet rs = st.executeQuery();
             if (rs.next()) {
-                if (rs.getString("email").equals(email) && rs.getString("password").equals(password)) {
-                    result = true;
-                }
+                result = true;
             }
         } catch (Exception e) {
             System.out.println("Connect Failed");

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <link href="assets/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/login.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>Login Page</title>
 </head>
 <body>
@@ -16,14 +17,19 @@
             <h2>What's going on now</h2>
             <p>Welcome back! Please login to your account.</p>
         </div>
+        <div>
+            <span style="color: red">${msg}</span>
+        </div>
+        <div class="icons">
+            <i class="fa-solid fa-key" style="color:#a541fa">  Login Section</i>
+            <p></p>
+        </div>
         <form class= "input-form" method="post" action="/blahproject/loginServlet">
             <div class="input-group">
-                <label for="email">Email Address</label>
-                <input type="text" id="email" name="userEmail">
+                <input type="text" id="email" name="userEmail" placeholder="Enter Email">
             </div>
             <div class="input-group">
-                <label for="pass">Password</label>
-                <input type="password" id="pass" name="passWord">
+                <input type="password" id="pass" name="passWord" placeholder="Enter Password">
             </div>
             <div class="actions">
                 <div class="checkbox">
