@@ -17,23 +17,20 @@ import util.sqlConnect;
 public class postDAO {
 
     public void addPost(Post p) {
-        
-        try {
-            Connection conn = null;
-        PreparedStatement stmt = null;
-            conn = sqlConnect.getInstance().getConnection();
-            String query = "INSERT INTO post (user_id, body, post_time) VALUES (?, ?, ?)";
-            stmt = conn.prepareStatement(query);
-            stmt.setInt(1, p.getUser_id());
-            stmt.setString(2, p.getBody());
-            stmt.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    String query = "INSERT INTO post (user_id, body, post_time) VALUES (?, ?, CURRENT_TIMESTAMP)";
+
+    try (Connection conn = sqlConnect.getInstance().getConnection();
+         PreparedStatement stmt = conn.prepareStatement(query)) {
+        stmt.setInt(1, p.getUser_id());
+        stmt.setString(2, p.getBody());
+        stmt.executeUpdate();
+    } catch (SQLException e) {
+        e.printStackTrace();  // Consider logging this exception
+    } catch (Exception e) {
+        e.printStackTrace();  // Consider logging this exception
     }
+}
+
 
     public static List<Post> getAllPosts() {
         List<Post> posts = new ArrayList<>();

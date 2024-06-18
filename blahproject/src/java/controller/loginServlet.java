@@ -13,6 +13,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.User;
 
 /**
@@ -61,7 +63,7 @@ public class loginServlet extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         if (session != null && session.getAttribute("user_id") != null) {
-            request.getRequestDispatcher("WEB-INF/home.jsp").forward(request, response);
+            response.sendRedirect("home");
         } else {
             request.getRequestDispatcher("WEB-INF/welcome.jsp").forward(request, response);
         }
@@ -78,7 +80,6 @@ public class loginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
         String action = request.getParameter("action");
         if (action != null && action.equals("redirectSignup")) {
             redirectSignup(request, response);
@@ -104,11 +105,10 @@ public class loginServlet extends HttpServlet {
                 if (verify) {
                     try {
                         User user = userDao.getUserByEmail(email);
-                        int userId = user.getUser_id(); 
-                        System.out.println("User ID retrieved from database: " + userId);
                         HttpSession session = request.getSession(true);
                         session.setMaxInactiveInterval(1800);
                         session.setAttribute("user_id", user.getUser_id());
+                        session.setAttribute("user", user);
                         request.getRequestDispatcher("WEB-INF/home.jsp").forward(request, response);
                     } catch (SQLException e) {
                         request.setAttribute("msg", "Login Failed.");

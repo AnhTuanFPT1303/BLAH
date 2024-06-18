@@ -22,12 +22,9 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>postServlet</servlet-name>
-        <url-pattern>/post</url-pattern>
+        <url-pattern>/postServlet</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>/WEB-INF/welcome.jsp</welcome-file>
-    </welcome-file-list>
-    <welcome-file-list>
-        <welcome-file>/WEB-INF/home.jsp</welcome-file>
     </welcome-file-list>
 </web-app>

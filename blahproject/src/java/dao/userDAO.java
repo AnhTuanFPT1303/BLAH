@@ -52,21 +52,21 @@ public class userDAO {
         User u = new User();
         try {
             Connection conn = sqlConnect.getInstance().getConnection();
-            PreparedStatement st = conn.prepareStatement("SELECT * FROM user WHERE email = ?");
+            PreparedStatement st = conn.prepareStatement("SELECT * FROM userAccount WHERE email = ?");
             st.setString(1, email);
             ResultSet rs = st.executeQuery();
 
             if (rs.next()) {
-                u.setUser_id(rs.getInt("user_id"));
-                u.setFirst_name(rs.getString("first_name"));
-                u.setLast_name(rs.getString("last_name"));
-                u.setPassword(rs.getString("password"));
-                u.setEmail(rs.getString("email"));
+                u.setUser_id(rs.getInt(1));
+                u.setFirst_name(rs.getString(2));
+                u.setLast_name(rs.getString(3));
+                u.setPassword(rs.getString(4));
+                u.setEmail(rs.getString(5));
             }
 
         } catch (Exception e) {
             System.out.println("Action Failed");
         }
         return u;
-    }
+    }  
 }

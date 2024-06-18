@@ -89,39 +89,28 @@ public class postServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         if (session != null && session.getAttribute("user_id") != null) {
-            int user_id = (int) session.getAttribute("user_id");
-            String body = request.getParameter("body");
-            Post post = new Post();
-            post.setUser_id(user_id);
-            post.setBody(body);
-            postDAO postDao = new postDAO();
-            postDao.addPost(post);
-            response.sendRedirect("post");
+            User user = (User) session.getAttribute("user");
+            String body = request.getParameter("postContent");
+
+            if (body != null && !body.trim().isEmpty()) {
+                Post post = new Post();
+                post.setUser_id(user.getUser_id());
+                post.setBody(body);
+
+                postDAO PostDao = new postDAO();
+                try {
+                    PostDao.addPost(post);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    request.setAttribute("errorMessage", "Error saving post");
+                }
+            }
+
+            request.getRequestDispatcher("WEB-INF/home.jsp").forward(request, response);
         } else {
-            response.sendRedirect("loginServlet");
+            request.getRequestDispatcher("WEB-INF/home.jsp").forward(request, response);
         }
     }
-    /* trong trường hợp muốn thử nhập tay user_id, tạo thêm cái input bên trang jsp r cho nhập giá trị vào user_id là đc :D
-//    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//        String userIdStr = request.getParameter("userId");
-//        String body = request.getParameter("body");
-//
-//        if (userIdStr != null && body != null && !body.isEmpty()) {
-//            int userId = Integer.parseInt(userIdStr);
-//            Post post = new Post(userId, body);
-//
-//            try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/yourdb", "username", "password")) {
-//                PostDAO postDAO = new PostDAO(connection);
-//                postDAO.addPost(post);
-//                response.sendRedirect("post.jsp?status=success");
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//                response.sendRedirect("post.jsp?status=error");
-//            }
-//        } else {
-//            response.sendRedirect("post.jsp?status=error");
-//        }
-//    }
 
     /**
      * Returns a short description of the servlet.
@@ -132,5 +121,4 @@ public class postServlet extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }
-
 }
