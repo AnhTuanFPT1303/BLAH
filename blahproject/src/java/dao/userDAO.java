@@ -8,6 +8,8 @@ import util.sqlConnect;
 import java.sql.*;
 import model.User;
 
+
+
 /**
  *
  * @author HELLO
@@ -75,5 +77,4 @@ public class userDAO {
         }
         return u;
     }
-
 }
