@@ -17,15 +17,17 @@
         <link rel="stylesheet" href="assets/css/home.css">
     </head>
     <body>
+        <header id="header">
         <nav class="navbar custom-navbar">
             <div class="container-fluid d-flex align-items-center">
                 <a class="navbar-brand text-primary" href="/blahproject/postServlet" style="font-weight: bold">BLAH</a>
                 <form class="d-flex ms-2 flex-grow-1">
                     <input class="form-control" type="search" placeholder="Finding in BLAH" aria-label="Search">
                 </form>
+                <a class="navbar-brand text-primary log-out" href="/blahproject" style="font-weight: bold">Log out</a>
             </div>
         </nav>
-
+    </header>
         <div class="container-fluid">
             <div class="row">
                 <nav class="col-2 py-3 bg-light">
@@ -47,7 +49,7 @@
                         <div class="mb-3">
                             <textarea class="form-control" id="body" name="postContent" rows="4" placeholder="What ya thinking" required></textarea>
                         </div>
-                        <button type="submit" class="btn btn-primary">Post</button>
+                        <button type="submit" class="btn btn-primary" style="padding: 5px 25px">Post</button>
                     </form>
 
                     <hr>
@@ -58,7 +60,7 @@
                     %>
 
                     <c:forEach var="post" items="${posts}">
-                        <div class="post mb-4">
+                        <div class="post mb-4" style="overflow-wrap: break-word">
                             <div class="post-header">
                                 <small>${post.first_name} ${post.last_name} -- <fmt:formatDate value="${post.post_time}" pattern="yyyy-MM-dd HH:mm:ss" /></small>
                             </div>
@@ -88,8 +90,7 @@
                     </div>
                     --%>
                 </main>
-
-                <aside class="col-2 sidebar py-3 bg-light">
+                <aside class="col-2 py-3 bg-light">
                     <h2>List Friends</h2>
                     <ul class="list-group">
                         <li class="list-group-item">Friend 1</li>
