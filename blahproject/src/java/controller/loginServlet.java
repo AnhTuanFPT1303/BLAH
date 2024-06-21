@@ -80,44 +80,39 @@ public class loginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String action = request.getParameter("action");
-        if (action != null && action.equals("redirectSignup")) {
-            redirectSignup(request, response);
+        String email = request.getParameter("userEmail");
+        String passWord = request.getParameter("passWord");
+        boolean status = true;
+        request.removeAttribute("msg");
+
+        if (email.trim().equals("")) {
+            status = false;
+        }
+        if (passWord.trim().equals("")) {
+            status = false;
+        }
+
+        if (!status) {
+            request.setAttribute("msg", "Re enter Email & password.");
+            request.getRequestDispatcher("WEB-INF/welcome.jsp").forward(request, response);
         } else {
-            String email = request.getParameter("userEmail");
-            String passWord = request.getParameter("passWord");
-            boolean status = true;
-            request.removeAttribute("msg");
-
-            if (email.trim().equals("")) {
-                status = false;
-            }
-            if (passWord.trim().equals("")) {
-                status = false;
-            }
-
-            if (!status) {
-                request.setAttribute("msg", "Re enter Email & password.");
-                request.getRequestDispatcher("WEB-INF/welcome.jsp").forward(request, response);
-            } else {
-                userDAO userDao = new userDAO();
-                boolean verify = userDao.login(email, passWord);
-                if (verify) {
-                    try {
-                        User user = userDao.getUserByEmail(email);
-                        HttpSession session = request.getSession(true);
-                        session.setMaxInactiveInterval(1800);
-                        session.setAttribute("user_id", user.getUser_id());
-                        session.setAttribute("user", user);
-                        request.getRequestDispatcher("WEB-INF/home.jsp").forward(request, response);
-                    } catch (SQLException e) {
-                        request.setAttribute("msg", "Login Failed.");
-                        request.getRequestDispatcher("WEB-INF/welcome.jsp").forward(request, response);
-                    }
-                } else {
-                    request.setAttribute("msg", "Wrong username or password.");
+            userDAO userDao = new userDAO();
+            boolean verify = userDao.login(email, passWord);
+            if (verify) {
+                try {
+                    User user = userDao.getUserByEmail(email);
+                    HttpSession session = request.getSession(true);
+                    session.setMaxInactiveInterval(1800);
+                    session.setAttribute("user_id", user.getUser_id());
+                    session.setAttribute("user", user);
+                    request.getRequestDispatcher("WEB-INF/home.jsp").forward(request, response);
+                } catch (SQLException e) {
+                    request.setAttribute("msg", "Login Failed.");
                     request.getRequestDispatcher("WEB-INF/welcome.jsp").forward(request, response);
                 }
+            } else {
+                request.setAttribute("msg", "Wrong username or password.");
+                request.getRequestDispatcher("WEB-INF/welcome.jsp").forward(request, response);
             }
         }
     }

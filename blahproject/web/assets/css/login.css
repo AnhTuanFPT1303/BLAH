@@ -110,10 +110,20 @@ body {
 }
 
 .buttons .signup-button {
-    background-color: white;
-    color: #4873ff;
-    border: 1px solid #4873ff;
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #a541fa;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 4px;
+    margin-left: 10px;
 }
+
+.buttons .signup-button:hover {
+    background-color: #8a36cc;
+}
+
 
 .social-login{
     display:flex;

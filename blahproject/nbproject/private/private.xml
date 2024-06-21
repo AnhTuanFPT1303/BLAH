@@ -3,13 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/E:/BLAH/BLAH/blahproject/web/assets/css/signup.css</file>
-            <file>file:/E:/BLAH/BLAH/blahproject/src/java/controller/loginServlet.java</file>
-            <file>file:/E:/BLAH/BLAH/blahproject/src/java/dao/userDAO.java</file>
-            <file>file:/E:/BLAH/BLAH/blahproject/web/WEB-INF/signup.jsp</file>
-            <file>file:/E:/BLAH/BLAH/blahproject/src/java/controller/signupServlet.java</file>
-            <file>file:/E:/BLAH/BLAH/blahproject/web/WEB-INF/welcome.jsp</file>
-            <file>file:/E:/BLAH/BLAH/blahproject/web/assets/css/login.css</file>
+            <file>file:/D:/Test/BLAH/blahproject/src/java/controller/signupServlet.java</file>
+            <file>file:/D:/Test/BLAH/blahproject/web/WEB-INF/welcome.jsp</file>
+            <file>file:/D:/Test/BLAH/blahproject/src/java/controller/loginServlet.java</file>
+            <file>file:/D:/Test/BLAH/blahproject/web/assets/css/login.css</file>
+            <file>file:/D:/Test/BLAH/blahproject/web/WEB-INF/web.xml</file>
+            <file>file:/D:/Test/BLAH/blahproject/web/WEB-INF/signup.jsp</file>
         </group>
     </open-files>
 </project-private>

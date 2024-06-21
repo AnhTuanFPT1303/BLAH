@@ -39,8 +39,8 @@
                 <a href="#" class="forgot-password">Forgot Password?</a>
             </div>
             <div class="buttons">
-                <button type="submit" name="action" value="login">Login</button>
-                <button type="submit" name="action" value="redirectSignup" class="signup-button">Sign Up</button>
+                <button type="submit" name="action">Login</button>
+                <a href="signup" class="signup-button">Sign Up</a>
             </div>
             <div class="social-login">
                 <p>Or login with</p>

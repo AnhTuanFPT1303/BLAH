@@ -58,12 +58,7 @@ public class signupServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession(false);
-        if (session != null && session.getAttribute("user_id") != null) {
-            response.sendRedirect("home");
-        } else {
-            request.getRequestDispatcher("WEB-INF/welcome.jsp").forward(request, response);
-        }
+        request.getRequestDispatcher("WEB-INF/signup.jsp").forward(request, response);
     }
 
     /**
