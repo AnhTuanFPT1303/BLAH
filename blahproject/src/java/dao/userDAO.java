@@ -34,7 +34,7 @@ public class userDAO {
     public String register(User user) {
         try {
             Connection conn = sqlConnect.getInstance().getConnection();
-            CallableStatement st = conn.prepareCall("{call registerUser(?,?,?,?)}"); //Call register procedure in SQL Server
+            CallableStatement st = conn.prepareCall("INSERT INTO userAccount Values (?,?,?,?)"); //Call register procedure in SQL Server
             st.setString(1, user.getFirst_name());
             st.setString(2, user.getLast_name());
             st.setString(3, user.getPassword());

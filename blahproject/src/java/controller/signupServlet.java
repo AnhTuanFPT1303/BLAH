@@ -72,29 +72,32 @@ public class signupServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String action = request.getParameter("action");
-        if (action.equals("login")) {
-            boolean status = false;
-            String firstName = request.getParameter("firstName");
-            String lastName = request.getParameter("lastName");
-            String email = request.getParameter("userEmail");
-            String password = request.getParameter("passWord");
-            status = !(firstName.equals("") || lastName.equals("") || email.equals("") || password.equals(""));
-            if (!status) {
-                request.setAttribute("msg", "No empty form allow.");
-                request.getRequestDispatcher("WEB-INF/welcome.jsp").forward(request, response);
-            } else {
-                User user = new User();
-                userDAO userDao = new userDAO();
-                user.setEmail(email);
-                user.setFirst_name(firstName);
-                user.setLast_name(lastName);
-                user.setPassword(password);
-                String result = userDao.register(user);
-                request.setAttribute("msg", result);
-                request.getRequestDispatcher("WEB-INF/welcome.jsp").forward(request, response);
-            }
+        String firstName = request.getParameter("firstName");
+        String lastName = request.getParameter("lastName");
+        String email = request.getParameter("userEmail");
+        String password = request.getParameter("passWord");
+
+        boolean status = !(firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() || password.isEmpty());
+
+        if (!status) {
+            request.setAttribute("msg", "No empty fields allowed.");
+            request.getRequestDispatcher("WEB-INF/signup.jsp").forward(request, response);
         } else {
+            User user = new User();
+            user.setEmail(email);
+            user.setFirst_name(firstName);
+            user.setLast_name(lastName);
+            user.setPassword(password);
+
+            userDAO userDao = new userDAO();
+            String result = userDao.register(user);
+
+            // Optionally clear session attributes related to login state
+            HttpSession session = request.getSession(false);
+            if (session != null) {
+               session.invalidate();
+            }
+            request.setAttribute("msg", result);
             request.getRequestDispatcher("WEB-INF/welcome.jsp").forward(request, response);
         }
     }

@@ -24,7 +24,7 @@
             <i class="fa-solid fa-key" style="color:#a541fa">  Login Section</i>
             <p></p>
         </div>
-        <form class= "input-form" method="post" action="/blahproject/loginServlet">
+        <form class= "input-form" method="post" action="/blahproject/login">
             <div class="input-group">
                 <input type="text" id="email" name="userEmail" placeholder="Enter Email">
             </div>
@@ -39,7 +39,7 @@
                 <a href="#" class="forgot-password">Forgot Password?</a>
             </div>
             <div class="buttons">
-                <button type="submit" name="action">Login</button>
+                <button type="submit" name="action" class="login-button">Login</button>
                 <a href="signup" class="signup-button">Sign Up</a>
             </div>
             <div class="social-login">

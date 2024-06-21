@@ -23,7 +23,7 @@
                 <h2>Join The Journey</h2>
                 <p>Register</p>
             </div>
-            <form class="input-form" method="post" action="/blahproject/signupServlet">
+            <form class="input-form" method="post" action="/blahproject/signup">
                 <div class="input-group">
                     <input type="text" id="firstname" name="firstName" placeholder="First Name"><br>
                 </div>
@@ -42,8 +42,8 @@
                     <span id="message"></span><br>
                 </div>
                 <div class="buttons">
-                    <button type="submit" name="action" value="signup">Sign Up</button>
-                    <button type="submit" name="action" value="redirectLogin" class="login-button">Already have an account?</button>
+                    <button type="submit" name="action" class="signup-button">Sign Up</button>
+                    <a href="login" class="login-button">Already have an account?</a>
                 </div>
             </form>
         </div>
@@ -55,7 +55,7 @@
                 <a href="#">Pricing</a>
             </nav>
             <div class="image">
-                <img src="assets/images/fall-guy-fall-guys.gif" alt="A man is riding a bicycle">
+                <img src="assets/images/cat-space.gif" alt="Rainbow cat">
             </div>
         </div>
     </body>
