@@ -22,8 +22,9 @@
             <div class="signup-text">
                 <h2>Join The Journey</h2>
                 <p>Register</p>
+                <span style="color:red">${msg}</span>
             </div>
-            <form class="input-form" method="post" action="/blahproject/signupServlet">
+            <form class="input-form" method="post" action="/blahproject/signup">
                 <div class="input-group">
                     <input type="text" id="firstname" name="firstName" placeholder="First Name"><br>
                 </div>
@@ -32,7 +33,6 @@
                 </div>
                 <div class="input-group">
                     <input type="text" id="email" name="userEmail" onkeyup="emailCheck()" placeholder="Email"><br>
-                    <span id="emailWarning"></span>
                 </div>
                 <div class="input-group">
                     <input type="password" id="pass" name="passWord" onkeyup="passwordCheck()" placeholder="Password"><br>
@@ -42,8 +42,11 @@
                     <span id="message"></span><br>
                 </div>
                 <div class="buttons">
-                    <button type="submit" name="action" value="signup">Sign Up</button>
-                    <button type="submit" name="action" value="redirectLogin" class="login-button">Already have an account?</button>
+                    <button type="submit" id="signupButton" class="signup-button" name="action">Sign Up</button>
+                    <a href="login" class="login-button">Already have an account?</a>
+                </div>
+                <div>
+                    <span id="emailWarning"></span>
                 </div>
             </form>
         </div>
@@ -55,7 +58,7 @@
                 <a href="#">Pricing</a>
             </nav>
             <div class="image">
-                <img src="assets/images/fall-guy-fall-guys.gif" alt="A man is riding a bicycle">
+                <img src="assets/images/cat-space.gif" alt="Rainbow cat">
             </div>
         </div>
     </body>

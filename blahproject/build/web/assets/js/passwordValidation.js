@@ -12,8 +12,10 @@ function passwordCheck() {
         message.textContent = "Password mismatch";
         message.style.color = "red";
         signupButton.disabled = true;
+        signupButton.style.opacity = 0.5;
     } else {
         message.textContent = "";
         signupButton.disabled = false;
+        signupButton.style.opacity = 1;
     }
 }

@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import model.User;
+import util.SmtpProtocol;
 
 /**
  *
@@ -83,25 +84,27 @@ public class signupServlet extends HttpServlet {
             request.setAttribute("msg", "No empty fields allowed.");
             request.getRequestDispatcher("WEB-INF/signup.jsp").forward(request, response);
         } else {
-            User user = new User();
-            user.setEmail(email);
-            user.setFirst_name(firstName);
-            user.setLast_name(lastName);
-            user.setPassword(password);
-
-            userDAO userDao = new userDAO();
-            String result = userDao.register(user);
-
-            // Optionally clear session attributes related to login state
-            HttpSession session = request.getSession(false);
-            if (session != null) {
-               session.invalidate();
+            userDAO dao = new userDAO();
+            if (!dao.checkEmail(email)) {
+                User user = new User();
+                user.setEmail(email);
+                user.setFirst_name(firstName);
+                user.setLast_name(lastName);
+                user.setPassword(password);
+                SmtpProtocol smtpProtocol = new SmtpProtocol();
+                int verifyCode = smtpProtocol.sendMail(email);
+                HttpSession session = request.getSession();
+                session.setAttribute("email", email);
+                session.setAttribute("user", user);
+                session.setAttribute("otpCode", verifyCode);
+                request.getRequestDispatcher("WEB-INF/verify.jsp").forward(request, response);
             }
-            request.setAttribute("msg", result);
-            request.getRequestDispatcher("WEB-INF/welcome.jsp").forward(request, response);
+            else {
+                request.setAttribute("msg", "Duplicated Email.");
+                request.getRequestDispatcher("WEB-INF/signup.jsp").forward(request, response);
+            }
         }
     }
-
     /**
      * Returns a short description of the servlet.
      *
@@ -111,5 +114,4 @@ public class signupServlet extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-
 }
