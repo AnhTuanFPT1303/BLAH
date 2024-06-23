@@ -20,7 +20,7 @@
         <header id="header">
         <nav class="navbar custom-navbar">
             <div class="container-fluid d-flex align-items-center">
-                <a class="navbar-brand text-primary" href="/blahproject/postServlet" style="font-weight: bold">BLAH</a>
+                <a class="navbar-brand text-primary" href="/blahproject/home" style="font-weight: bold">BLAH</a>
                 <form class="d-flex ms-2 flex-grow-1">
                     <input class="form-control" type="search" placeholder="Finding in BLAH" aria-label="Search">
                 </form>
@@ -45,7 +45,7 @@
 
                         <main class="col-8 sidebar">
                     <h1 class="mt-3 text-primary">HOME</h1>
-                    <form action="/blahproject/postServlet" method="post" class="mb-4">
+                    <form action="/blahproject/home" method="post" class="mb-4">
                         <div class="mb-3">
                             <textarea class="form-control" id="body" name="postContent" rows="4" placeholder="What ya thinking" required></textarea>
                         </div>

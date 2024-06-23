@@ -11,15 +11,15 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import model.User;
+import jakarta.servlet.http.HttpSession;
 import util.SmtpProtocol;
 
 /**
  *
  * @author HELLO
  */
-public class signupServlet extends HttpServlet {
+public class VerifyServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,10 +38,10 @@ public class signupServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet signupServlet</title>");
+            out.println("<title>Servlet VerifyServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet signupServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet VerifyServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -59,7 +59,7 @@ public class signupServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("WEB-INF/signup.jsp").forward(request, response);
+        processRequest(request, response);
     }
 
     /**
@@ -73,38 +73,31 @@ public class signupServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String firstName = request.getParameter("firstName");
-        String lastName = request.getParameter("lastName");
-        String email = request.getParameter("userEmail");
-        String password = request.getParameter("passWord");
+        String act = request.getParameter("action");
+        HttpSession session = request.getSession(false);
+        Integer otp = (Integer) session.getAttribute("otpCode");
+        User user = (User) session.getAttribute("user");
+        if ("resend".equals(act)) {
+            String email = (String) session.getAttribute("email");
+            SmtpProtocol smtpProtocol = new SmtpProtocol();
+            otp = smtpProtocol.sendMail(email);
+            session.setAttribute("otpCode", otp);
+            session.setAttribute("email", email);
+            session.setAttribute("user", user);
+            request.getRequestDispatcher("WEB-INF/verify.jsp").forward(request, response);
+        }
 
-        boolean status = !(firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() || password.isEmpty());
-
-        if (!status) {
-            request.setAttribute("msg", "No empty fields allowed.");
-            request.getRequestDispatcher("WEB-INF/signup.jsp").forward(request, response);
+        int inputOtp = Integer.parseInt(request.getParameter("otp-code"));
+        if (otp == inputOtp) {
+            userDAO userDao = new userDAO();
+            String result = userDao.register(user);
+            request.setAttribute("msg", result);
+            request.getRequestDispatcher("WEB-INF/welcome.jsp").forward(request, response);
         } else {
-            userDAO dao = new userDAO();
-            if (!dao.checkEmail(email)) {
-                User user = new User();
-                user.setEmail(email);
-                user.setFirst_name(firstName);
-                user.setLast_name(lastName);
-                user.setPassword(password);
-                SmtpProtocol smtpProtocol = new SmtpProtocol();
-                int verifyCode = smtpProtocol.sendMail(email);
-                HttpSession session = request.getSession();
-                session.setAttribute("email", email);
-                session.setAttribute("user", user);
-                session.setAttribute("otpCode", verifyCode);
-                request.getRequestDispatcher("WEB-INF/verify.jsp").forward(request, response);
-            }
-            else {
-                request.setAttribute("msg", "Duplicated Email.");
-                request.getRequestDispatcher("WEB-INF/signup.jsp").forward(request, response);
-            }
+            // Handle invalid OTP case
         }
     }
+
     /**
      * Returns a short description of the servlet.
      *
@@ -114,4 +107,5 @@ public class signupServlet extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+
 }

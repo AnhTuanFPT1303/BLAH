@@ -12,17 +12,25 @@
         <servlet-name>postServlet</servlet-name>
         <servlet-class>controller.postServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>VerifyServlet</servlet-name>
+        <servlet-class>controller.VerifyServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>loginServlet</servlet-name>
-        <url-pattern>/loginServlet</url-pattern>
+        <url-pattern>/login</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>signupServlet</servlet-name>
-        <url-pattern>/signupServlet</url-pattern>
+        <url-pattern>/signup</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>postServlet</servlet-name>
-        <url-pattern>/postServlet</url-pattern>
+        <url-pattern>/home</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>VerifyServlet</servlet-name>
+        <url-pattern>/verify</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>/WEB-INF/welcome.jsp</welcome-file>
