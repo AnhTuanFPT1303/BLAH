@@ -27,7 +27,7 @@ body {
     float: left;
 }
 
-.logo h1 {
+.logo h1 {  
     font-size: 23px;
     margin-bottom: 50px;
     color: #4873ff;
@@ -39,6 +39,10 @@ body {
     margin: 0;
     color: #4873ff;
     font-weight: bold;
+}
+
+#emailWarning {
+    color: red;
 }
 
 .signup-text p {
