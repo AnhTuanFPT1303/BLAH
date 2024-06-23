@@ -17,7 +17,7 @@
         <div class="container">
             <h2>Enter the code from your email</h2>
             <p>Let us know that this email address belongs to you. Enter the code from the email sent to ${sessionScope['user.email']}.</p>
-            <form method="post" action="/blahproject/VerifyServlet">
+            <form method="post" action="/blahproject/verify">
                 <input type="text" id="code" name="otp-code" placeholder="BLAH-">
                 <div class="button-group">
                     <button id="send-email-again" name="action" value="resend">Send Email Again</button>                
