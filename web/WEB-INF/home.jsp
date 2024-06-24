@@ -29,12 +29,12 @@
         </nav>
     </header>
         <div class="container-fluid">
-            <div class="row">
+            <div class="row all-post">
                 <nav class="col-2 py-3 bg-light">
                     <div class="profile-section mb-3 d-flex align-items-center">
                         <a href="user_page" class="d-flex align-items-center text-decoration-none text-dark">
                             <img src="assets/images/cheems_test.jpg" class="img-fluid rounded-circle avatar">
-                            <p class="mb-0 ms-2">${sessionScope['first_name']} ${sessionScope['last_name']}</p>
+                            <p class="mb-0 ms-2 ava-name">${sessionScope['first_name']} ${sessionScope['last_name']}</p>
                         </a>
                     </div>
                     <div class="chat-box mb-3">
@@ -43,9 +43,9 @@
                     </div>
                 </nav>
 
-                        <main class="col-8 sidebar">
-                    <h1 class="mt-3 text-primary">HOME</h1>
-                    <form action="/blahproject/home" method="post" class="mb-4">
+                        <main class="col-8">
+                    <h1 class="mt-3 text-primary home-logo">HOME</h1>
+                    <form action="/blahproject/home" method="post" class="mb-4 post-method">
                         <div class="mb-3">
                             <textarea class="form-control" id="body" name="postContent" rows="4" placeholder="What ya thinking" required></textarea>
                         </div>
@@ -90,7 +90,7 @@
                     </div>
                     --%>
                 </main>
-                <aside class="col-2 py-3 bg-light">
+                <aside class="col-2 py-3 bg-light friend-list">
                     <h2>List Friends</h2>
                     <ul class="list-group">
                         <li class="list-group-item">Friend 1</li>

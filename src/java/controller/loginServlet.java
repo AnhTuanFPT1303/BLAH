@@ -95,6 +95,8 @@ public class loginServlet extends HttpServlet {
                     HttpSession session = request.getSession(true);
                     session.setMaxInactiveInterval(1800);
                     session.setAttribute("user_id", user.getUser_id());
+                    session.setAttribute("last_name", user.getLast_name());
+                    session.setAttribute("first_name", user.getFirst_name());
                     session.setAttribute("user", user);
                     request.getRequestDispatcher("WEB-INF/home.jsp").forward(request, response);
                 } catch (SQLException e) {
