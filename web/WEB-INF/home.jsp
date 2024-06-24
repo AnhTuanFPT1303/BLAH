@@ -32,7 +32,7 @@
             <div class="row">
                 <nav class="col-2 py-3 bg-light">
                     <div class="profile-section mb-3 d-flex align-items-center">
-                        <a href="user_page" class="d-flex align-items-center text-decoration-none text-dark">
+                        <a href="userpageServlet" class="d-flex align-items-center text-decoration-none text-dark">
                             <img src="assets/images/cheems_test.jpg" class="img-fluid rounded-circle avatar">
                             <p class="mb-0 ms-2">${sessionScope['first_name']} ${sessionScope['last_name']}</p>
                         </a>
