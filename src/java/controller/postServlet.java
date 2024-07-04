@@ -13,10 +13,14 @@ import java.sql.SQLException;
 
 import java.io.IOException;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Part;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.List;
 
@@ -24,6 +28,7 @@ import java.util.List;
  *
  * @author bim26
  */
+@MultipartConfig
 public class postServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
@@ -66,12 +71,12 @@ public class postServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
-        if (session != null && session.getAttribute("user_id") != null) {
+        if (session != null && session.getAttribute("user") != null) {
             List<Post> posts = postDAO.getAllPosts();
             request.setAttribute("posts", posts);
             request.getRequestDispatcher("WEB-INF/home.jsp").forward(request, response);
         } else {
-            response.sendRedirect("loginServlet");
+            response.sendRedirect("login");
         }
 
     }
@@ -88,15 +93,32 @@ public class postServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
-        if (session != null && session.getAttribute("user_id") != null) {
+
+        if (session != null && session.getAttribute("user") != null) {
             User user = (User) session.getAttribute("user");
             String body = request.getParameter("postContent");
+            
+            
+            Part file = request.getPart("image");
+                String image_path = file.getSubmittedFileName();
+                String uploadPath = "D:/fpt/prj301/project/BLAH_L4/BLAH/web/assets/post_image/" + image_path;
+                try {
+                    FileOutputStream fos = new FileOutputStream(uploadPath);
+                    InputStream is = file.getInputStream();
 
-            if (body != null && !body.trim().isEmpty()) {
+                    byte[] data = new byte[is.available()];
+                    is.read(data);
+                    fos.write(data);
+                    fos.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            if (body != null && !body.trim().isEmpty() ) {
                 Post post = new Post();
                 post.setUser_id(user.getUser_id());
                 post.setBody(body);
-
+                post.setImage_path(image_path);
                 postDAO PostDao = new postDAO();
                 try {
                     PostDao.addPost(post);

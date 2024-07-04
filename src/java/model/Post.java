@@ -17,7 +17,26 @@ public class Post {
     private Timestamp post_time;
     private String first_name;
     private String last_name;
+    private String image_path;
 
+    public Post(int post_id, int user_id, String body, Timestamp post_time, String first_name, String last_name, String image_path) {
+        this.post_id = post_id;
+        this.user_id = user_id;
+        this.body = body;
+        this.post_time = post_time;
+        this.first_name = first_name;
+        this.last_name = last_name;
+        this.image_path = image_path;
+    }
+
+    public String getImage_path() {
+        return image_path;
+    }
+
+    public void setImage_path(String image_path) {
+        this.image_path = image_path;
+    }
+    
     public String getFirst_name() {
         return first_name;
     }
