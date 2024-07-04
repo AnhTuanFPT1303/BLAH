@@ -40,75 +40,69 @@
                         </a>
                     </div>
                     <div class="chat-box mb-3">
-                        <h5>Chat box</h5>
-                        <!-- Chatseggs here -->
-                    </div>
-                </nav>
-
-                        <main class="col-8">
-                    <h1 class="mt-3 text-primary home-logo">HOME</h1>
-                    <form action="/blahproject/home" method="post" class="mb-4 post-method">
-                        <div class="mb-3">
-                            <textarea class="form-control" id="body" name="postContent" rows="4" placeholder="What ya thinking" required></textarea>
+                        <h5>Chat box</h5>   
+                            <!-- Chatseggs here -->
                         </div>
-                        <button type="submit" class="btn btn-primary" style="padding: 5px 25px">Post</button>
-                    </form>
+                    </nav>
 
-                    <hr>
-
-                    <%
-                        List<Post> posts = postDAO.getAllPosts();
-                        request.setAttribute("posts", posts);
-                    %>
-
-                    <c:forEach var="post" items="${posts}">
-                        <div class="post mb-4" style="overflow-wrap: break-word">
-                            <div class="post-header">
-                                <small>${post.first_name} ${post.last_name} -- <fmt:formatDate value="${post.post_time}" pattern="yyyy-MM-dd HH:mm:ss" /></small>
-                            </div>
-                            <p>${post.body}</p>
-                        </div>
-                        <hr>
-                    </c:forEach>
-                    <%-- k dung`
-                    <div class="send-message mb-4">
-                        <h2>Send Message</h2>
-                        <form action="sendMessage" method="post">
+                            <main class="col-8">
+                        <h1 class="mt-3 text-primary home-logo">HOME</h1>
+                        <form action="/blahproject/home" method="post" class="mb-4 post-method">
                             <div class="mb-3">
-                                <label for="recipient" class="form-label">Recipient:</label>
-                                <input type="text" class="form-control" id="recipient" name="recipient" required>
+                                <textarea class="form-control" id="body" name="postContent" rows="4" placeholder="What ya thinking" required></textarea>
                             </div>
-                            <div class="mb-3">
-                                <label for="message" class="form-label">Message:</label>
-                                <textarea class="form-control" id="message" name="message" rows="4" required></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Send Message</button>
+                            <button type="submit" class="btn btn-primary" style="padding: 5px 25px">Post</button>
                         </form>
-                    </div>
 
-                    <div class="add-friend mb-4">
-                        <h2>Add Friend</h2>
-                        <a href="addFriend?userId=123" class="btn btn-secondary">Add Friend</a>
-                    </div>
-                    --%>
-                </main>
-                <aside class="col-2 py-3 bg-light friend-list">
-                    <h2>List Friends</h2>
-                    <ul class="list-group">
-                        <li class="list-group-item">Friend 1</li>
-                        <li class="list-group-item">Friend 2</li>
-                        <li class="list-group-item">Friend 3</li>
-                    </ul>
-                </aside>
+                        <hr>
+
+                        <%
+                            List<Post> posts = postDAO.getAllPosts();
+                            request.setAttribute("posts", posts);
+                        %>
+
+                        <c:forEach var="post" items="${posts}">
+                            <div class="post mb-4" style="overflow-wrap: break-word">
+                                <div class="post-header">
+                                    <small>${post.first_name} ${post.last_name} -- <fmt:formatDate value="${post.post_time}" pattern="yyyy-MM-dd HH:mm:ss" /></small>
+                                </div>
+                                <p>${post.body}</p>
+                            </div>
+                            <hr>
+                        </c:forEach>
+                        <%-- k dung`
+                        <div class="send-message mb-4">
+                            <h2>Send Message</h2>
+                            <form action="sendMessage" method="post">
+                                <div class="mb-3">
+                                    <label for="recipient" class="form-label">Recipient:</label>
+                                    <input type="text" class="form-control" id="recipient" name="recipient" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="message" class="form-label">Message:</label>
+                                    <textarea class="form-control" id="message" name="message" rows="4" required></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Send Message</button>
+                            </form>
+                        </div>
+
+                        <div class="add-friend mb-4">
+                            <h2>Add Friend</h2>
+                            <a href="addFriend?userId=123" class="btn btn-secondary">Add Friend</a>
+                        </div>
+                        --%>
+                    </main>
+                    <aside class="col-2 py-3 bg-light friend-list">
+                        <h2>List Friends</h2>
+                        <ul class="list-group">
+                            <li class="list-group-item">Friend 1</li>
+                            <li class="list-group-item">Friend 2</li>
+                            <li class="list-group-item">Friend 3</li>
+                        </ul>
+                    </aside>
+                </div>
             </div>
 
-            <c:if test="${empty sessionScope.user}">
-                <div class="alert alert-warning mt-4">
-                    <p>Please <a href="login.jsp">log in</a> to access this page.</p>
-                </div>
-            </c:if>
-        </div>
-
-        <script src="assets/js/bootstrap.min.js"></script>
-    </body>
-</html>
+            <script src="assets/js/bootstrap.min.js"></script>
+        </body>
+    </html>
