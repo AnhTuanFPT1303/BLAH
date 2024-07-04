@@ -34,11 +34,12 @@ public class userDAO {
     public String register(User user) {
         try {
             Connection conn = sqlConnect.getInstance().getConnection();
-            CallableStatement st = conn.prepareCall("INSERT INTO userAccount Values (?,?,?,?)"); //Call register procedure in SQL Server
+            CallableStatement st = conn.prepareCall("INSERT INTO userAccount Values (?,?,?,?,?)"); //Call register procedure in SQL Server
             st.setString(1, user.getFirst_name());
             st.setString(2, user.getLast_name());
             st.setString(3, user.getPassword());
             st.setString(4, user.getEmail());
+            st.setString(5, user.getProfile_pic());
             st.execute();
             return "Registration Successful.";
         } catch (SQLException e) {
@@ -62,30 +63,37 @@ public class userDAO {
                 u.setLast_name(rs.getString(3));
                 u.setPassword(rs.getString(4));
                 u.setEmail(rs.getString(5));
+                u.setProfile_pic(rs.getString(6));
             }
 
         } catch (Exception e) {
             System.out.println("Action Failed");
         }
         return u;
-    }  
-    
-    public boolean checkEmail(String email) {
-    boolean exists = false;
-    try {
-        Connection conn = sqlConnect.getInstance().getConnection();
-        PreparedStatement st = conn.prepareStatement("SELECT 1 FROM userAccount WHERE email = ?");
-        st.setString(1, email);
-        ResultSet rs = st.executeQuery();
-        if (rs.next()) {
-            exists = true;
-        }
-    } catch (SQLException e) {
-        System.out.println("SQL Exception occurred while checking email.");
-    } catch (Exception e) {
-        System.out.println("An unknown error occurred while checking email.");
     }
-    return exists;
-}
-    
+
+    public boolean checkEmail(String email) {
+        boolean exists = false;
+        try {
+            Connection conn = sqlConnect.getInstance().getConnection();
+            PreparedStatement st = conn.prepareStatement("SELECT 1 FROM userAccount WHERE email = ?");
+            st.setString(1, email);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                exists = true;
+            }
+        } catch (SQLException e) {
+            System.out.println("SQL Exception occurred while checking email.");
+        } catch (Exception e) {
+            System.out.println("An unknown error occurred while checking email.");
+        }
+        return exists;
+    }
+
+    public static void main(String[] args) throws SQLException {
+        userDAO test = new userDAO();
+        User user = test.getUserByEmail("nguyenhuuanhtuan123@gmail.com");
+        String img = user.getProfile_pic();
+        System.out.println(img);
+    }
 }

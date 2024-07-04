@@ -20,11 +20,13 @@
         <header id="header">
         <nav class="navbar custom-navbar">
             <div class="container-fluid d-flex align-items-center">
-                <a class="navbar-brand text-primary" href="/blahproject/home" style="font-weight: bold">BLAH</a>
+                <a class="navbar-brand text-primary" href="#" style="font-weight: bold">BLAH</a>
                 <form class="d-flex ms-2 flex-grow-1">
                     <input class="form-control" type="search" placeholder="Finding in BLAH" aria-label="Search">
                 </form>
-                <a class="navbar-brand text-primary log-out" href="/blahproject" style="font-weight: bold">Log out</a>
+                <form method="post" action="/blahproject/logout">
+                    <button type="submit" class="navbar-brand text-primary log-out" style="font-weight: bold">Log out</a>
+                </form>
             </div>
         </nav>
     </header>
@@ -33,8 +35,8 @@
                 <nav class="col-2 py-3 bg-light">
                     <div class="profile-section mb-3 d-flex align-items-center">
                         <a href="userpageServlet" class="d-flex align-items-center text-decoration-none text-dark">
-                            <img src="assets/images/cheems_test.jpg" class="img-fluid rounded-circle avatar">
-                            <p class="mb-0 ms-2 ava-name">${sessionScope['first_name']} ${sessionScope['last_name']}</p>
+                            <img src="${sessionScope.user['profile_pic']}" class="img-fluid rounded-circle avatar">
+                            <p class="mb-0 ms-2 ava-name">${sessionScope.user['first_name']} ${sessionScope.user['last_name']}</p>
                         </a>
                     </div>
                     <div class="chat-box mb-3">

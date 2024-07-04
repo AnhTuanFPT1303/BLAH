@@ -91,6 +91,7 @@ public class signupServlet extends HttpServlet {
                 user.setFirst_name(firstName);
                 user.setLast_name(lastName);
                 user.setPassword(password);
+                user.setProfile_pic("assets/profile_avt/default_avt.jpg");
                 SmtpProtocol smtpProtocol = new SmtpProtocol();
                 int verifyCode = smtpProtocol.sendMail(email);
                 HttpSession session = request.getSession();
