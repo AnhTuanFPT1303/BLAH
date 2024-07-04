@@ -29,6 +29,7 @@ header{
 }
 .log-out{
     margin-right: 1rem;
+    border: 0;
 }
 .sidebar {
     border-right: 1px solid #ddd;
@@ -64,6 +65,7 @@ header{
 }
 
 .post {
+    height: auto;
     border-bottom: 1px solid #ddd;
     padding-bottom: 10px;
     padding-top: 10px;
@@ -82,4 +84,28 @@ header{
 .list-group-item {
     border: none;
     padding-left: 0;
+}
+
+
+
+@media screen and (max-width: 768px) {
+    .ava-name{
+        display: none;
+    }
+    .friend-list{
+        display: none;
+    }
+    .chat-box{
+        display: none;
+    }
+    .post-method{
+        width: 125%;
+    }
+    .home-logo{
+        display: none;
+    }
+    .all-post{
+        margin-top: 5%;
+    }
+    
 }
