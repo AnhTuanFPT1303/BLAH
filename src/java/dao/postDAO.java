@@ -17,7 +17,7 @@ import util.sqlConnect;
 public class postDAO {
 
     public void addPost(Post p) {
-        String query = "INSERT INTO post (user_id, body, image_path, post_time) VALUES (?, ?, ?, CURRENT_TIMESTAMP)";
+        String query = "INSERT INTO post (user_id, body, image_path, post_time  ) VALUES (?, ?, ?, CURRENT_TIMESTAMP)";
 
         try (Connection conn = sqlConnect.getInstance().getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, p.getUser_id());

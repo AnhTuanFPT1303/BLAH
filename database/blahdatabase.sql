@@ -46,7 +46,7 @@ CREATE TABLE post (
   post_id INT IDENTITY(1,1) PRIMARY KEY,
   user_id INT NOT NULL,
   body VARCHAR(500) NOT NULL,
-  post_pic varchar(max) NULL,
+  image_path varchar(max) NULL,
   post_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT fk_post_user FOREIGN KEY (user_id) REFERENCES userAccount (user_id) ON DELETE CASCADE ON UPDATE CASCADE
 );

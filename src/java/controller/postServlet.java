@@ -97,24 +97,23 @@ public class postServlet extends HttpServlet {
         if (session != null && session.getAttribute("user") != null) {
             User user = (User) session.getAttribute("user");
             String body = request.getParameter("postContent");
-            
-            
+
             Part file = request.getPart("image");
-                String image_path = file.getSubmittedFileName();
-                String uploadPath = "D:/fpt/prj301/project/BLAH_L4/BLAH/web/assets/post_image/" + image_path;
-                try {
-                    FileOutputStream fos = new FileOutputStream(uploadPath);
-                    InputStream is = file.getInputStream();
+            String image_path = file.getSubmittedFileName();
+            String uploadPath = "E:/blahproject/BLAH/web/assets/post_image/" + image_path;
+            try {
+                FileOutputStream fos = new FileOutputStream(uploadPath);
+                InputStream is = file.getInputStream();
 
-                    byte[] data = new byte[is.available()];
-                    is.read(data);
-                    fos.write(data);
-                    fos.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                byte[] data = new byte[is.available()];
+                is.read(data);
+                fos.write(data);
+                fos.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
-            if (body != null && !body.trim().isEmpty() ) {
+            if (body != null && !body.trim().isEmpty()) {
                 Post post = new Post();
                 post.setUser_id(user.getUser_id());
                 post.setBody(body);
@@ -122,13 +121,13 @@ public class postServlet extends HttpServlet {
                 postDAO PostDao = new postDAO();
                 try {
                     PostDao.addPost(post);
+                    response.sendRedirect("home");
                 } catch (Exception e) {
                     e.printStackTrace();
                     request.setAttribute("errorMessage", "Error saving post");
+                    request.getRequestDispatcher("WEB-INF/home.jsp").forward(request, response);
                 }
             }
-
-            request.getRequestDispatcher("WEB-INF/home.jsp").forward(request, response);
         } else {
             request.getRequestDispatcher("WEB-INF/home.jsp").forward(request, response);
         }

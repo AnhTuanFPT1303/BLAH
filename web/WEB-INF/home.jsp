@@ -49,7 +49,7 @@
                     <h1 class="mt-3 text-primary home-logo">HOME</h1>
                     <form action="/blahproject/home" method="post" class="mb-4 post-method" enctype="multipart/form-data">
                         <div class="mb-3">
-                            <textarea class="form-control" id="body" name="postContent" rows="2" placeholder="What ya thinking" required></textarea>
+                            <textarea class="form-control" id="body" name="postContent" rows="2" placeholder="What ya thinking"></textarea>
                         </div>
 
                         <input type="file" name="image">
