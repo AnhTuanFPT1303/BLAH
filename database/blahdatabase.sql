@@ -99,3 +99,7 @@ END;
 
 Go
 Select * from userAccount
+
+insert into userAccount values ('Ha', 'Phan', '123', 'haphan123@gmail.com', 'assets/profile_avt/default_avt.jpg')
+insert into userAccount values ('Tung', 'Nui', '123', 'tungnui123@gmail.com', 'assets/profile_avt/default_avt.jpg')
+insert into userAccount values ('Tuan', 'Khi', '123', 'tuankhi123@gmail.com', 'assets/profile_avt/default_avt.jpg')
