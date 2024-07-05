@@ -15,6 +15,8 @@
         <title>Home Page</title>
         <link href="assets/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="assets/css/home.css">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
     </head>
     <body>
         <header id="header">
@@ -65,16 +67,25 @@
                     %>
 
                     <c:forEach var="post" items="${posts}">
-                        <div class="post mb-4" style="overflow-wrap: break-word">
+                        <div class="post mb-4" style="overflow-wrap: break-word" data-post-id="${post.post_id}" data-liked="${post.likedByCurrentUser}">
                             <div class="post-header">
                                 <small>${post.first_name} ${post.last_name} -- <fmt:formatDate value="${post.post_time}" pattern="yyyy-MM-dd HH:mm:ss" /></small>
                             </div>
                             <p>${post.body}</p>
                             <c:if test="${not empty post.image_path}">
                                 <div>
-                                    <img src="assets/post_image/${post.image_path}">
+                                    <img src="assets/post_image/${post.image_path}" style="width : 60%">
                                 </div>
                             </c:if>
+
+
+                            <div class="post-ratings-container">
+                                <div class="post-rating ${post.likedByCurrentUser ? 'post-rating-selected' : ''}">
+                                    <span class="post-rating-button material-icons" style="cursor: pointer">thumb_up</span>
+                                    <span class="post-rating-count">${post.like_count}</span>
+                                </div>
+                            </div>
+
 
                         </div>
                         <hr>
@@ -111,7 +122,7 @@
                 </aside>
             </div>
         </div>
-
+        <script src="assets/js/likeButton.js" defer></script>
         <script src="assets/js/bootstrap.min.js"></script>
     </body>
 </html>

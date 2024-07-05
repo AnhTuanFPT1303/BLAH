@@ -34,7 +34,7 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>postServlet</servlet-name>
-        <url-pattern>/home</url-pattern>
+        <url-pattern>/home/*</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>VerifyServlet</servlet-name>
