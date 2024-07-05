@@ -90,6 +90,51 @@ public class userDAO {
         return exists;
     }
 
+    public void updateUserName(int userId, String newFirstName, String newLastName) throws SQLException, Exception {
+        String query = "UPDATE userAccount SET first_name = ?, last_name = ? WHERE user_id = ?";
+        try (Connection conn = sqlConnect.getInstance().getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, newFirstName);
+            stmt.setString(2, newLastName);
+            stmt.setInt(3, userId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
+    public void updatePassword(int userId, String newPassword) throws SQLException, Exception {
+        String query = "UPDATE userAccount SET password = ? WHERE user_id = ?";
+        try (Connection conn = sqlConnect.getInstance().getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, newPassword);
+            stmt.setInt(2, userId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
+    public void deleteUser(int userId) throws SQLException, Exception {
+        String query = "DELETE FROM userAccount WHERE user_id = ?";
+        try (Connection conn = sqlConnect.getInstance().getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, userId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
     public static void main(String[] args) throws SQLException {
         userDAO test = new userDAO();
         User user = test.getUserByEmail("nguyenhuuanhtuan123@gmail.com");

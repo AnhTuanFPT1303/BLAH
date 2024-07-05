@@ -51,7 +51,8 @@
                     <a href="userpageServlet" class="text-decoration-none text-dark">
                         <img src="${sessionScope.user['profile_pic']}" class="img-fluid rounded-circle avatar">
                     </a>
-    <p style="text-align: left;">Name: ${user.first_name} ${user.last_name}</p>
+                    <p style="text-align: left;">Name: ${user.first_name} ${user.last_name}</p>
+                    <a href="setting.jsp" class="btn btn-primary btn-block mt-3">Settings</a>
                 </div>
             </nav>
             <main class="col-8">
@@ -87,7 +88,7 @@
             </aside>
         </div>
     </div>
-  <script src="assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
     <script src="assets/js/jquery.min.js"></script>
 </body>
 </html>

@@ -61,8 +61,6 @@ public class postDAO {
         return posts;
     }
 
-    
-    
     public static List<Post> getMyPosts(int userId) {
         List<Post> posts = new ArrayList<>();
         try {
@@ -94,4 +92,17 @@ public class postDAO {
         return posts;
     }
 
+    public void deletePost(int postId) throws SQLException, Exception {
+        String query = "DELETE FROM post WHERE post_id = ?";
+        try (Connection conn = sqlConnect.getInstance().getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, postId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+    }
 }
