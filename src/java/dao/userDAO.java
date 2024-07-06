@@ -72,6 +72,29 @@ public class userDAO {
         }
         return u;
     }
+    
+    public User getUserById(int user_id) throws SQLException {
+        User u = new User();
+        try {
+            Connection conn = sqlConnect.getInstance().getConnection();
+            PreparedStatement st = conn.prepareStatement("SELECT * FROM userAccount WHERE user_id = ?");
+            st.setInt(1, user_id);
+            ResultSet rs = st.executeQuery();
+
+            if (rs.next()) {
+                u.setUser_id(rs.getInt(1));
+                u.setFirst_name(rs.getString(2));
+                u.setLast_name(rs.getString(3));
+                u.setPassword(rs.getString(4));
+                u.setEmail(rs.getString(5));
+                u.setProfile_pic(rs.getString(6));
+            }
+
+        } catch (Exception e) {
+            System.out.println("Action Failed");
+        }
+        return u;
+    }
 
     public static ArrayList<User> getAllUserByName(String name) throws SQLException {
         ArrayList<User> userList = new ArrayList<>();

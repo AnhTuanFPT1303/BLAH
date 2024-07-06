@@ -50,8 +50,10 @@
                     <hr>
                     <c:forEach var="user" items="${userList}">
                         <div class="post mb-4 d-flex align-items-center" style="overflow-wrap: break-word">
+                            <a href="userpageServlet?userId=${user.user_id}">
                             <img src="${user.profile_pic}" alt="avatar picture" class="img-thumbnail mr-3" style="width: 50px; height: 50px; object-fit: cover;">
-                            <small style="margin-left: 5px">${user.first_name} ${user.last_name}</small>
+                            </a>
+                            <a href="userpageServlet?userId=${user.user_id}" style="margin-left: 5px">${user.first_name} ${user.last_name}</a>
                         </div>
                         <hr>
                     </c:forEach>

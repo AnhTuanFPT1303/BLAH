@@ -33,9 +33,9 @@
         </header>
         <div class="container-fluid">
             <div class="row all-post">
-                <nav class="col-2 py-3 bg-light">
+                <nav class="col-2 py-3 bg-light">   
                     <div class="profile-section mb-3 d-flex align-items-center">
-                        <a href="userpageServlet" class="d-flex align-items-center text-decoration-none text-dark">
+                        <a href="userpageServlet?userId=${sessionScope.user['user_id']}" class="d-flex align-items-center text-decoration-none text-dark">
                             <img src="${sessionScope.user['profile_pic']}" class="img-fluid rounded-circle avatar">
                             <p class="mb-0 ms-2 ava-name">${sessionScope.user['first_name']} ${sessionScope.user['last_name']}</p>
                         </a>
