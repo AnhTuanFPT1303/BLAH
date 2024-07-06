@@ -106,13 +106,13 @@ public class commentServlet extends HttpServlet {
             }
             try {
                 postDAO.addComment(comment);
-                response.sendRedirect("home");
+                request.getRequestDispatcher("WEB-INF/home.jsp").forward(request, response);
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
         } else {
-            response.sendRedirect("login");
+            request.getRequestDispatcher("WEB-INF/home.jsp").forward(request, response);
         }
     }
 

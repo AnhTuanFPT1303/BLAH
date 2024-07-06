@@ -172,7 +172,7 @@ public class postServlet extends HttpServlet {
                 postDAO PostDao = new postDAO();
                 try {
                     PostDao.addPost(post);
-                    response.sendRedirect("home");
+                    request.getRequestDispatcher("WEB-INF/home.jsp").forward(request, response);
                 } catch (Exception e) {
                     e.printStackTrace();
                     request.setAttribute("errorMessage", "Error saving post");
