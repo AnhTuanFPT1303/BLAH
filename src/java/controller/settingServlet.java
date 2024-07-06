@@ -34,7 +34,7 @@ public class settingServlet extends HttpServlet {
                 user.setFirst_name(firstName);
                 user.setLast_name(lastName);
                 userDao.updateUser(user);
-                response.sendRedirect("settings.jsp?action=changeName");
+                request.getRequestDispatcher("settings.jsp?action=changeName").forward(request, response);
             } else if ("changePassword".equals(action)) {
                 String oldPassword = request.getParameter("oldPassword");
                 String newPassword = request.getParameter("newPassword");
@@ -42,16 +42,16 @@ public class settingServlet extends HttpServlet {
                 if (user.getPassword().equals(oldPassword) && newPassword.equals(confirmNewPassword)) {
                     user.setPassword(newPassword);
                     userDao.updateUser(user);
-                    response.sendRedirect("settings.jsp?action=changePassword");
+                    request.getRequestDispatcher("settings.jsp?action=changePassword").forward(request, response);
                 }
             } else if ("deletePost".equals(action)) {
                 int postId = Integer.parseInt(request.getParameter("postId"));
                 postDao.deletePost(postId);
-                response.sendRedirect("settings.jsp?action=deletePost");
+                request.getRequestDispatcher("settings.jsp?action=deletePost").forward(request, response);
             } else if ("confirmDelete".equals(action)) {
                 int postId = Integer.parseInt(request.getParameter("postId"));
                 postDao.deletePost(postId);
-                response.sendRedirect("settings.jsp?action=deletePost");
+                request.getRequestDispatcher("settings.jsp?action=deletePost").forward(request, response);
             }
         } catch (Exception e) {
             // log the error and exception
