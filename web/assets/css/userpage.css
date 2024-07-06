@@ -104,3 +104,16 @@ header {
     width: 125%;
   }
 }
+.settings-section {
+    display: inline-block;
+    vertical-align: top;
+}
+nav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.profile-section, .settings-section {
+    flex: 1;
+}

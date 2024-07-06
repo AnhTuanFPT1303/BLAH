@@ -182,5 +182,18 @@ public void addLike(int userId, int postId) throws SQLException {
         }
         return posts;
     }
+     public void deletePost(int postId) {
+        String deletePostQuery = "DELETE FROM post WHERE post_id = ?";
 
+        try (Connection conn = sqlConnect.getInstance().getConnection();
+             PreparedStatement stmt = conn.prepareStatement(deletePostQuery)) {
+            stmt.setInt(1, postId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+}
 }

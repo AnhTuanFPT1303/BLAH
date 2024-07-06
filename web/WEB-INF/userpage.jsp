@@ -1,5 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8" import="model.*"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -15,7 +16,7 @@
             .custom-navbar {
                 box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             }
-            .profile-section {
+            .profile-section, .settings-section {
                 background-color: #f7f7f7;
                 padding: 10px;
                 border-radius: 10px;
@@ -53,6 +54,15 @@
                         </a>
                         <p style="text-align: left;">Name: ${user.first_name} ${user.last_name}</p>
                     </div>
+                    <hr>
+                    <div class="settings-section mb-3 text-center">
+                        <h2>Settings</h2>
+                        <form action="settingServlet" method="post">
+                            <button type="submit" name="action" value="changeName" class="btn btn-secondary mb-2">Change Name</button>
+                            <button type="submit" name="action" value="changePassword" class="btn btn-secondary mb-2">Change Password</button>
+                            <button type="submit" name="action" value="deletePost" class="btn btn-secondary mb-2">Delete Post</button>
+                        </form>
+                    </div>
                 </nav>
                 <main class="col-8">
                     <h1 class="mt-3 text-primary home-logo">Welcome, ${user.first_name} ${user.last_name}!</h1>
@@ -65,13 +75,13 @@
                         <button type="submit" class="btn btn-primary" style="padding: 5px 25px">Post</button>
                     </form>
                     <hr>
-                    <h2>Yours Timeline</h2>
+                    <h2>Your Timeline</h2>
                     <c:forEach items="${posts}" var="post">
                         <div class="post mb-4" style="overflow-wrap: break-word; border: 1px solid #ddd; padding: 10px; border-radius: 10px;">
                             <div class="post-header">
                                 <small>${post.first_name} ${post.last_name} -- <fmt:formatDate value="${post.post_time}" pattern="yyyy-MM-dd HH:mm:ss" /></small>
                             </div>
-                            <p style="font-size: 14px;">${post.body}</p>
+                                                       <p style="font-size: 14px;">${post.body}</p>
                             <c:if test="${not empty post.image_path}">
                                 <div>
                                     <img src="assets/post_image/${post.image_path}">
@@ -80,12 +90,10 @@
                         </div>
                         <hr>
                     </c:forEach>
-                    <form action="logout" method="post">
-
-                    </form>
+                    <jsp:include page="setting.jsp" />
                 </main>
                 <aside class="col-2 py-3 bg-light friend-list">
-                    <h2>Yours Friends</h2>
+                    <h2>Your Friends</h2>
                     <ul class="list-group">
                         <li class="list-group-item">Friend 1</li>
                         <li class="list-group-item">Friend 2</li>
