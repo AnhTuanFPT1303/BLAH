@@ -17,20 +17,19 @@
     <body>
         <h2>Pending Friend Requests</h2>
         <c:forEach var="friendRequest" items="${pendingList}">
-            
+            <div>
+                <p>Friend Request from User ID: <%= userRequest %></p>
+                <form action="acceptFriend" method="post" style="display:inline;">
+                    <input type="hidden" name="userRequest" value="<%= userRequest %>">
+                    <input type="hidden" name="userAccept" value="<%= userId %>">
+                    <button type="submit">Accept</button>
+                </form>
+                <form action="rejectFriend" method="post" style="display:inline;">
+                    <input type="hidden" name="userRequest" value="<%= userRequest %>">
+                    <input type="hidden" name="userAccept" value="<%= userId %>">
+                    <button type="submit">Reject</button>
+                </form>
+            </div>
         </c:forEach>
-        <div>
-            <p>Friend Request from User ID: <%= userRequest %></p>
-            <form action="acceptFriend" method="post" style="display:inline;">
-                <input type="hidden" name="userRequest" value="<%= userRequest %>">
-                <input type="hidden" name="userAccept" value="<%= userId %>">
-                <button type="submit">Accept</button>
-            </form>
-            <form action="rejectFriend" method="post" style="display:inline;">
-                <input type="hidden" name="userRequest" value="<%= userRequest %>">
-                <input type="hidden" name="userAccept" value="<%= userId %>">
-                <button type="submit">Reject</button>
-            </form>
-        </div>
     </body>
 </html>

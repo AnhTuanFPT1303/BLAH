@@ -49,15 +49,15 @@
 
                 <main class="main-class col-8">
                     <h1 class="mt-3 text-primary home-logo">HOME</h1>
-                    <form action="/blahproject/home" method="post" class="mb-4 post-method" enctype="multipart/form-data">
+                    <form action="/blahproject/home" method="post" class="mb-4 post-method" enctype="multipart/form-data" onsubmit="document.getElementById('myBtn').disabled = true;">
                         <div class="mb-3">
                             <textarea class="form-control" id="body" name="postContent" rows="2" placeholder="What ya thinking" maxlength="300"></textarea>
                         </div>
-
                         <input type="file" name="image" accept=".jpeg, .png, .jpg">
                         <br>
-                        <button type="submit" class="btn btn-primary" style="padding: 5px 25px; margin-top: 5px ">Post</button>
+                        <button id="myBtn" type="submit" class="btn btn-primary" style="padding: 5px 25px; margin-top: 5px;">Post</button>
                     </form>
+
 
                     <br>
 
@@ -125,6 +125,6 @@
             </div>
         </div>
         <script src="assets/js/likeButton.js" defer></script>
-        <script src="assets/js/bootstrap.min.js"></script>
+        <script src="assets/js/bootstrap.min.js"></script>   
     </body>
 </html>
