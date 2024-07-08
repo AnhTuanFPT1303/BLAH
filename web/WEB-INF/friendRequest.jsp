@@ -8,6 +8,7 @@
 <%@ page import="java.util.List, model.Post, dao.postDAO, model.User" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core"%>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt"%>
+<%@ taglib uri="jakarta.tags.functions" prefix="fn" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -18,18 +19,18 @@
         <h2>Pending Friend Requests</h2>
         <c:forEach var="friendRequest" items="${pendingList}">
             <div>
-                <p>Friend Request from User ID: <%= userRequest %></p>
-                <form action="acceptFriend" method="post" style="display:inline;">
-                    <input type="hidden" name="userRequest" value="<%= userRequest %>">
-                    <input type="hidden" name="userAccept" value="<%= userId %>">
-                    <button type="submit">Accept</button>
+                <c:set var="splitRequest" value="${fn:split(friendRequest, '.')}"/>
+                <p>Friend Request from User: ${splitRequest[1]} ${splitRequest[2]}</p>
+                <form action="friendRequestServlet" method="post" style="display:inline;">
+                    <input type="hidden" name="userRequest" value="${splitRequest[0]}">
+                    <button name="action" value="acceptFriend" type="submit">Accept</button>
                 </form>
-                <form action="rejectFriend" method="post" style="display:inline;">
-                    <input type="hidden" name="userRequest" value="<%= userRequest %>">
-                    <input type="hidden" name="userAccept" value="<%= userId %>">
-                    <button type="submit">Reject</button>
+                <form action="friendRequestServlet" method="post" style="display:inline;">
+                    <input type="hidden" name="userRequest" value="${splitRequest[0]}">
+                    <button name="action" value="rejectFriend" type="submit">Reject</button>
                 </form>
             </div>
         </c:forEach>
+
     </body>
 </html>

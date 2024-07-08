@@ -61,7 +61,7 @@ public class friendRequestServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         FriendDAO friendDAO = new FriendDAO();
-        ArrayList<Integer> pendingList = new ArrayList<>();
+        ArrayList<String> pendingList = new ArrayList<>();
         HttpSession session = request.getSession(false);
         int userId = (int) session.getAttribute("user_id");
         try {
@@ -84,7 +84,19 @@ public class friendRequestServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        HttpSession session = request.getSession(false);
+        int userRequest = Integer.parseInt(request.getParameter("userRequest"));
+        int userAccept = (int)session.getAttribute("user_id");
+        FriendDAO friendDAO = new FriendDAO();
+        switch (request.getParameter("action")) {
+            case "acceptFriend":
+                friendDAO.acceptFriendRequest(userRequest, userAccept);
+                break;
+            case "rejectFriend": 
+                friendDAO.rejectFriendRequest(userRequest, userAccept);
+                break;
+        }
+        request.getRequestDispatcher("WEB-INF/friendRequest.jsp").forward(request, response);
     }
 
     /**
