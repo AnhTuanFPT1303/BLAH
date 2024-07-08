@@ -47,7 +47,7 @@
                     </div>
                 </nav>
 
-                <main class="col-8">
+                <main class="main-class col-8">
                     <h1 class="mt-3 text-primary home-logo">HOME</h1>
                     <form action="/blahproject/home" method="post" class="mb-4 post-method" enctype="multipart/form-data">
                         <div class="mb-3">
@@ -59,7 +59,7 @@
                         <button type="submit" class="btn btn-primary" style="padding: 5px 25px; margin-top: 5px ">Post</button>
                     </form>
 
-                    <hr>
+                    <br>
 
                     <%
                         List<Post> posts = postDAO.getAllPosts();
@@ -86,12 +86,35 @@
                                 </div>
                             </div>
 
+                            <div class="post-comments">
+                                <c:forEach var="comment" items="${post.comments}">
+                                    <div class="comment mb-2" style="margin-left: 20px;">
+                                        <div class="comment-header">
+                                            <small><strong>>>${comment.first_name} ${comment.last_name}</strong></small>
+                                        </div>
+                                        <div class="comment-body">
+                                            <p style="margin-bottom: 0;">${comment.comment_text}</p>
+                                        </div>
+                                    </div>
+                                </c:forEach>
+                            </div>
 
+                            <!-- Comment form -->
+                            <form action="/blahproject/commentServlet" method="post" class="mb-4 post-method">
+                                <div class="mb-3">
+                                    <textarea class="form-control" id="body" name="commentContent" rows="2" placeholder="Reply"></textarea>
+                                </div>
+                                <input type="hidden" name="post_id" value="${post.post_id}">
+                                <button type="submit" class="btn btn-primary" style="padding: 5px 25px; margin-top: 5px">Comment</button>
+                            </form>
+
+
+                            <%----%>
                         </div>
-                        <hr>
+                        <br>
                     </c:forEach>
                 </main>
-                <aside class="col-2 py-3 bg-light friend-list">
+                <aside class="col-2 py-3 bg-light friend-list" style="z-index: -5">
                     <h2>List Friends</h2>
                     <ul class="list-group">
                         <li class="list-group-item">Friend 1</li>
