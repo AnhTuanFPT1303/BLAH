@@ -58,9 +58,7 @@
                     <div class="settings-section mb-3 text-center">
                         <h2>Settings</h2>
                         <form action="settingServlet" method="post">
-                            <button type="submit" name="action" value="changeName" class="btn btn-secondary mb-2">Change Name</button>
-                            <button type="submit" name="action" value="changePassword" class="btn btn-secondary mb-2">Change Password</button>
-                            <button type="submit" name="action" value="deletePost" class="btn btn-secondary mb-2">Delete Post</button>
+                            <button type="submit" name="action" value="changeInformation" class="btn btn-secondary mb-2">Change Information</button>
                         </form>
                     </div>
                 </nav>
@@ -90,7 +88,6 @@
                         </div>
                         <hr>
                     </c:forEach>
-                    <jsp:include page="setting.jsp" />
                 </main>
                 <aside class="col-2 py-3 bg-light friend-list">
                     <h2>Your Friends</h2>

@@ -54,7 +54,7 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>settingServlet</servlet-name>
-        <url-pattern>/setting</url-pattern>
+        <url-pattern>/settingServlet</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>/WEB-INF/welcome.jsp</welcome-file>

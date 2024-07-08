@@ -82,19 +82,6 @@ public class userDAO {
         return exists;
     }
 
-    public void updateFirstName(int userId, String newFirstName) {
-        String query = "UPDATE userAccount SET first_name = ? WHERE user_id = ?";
-        try (Connection conn = sqlConnect.getInstance().getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setString(1, newFirstName);
-            stmt.setInt(2, userId);
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
    public void updateUser(User user) {
     String query = "UPDATE userAccount SET first_name =?, last_name =?, password =? WHERE user_id =?";
