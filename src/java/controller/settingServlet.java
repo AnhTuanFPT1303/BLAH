@@ -7,23 +7,24 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import dao.userDAO;
-import dao.postDAO;
 import model.User;
-import model.Post;
-import java.util.List;
 
 public class settingServlet extends HttpServlet {
 
     private userDAO userDao;
-    private postDAO postDao;
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         userDao = new userDAO();
-        postDao = new postDAO();
         String action = request.getParameter("action");
 
         HttpSession session = request.getSession(false);
-        User user = (User) session.getAttribute("user");
+        User sessionUser = (User) session.getAttribute("user");
+
+        if (sessionUser == null) {
+            // No user in session, redirect to homepage
+            response.sendRedirect(request.getContextPath() + "/homepage.jsp?notification=You%20cant%20do%20that");
+            return;
+        }
 
         try {
             if (null != action) {
@@ -34,32 +35,30 @@ public class settingServlet extends HttpServlet {
                     case "changeName" -> {
                         String firstName = request.getParameter("firstName");
                         String lastName = request.getParameter("lastName");
-                        user.setFirst_name(firstName);
-                        user.setLast_name(lastName);
-                        userDao.updateUser(user);
-                        request.getRequestDispatcher("/WEB-INF/setting.jsp").forward(request, response);
+                        sessionUser.setFirst_name(firstName);
+                        sessionUser.setLast_name(lastName);
+                        userDao.updateUser(sessionUser);
+                        request.setAttribute("notification", "Your name has been changed to: " + firstName + " " + lastName);
+                        request.getRequestDispatcher("/WEB-INF/userpage.jsp").forward(request, response);
                     }
                     case "changePassword" -> {
                         String oldPassword = request.getParameter("oldPassword");
                         String newPassword = request.getParameter("newPassword");
                         String confirmNewPassword = request.getParameter("confirmNewPassword");
-                        if (user.getPassword().equals(oldPassword) && newPassword.equals(confirmNewPassword)) {
-                            user.setPassword(newPassword);
-                            userDao.updateUser(user);
+                        if (!sessionUser.getPassword().equals(oldPassword)) {
+                            request.setAttribute("oldPasswordError", "The old password is incorrect");
                             request.getRequestDispatcher("/WEB-INF/setting.jsp").forward(request, response);
+                        } else if (!newPassword.equals(confirmNewPassword)) {
+                            request.setAttribute("confirmPasswordError", "Confirm password does not match");
+                            request.getRequestDispatcher("/WEB-INF/setting.jsp").forward(request, response);
+                        } else {
+                            sessionUser.setPassword(newPassword);
+                            userDao.updateUser(sessionUser);
+                            request.setAttribute("notification", "Your password has been changed successfully. You will be logged out now.");
+                            request.getRequestDispatcher("/WEB-INF/userpage.jsp").forward(request, response);
+                            session.invalidate();
+                            response.sendRedirect(request.getContextPath() + "/login");
                         }
-                    }
-                    case "deletePost" -> {
-                        int postId = Integer.parseInt(request.getParameter("postId"));
-                        postDao.deletePost(postId);
-                        request.getRequestDispatcher("setting.jsp").forward(request, response);
-                    }
-                    case "confirmDelete" -> {
-                        int postId = Integer.parseInt(request.getParameter("postId"));
-                        postDao.deletePost(postId);
-                        request.getRequestDispatcher("setting.jsp").forward(request, response);
-                    }
-                    default -> {
                     }
                 }
             }
@@ -73,7 +72,15 @@ public class settingServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
 
-        HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("user");
+        HttpSession session = request.getSession(false);
+        User sessionUser = (User) session.getAttribute("user");
+
+        if (sessionUser == null) {
+            // No user in session, redirect to homepage
+            response.sendRedirect(request.getContextPath() + "/homepage.jsp?notification=You%20cant%20do%20that");
+            return;
+        }
+
+        // Process the GET request normally
     }
 }

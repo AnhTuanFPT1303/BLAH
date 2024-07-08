@@ -4,6 +4,16 @@
 <!DOCTYPE html>
 <html>
     <head>
+    <c:if test="${not empty notification}">
+    <div class="alert alert-success" role="alert">
+        ${notification}
+        <script>
+            setTimeout(function() {
+                window.location.href = "${pageContext.request.contextPath}/login";
+            }, 3000);
+        </script>
+    </div>
+</c:if>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>User Page</title>
         <link href="assets/css/bootstrap.min.css" rel="stylesheet">
@@ -128,5 +138,6 @@
                 </c:forEach>
             </main>
         </div>
+
     </body>
 </html>
