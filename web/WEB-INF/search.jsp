@@ -1,15 +1,10 @@
-<%-- 
-    Document   : search
-    Created on : Jul 5, 2024, 11:34:52 PM
-    Author     : HELLO
---%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="java.util.ArrayList, model.User, dao.userDAO" %>
-<%@ taglib prefix="c" uri="jakarta.tags.core"%>
-<%@ taglib prefix="fmt" uri="jakarta.tags.fmt"%>
+<%@ page import="java.util.HashMap" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Search Result</title>
@@ -26,7 +21,7 @@
                         <input type="submit" value="Submit">
                     </form>
                     <form method="post" action="/blahproject/logout">
-                        <button type="submit" class="navbar-brand text-primary log-out" style="font-weight: bold">Log out</a>
+                        <button type="submit" class="navbar-brand text-primary log-out" style="font-weight: bold">Log out</button>
                     </form>
                 </div>
             </nav>
@@ -48,12 +43,22 @@
                 <main class="col-8">
                     <h1 class="mt-3 text-primary home-logo">HOME</h1>
                     <hr>
-                    <c:forEach var="user" items="${userList}">
+                    <c:forEach var="userResult" items="${usersWithStatus}">
+                        <c:set var="userSearched" value="${userResult.key}" />
+                        <c:set var="isInvited" value="${userResult.value}" />
                         <div class="post mb-4 d-flex align-items-center" style="overflow-wrap: break-word">
-                            <a href="userpageServlet?userId=${user.user_id}">
-                            <img src="${user.profile_pic}" alt="avatar picture" class="img-thumbnail mr-3" style="width: 50px; height: 50px; object-fit: cover;">
+                            <a href="userpageServlet?userId=${userSearched.user_id}">
+                                <img src="${userSearched.profile_pic}" alt="avatar picture" class="img-thumbnail mr-3" style="width: 50px; height: 50px; object-fit: cover;">
                             </a>
-                            <a href="userpageServlet?userId=${user.user_id}" style="margin-left: 5px">${user.first_name} ${user.last_name}</a>
+                            <a href="userpageServlet?userId=${userSearched.user_id}" style="margin-left: 5px">${userSearched.first_name} ${userSearched.last_name}</a>
+                            <c:choose>
+                                <c:when test="${isInvited}">
+                                    <button class="btn btn-secondary btn-sm" style="margin-left: auto;" disabled>Invited</button>
+                                </c:when>
+                                <c:otherwise>
+                                    <button class="btn btn-primary btn-sm invite-friend" data-user-id="${userSearched.user_id}" style="margin-left: auto;">Add Friend</button>
+                                </c:otherwise>
+                            </c:choose>
                         </div>
                         <hr>
                     </c:forEach>
@@ -70,5 +75,30 @@
             </div>
         </div>
         <script src="assets/js/bootstrap.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                $('.invite-friend').click(function () {
+                    var button = $(this);
+                    var userId = button.data('user-id');
+                    $.ajax({
+                        type: 'POST',
+                        url: 'inviteFriendServlet',
+                        data: {userAccept: userId},
+                        success: function (response) {
+                            if (response.success) {
+                                button.text('Invited');
+                                button.prop('disabled', true);
+                            } else {
+                                alert('Failed to send friend request');
+                            }
+                        },
+                        error: function () {
+                            alert('Error sending request');
+                        }
+                    });
+                });
+            });
+        </script>
+
     </body>
 </html>

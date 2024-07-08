@@ -15,18 +15,18 @@ import java.util.ArrayList;
  */
 public class FriendDAO {
 
-    public void sendFriendRequest(int userRequest, int userAccept) {
+    public boolean sendFriendRequest(int userRequest, int userAccept) {
         try {
             Connection conn = sqlConnect.getInstance().getConnection();
             PreparedStatement st = conn.prepareStatement("INSERT INTO friendship VALUES (?, ?, 'pending')");
             st.setInt(1, userRequest);
             st.setInt(2, userAccept);
             st.executeUpdate();
-        } catch (SQLException e) {
-            System.out.println("SQL Exception occurred while sending friend request: " + e.getMessage());
         } catch (Exception e) {
             System.out.println("An unknown error occurred while sending friend request: " + e.getMessage());
+            return false;
         }
+        return true;
     }
 
     public void acceptFriendRequest(int userRequest, int userAccept) {
@@ -68,6 +68,22 @@ public class FriendDAO {
             requested_userId_List.add(userRequest);
         }
         return requested_userId_List;
+    }
+
+    public boolean isFriendRequestSent(int userRequest, int userAccept) throws Exception {
+        Connection conn = sqlConnect.getInstance().getConnection();
+        PreparedStatement ps = conn.prepareStatement("SELECT status FROM friendship WHERE user_request = ? AND user_accept = ?");
+        ps.setInt(1, userRequest);
+        ps.setInt(2, userAccept);
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return true; // Friend request already sent
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
 }

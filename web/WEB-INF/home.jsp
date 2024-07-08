@@ -51,10 +51,10 @@
                     <h1 class="mt-3 text-primary home-logo">HOME</h1>
                     <form action="/blahproject/home" method="post" class="mb-4 post-method" enctype="multipart/form-data">
                         <div class="mb-3">
-                            <textarea class="form-control" id="body" name="postContent" rows="2" placeholder="What ya thinking"></textarea>
+                            <textarea class="form-control" id="body" name="postContent" rows="2" placeholder="What ya thinking" maxlength="300"></textarea>
                         </div>
 
-                        <input type="file" name="image">
+                        <input type="file" name="image" accept=".jpeg, .png, .jpg">
                         <br>
                         <button type="submit" class="btn btn-primary" style="padding: 5px 25px; margin-top: 5px ">Post</button>
                     </form>
@@ -71,10 +71,10 @@
                             <div class="post-header">
                                 <small>${post.first_name} ${post.last_name} -- <fmt:formatDate value="${post.post_time}" pattern="yyyy-MM-dd HH:mm:ss" /></small>
                             </div>
-                            <p>${post.body}</p>
+                            <p>${post.body}</p> 
                             <c:if test="${not empty post.image_path}">
                                 <div>
-                                    <img src="assets/post_image/${post.image_path}" style="width : 60%">
+                                    <img src="assets/post_image/${post.image_path}" style="max-width : 60%">
                                 </div>
                             </c:if>
 

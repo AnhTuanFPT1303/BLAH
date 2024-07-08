@@ -12,6 +12,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import dao.FriendDAO;
+import org.json.JSONObject;
+
 
 /**
  *
@@ -75,7 +77,19 @@ public class inviteFriendServlet extends HttpServlet {
         int userRequest = (int) session.getAttribute("user_id");
         int userAccept = Integer.parseInt(request.getParameter("userAccept"));
         FriendDAO friendDAO = new FriendDAO();
-        friendDAO.sendFriendRequest(userRequest, userAccept);
+        boolean success = friendDAO.sendFriendRequest(userRequest, userAccept);
+        
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        JSONObject jsonResponse = new JSONObject();
+        
+        if (success) {
+            jsonResponse.put("success", true);
+        } else {
+            jsonResponse.put("success", false);
+        }
+        
+        response.getWriter().write(jsonResponse.toString());
     }
 
     /**

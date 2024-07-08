@@ -52,8 +52,9 @@
             <nav class="navbar custom-navbar">
                 <div class="container-fluid d-flex align-items-center">
                     <a class="navbar-brand text-primary" href="/blahproject/login" style="font-weight: bold">BLAH</a>
-                    <form class="d-flex ms-2 flex-grow-1">
-                        <input class="form-control" type="search" placeholder="Finding in BLAH" aria-label="Search">
+                    <form class="d-flex ms-2 flex-grow-1" method="get" action="/blahproject/searchServlet">
+                        <input class="form-control" name="search-name" type="search" placeholder="Finding in BLAH" aria-label="Search">
+                        <input type="submit" value="Submit">
                     </form>
                 <a class="navbar-brand text-primary log-out" href="/blahproject" style="font-weight: bold">Log out</a>
             </div>
@@ -63,8 +64,8 @@
             <div class="row all-post">
                 <nav class="col-2 py-3 bg-light">
                     <div class="profile-section mb-3 text-center">
-                        <a href="userpageServlet" class="text-decoration-none text-dark">
-                            <img src="${sessionScope.user['profile_pic']}" class="img-fluid rounded-circle avatar">
+                        <a href="userpageServlet?userId=${user.user_id}" class="text-decoration-none text-dark">
+                            <img src="${user.profile_pic}" class="img-fluid rounded-circle avatar">
                         </a>
                         <p style="text-align: left;">Name: ${user.first_name} ${user.last_name}</p>
                     </div>

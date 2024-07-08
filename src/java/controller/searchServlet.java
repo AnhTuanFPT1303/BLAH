@@ -5,6 +5,7 @@
 
 package controller;
 
+import dao.FriendDAO;
 import dao.userDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.User;
+import java.util.HashMap;
 
 /**
  *
@@ -62,14 +64,25 @@ public class searchServlet extends HttpServlet {
     throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         if (session != null && session.getAttribute("user") != null) {
-            String name = (String) request.getParameter("search-name");
+            int userRequest = (int) session.getAttribute("user_id");
+            String name = request.getParameter("search-name");
             ArrayList<User> userList;
             try {
                 userList = userDAO.getAllUserByName(name);
-                request.setAttribute("userList", userList);
+                FriendDAO friendDAO = new FriendDAO();
+                HashMap<User, Boolean> usersWithStatus = new HashMap<>();
+
+                for (User user : userList) {
+                    boolean isInvited = friendDAO.isFriendRequestSent(userRequest, user.getUser_id());
+                    usersWithStatus.put(user, isInvited);
+                }
+
+                request.setAttribute("usersWithStatus", usersWithStatus);
             } catch (SQLException ex) {
                 Logger.getLogger(searchServlet.class.getName()).log(Level.SEVERE, null, ex);
-            }            
+            } catch (Exception ex) {
+                Logger.getLogger(searchServlet.class.getName()).log(Level.SEVERE, null, ex);
+            }
             request.getRequestDispatcher("WEB-INF/search.jsp").forward(request, response);
         } else {
             response.sendRedirect("login");
@@ -97,5 +110,4 @@ public class searchServlet extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-
 }
