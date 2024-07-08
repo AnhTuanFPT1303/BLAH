@@ -1,10 +1,10 @@
 <%-- 
-    Document   : home
-    Created on : Jun 10, 2024, 3:20:34 PM
-    Author     : bim26
+    Document   : search
+    Created on : Jul 5, 2024, 11:34:52 PM
+    Author     : HELLO
 --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="java.util.List, model.Post, dao.postDAO, model.User" %>
+<%@ page import="java.util.ArrayList, model.User, dao.userDAO" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core"%>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt"%>
 <!DOCTYPE html>
@@ -12,11 +12,9 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Home Page</title>
+        <title>Search Result</title>
         <link href="assets/css/bootstrap.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="assets/css/home.css">
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
+        <link rel="stylesheet" href="assets/css/search.css">
     </head>
     <body>
         <header id="header">
@@ -35,9 +33,9 @@
         </header>
         <div class="container-fluid">
             <div class="row all-post">
-                <nav class="col-2 py-3 bg-light">   
+                <nav class="col-2 py-3 bg-light">
                     <div class="profile-section mb-3 d-flex align-items-center">
-                        <a href="userpageServlet?userId=${sessionScope.user['user_id']}" class="d-flex align-items-center text-decoration-none text-dark">
+                        <a href="userpageServlet" class="d-flex align-items-center text-decoration-none text-dark">
                             <img src="${sessionScope.user['profile_pic']}" class="img-fluid rounded-circle avatar">
                             <p class="mb-0 ms-2 ava-name">${sessionScope.user['first_name']} ${sessionScope.user['last_name']}</p>
                         </a>
@@ -49,48 +47,18 @@
 
                 <main class="col-8">
                     <h1 class="mt-3 text-primary home-logo">HOME</h1>
-                    <form action="/blahproject/home" method="post" class="mb-4 post-method" enctype="multipart/form-data">
-                        <div class="mb-3">
-                            <textarea class="form-control" id="body" name="postContent" rows="2" placeholder="What ya thinking"></textarea>
-                        </div>
-
-                        <input type="file" name="image">
-                        <br>
-                        <button type="submit" class="btn btn-primary" style="padding: 5px 25px; margin-top: 5px ">Post</button>
-                    </form>
-
                     <hr>
-
-                    <%
-                        List<Post> posts = postDAO.getAllPosts();
-                        request.setAttribute("posts", posts);
-                    %>
-
-                    <c:forEach var="post" items="${posts}">
-                        <div class="post mb-4" style="overflow-wrap: break-word" data-post-id="${post.post_id}" data-liked="${post.likedByCurrentUser}">
-                            <div class="post-header">
-                                <small>${post.first_name} ${post.last_name} -- <fmt:formatDate value="${post.post_time}" pattern="yyyy-MM-dd HH:mm:ss" /></small>
-                            </div>
-                            <p>${post.body}</p>
-                            <c:if test="${not empty post.image_path}">
-                                <div>
-                                    <img src="assets/post_image/${post.image_path}" style="width : 60%">
-                                </div>
-                            </c:if>
-
-
-                            <div class="post-ratings-container">
-                                <div class="post-rating ${post.likedByCurrentUser ? 'post-rating-selected' : ''}">
-                                    <span class="post-rating-button material-icons" style="cursor: pointer">thumb_up</span>
-                                    <span class="post-rating-count">${post.like_count}</span>
-                                </div>
-                            </div>
-
-
+                    <c:forEach var="user" items="${userList}">
+                        <div class="post mb-4 d-flex align-items-center" style="overflow-wrap: break-word">
+                            <a href="userpageServlet?userId=${user.user_id}">
+                            <img src="${user.profile_pic}" alt="avatar picture" class="img-thumbnail mr-3" style="width: 50px; height: 50px; object-fit: cover;">
+                            </a>
+                            <a href="userpageServlet?userId=${user.user_id}" style="margin-left: 5px">${user.first_name} ${user.last_name}</a>
                         </div>
                         <hr>
                     </c:forEach>
                 </main>
+
                 <aside class="col-2 py-3 bg-light friend-list">
                     <h2>List Friends</h2>
                     <ul class="list-group">
@@ -101,7 +69,6 @@
                 </aside>
             </div>
         </div>
-        <script src="assets/js/likeButton.js" defer></script>
         <script src="assets/js/bootstrap.min.js"></script>
     </body>
 </html>

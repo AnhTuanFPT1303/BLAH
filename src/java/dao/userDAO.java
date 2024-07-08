@@ -3,6 +3,7 @@ package dao;
 import util.sqlConnect;
 import java.sql.*;
 import model.User;
+import java.util.ArrayList;
 
 public class userDAO {
 
@@ -63,6 +64,52 @@ public class userDAO {
         }
         return u;
     }
+    
+    public User getUserById(int user_id) throws SQLException {
+        User u = new User();
+        try {
+            Connection conn = sqlConnect.getInstance().getConnection();
+            PreparedStatement st = conn.prepareStatement("SELECT * FROM userAccount WHERE user_id = ?");
+            st.setInt(1, user_id);
+            ResultSet rs = st.executeQuery();
+
+            if (rs.next()) {
+                u.setUser_id(rs.getInt(1));
+                u.setFirst_name(rs.getString(2));
+                u.setLast_name(rs.getString(3));
+                u.setPassword(rs.getString(4));
+                u.setEmail(rs.getString(5));
+                u.setProfile_pic(rs.getString(6));
+            }
+
+        } catch (Exception e) {
+            System.out.println("Action Failed");
+        }
+        return u;
+    }
+
+    public static ArrayList<User> getAllUserByName(String name) throws SQLException {
+        ArrayList<User> userList = new ArrayList<>();
+        try {
+            Connection conn = sqlConnect.getInstance().getConnection();
+            PreparedStatement st = conn.prepareStatement("SELECT user_id, first_name, last_name, profile_pic FROM userAccount WHERE first_name LIKE ? OR last_name LIKE ?");
+            st.setString(1, "%" + name + "%");
+            st.setString(2, "%" + name + "%");
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                User u = new User();
+                u.setUser_id(rs.getInt(1));
+                u.setFirst_name(rs.getString(2));
+                u.setLast_name(rs.getString(3));
+                u.setProfile_pic(rs.getString(4));
+                userList.add(u);
+            }
+
+        } catch (Exception e) {
+            System.out.println("Action Failed");
+        }
+        return userList;
+    }
 
     public boolean checkEmail(String email) {
         boolean exists = false;
@@ -99,8 +146,7 @@ public class userDAO {
 }
     public static void main(String[] args) throws SQLException {
         userDAO test = new userDAO();
-        User user = test.getUserByEmail("nguyenhuuanhtuan123@gmail.com");
-        String img = user.getProfile_pic();
-        System.out.println(img);
+        ArrayList<User> userList = test.getAllUserByName("tu");
+        System.out.println(userList.size());
     }
 }
