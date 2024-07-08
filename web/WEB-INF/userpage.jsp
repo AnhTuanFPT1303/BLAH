@@ -1,45 +1,59 @@
 <%@page contentType="text/html" pageEncoding="UTF-8" import="model.*"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core"%>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt"%>
+
 <!DOCTYPE html>
 <html>
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>User Page</title>
-    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/home.css">
-    <style>
-        /* Add some decorative elements */
-        body {
-            background-image: linear-gradient(to bottom, #f8f9fa, #fff);
-        }
-        .custom-navbar {
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        .profile-section {
-            background-color: #f7f7f7;
-            padding: 10px;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        .post {
-            background-color: #fff;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        .post-header {
-            color: #337ab7;
-        }
-    </style>
-</head>
-<body>
-    <header id="header">
-        <nav class="navbar custom-navbar">
-            <div class="container-fluid d-flex align-items-center">
-                <a class="navbar-brand text-primary" href="/blahproject/login" style="font-weight: bold">BLAH</a>
-                <form class="d-flex ms-2 flex-grow-1" method="get" action="/blahproject/searchServlet">
-                        <input class="form-control" name="search-name" type="search" placeholder="Finding in BLAH" aria-label="Search">
-                        <input type="submit" value="Submit">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>User Page</title>
+        <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="assets/css/home.css">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <style>
+            /* Add some decorative elements */
+            body {
+                background-image: linear-gradient(to bottom, #f8f9fa, #fff);
+            }
+            .custom-navbar {
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+            .profile-section, .settings-section {
+                background-color: #f7f7f7;
+                padding: 10px;
+                border-radius: 10px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+            .post {
+                background-color: #fff;
+                padding: 15px;
+                border-radius: 10px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+            .post-header {
+                color: #337ab7;
+            }
+            .post-rating-selected > .post-rating-button,
+            .post-rating-selected > .post-rating-count {
+                color: #337ab7; /* blue color for liked posts */
+            }
+            .post-rating-button {
+                font-size: 18px;
+                margin-right: 5px;
+            }
+            .post-rating-count {
+                font-size: 14px;
+                margin-left: 5px;
+            }
+        </style>
+    </head>
+    <body>
+        <header id="header">
+            <nav class="navbar custom-navbar">
+                <div class="container-fluid d-flex align-items-center">
+                    <a class="navbar-brand text-primary" href="/blahproject/login" style="font-weight: bold">BLAH</a>
+                    <form class="d-flex ms-2 flex-grow-1">
+                        <input class="form-control" type="search" placeholder="Finding in BLAH" aria-label="Search">
                     </form>
                 <a class="navbar-brand text-primary log-out" href="/blahproject" style="font-weight: bold">Log out</a>
             </div>
@@ -54,6 +68,13 @@
                         </a>
                         <p style="text-align: left;">Name: ${user.first_name} ${user.last_name}</p>
                     </div>
+                    <hr>
+                    <div class="settings-section mb-3 text-center">
+                        <h2>Settings</h2>
+                        <form action="settingServlet" method="post">
+                            <button type="submit" name="action" value="changeInformation" class="btn btn-secondary mb-2">Change Information</button>
+                        </form>
+                    </div>
                 </nav>
                 <main class="col-8">
                     <h1 class="mt-3 text-primary home-logo">Welcome, ${user.first_name} ${user.last_name}!</h1>
@@ -66,36 +87,48 @@
                         <button type="submit" class="btn btn-primary" style="padding: 5px 25px">Post</button>
                     </form>
                     <hr>
-                    <h2>Yours Timeline</h2>
+                    <h2>Your Timeline</h2>
                     <c:forEach items="${posts}" var="post">
-                        <div class="post mb-4" style="overflow-wrap: break-word; border: 1px solid #ddd; padding: 10px; border-radius: 10px;">
+                        <div class="post mb-4" style="overflow-wrap: break-word; border: 1px solid #ddd; padding: 10px; border-radius: 10px;" data-post-id="${post.post_id}" data-liked="${post.likedByCurrentUser}">
                             <div class="post-header">
-                                <small>${post.first_name} ${post.last_name} -- <fmt:formatDate value="${post.post_time}" pattern="yyyy-MM-dd HH:mm:ss" /></small>
-                            </div>
-                            <p style="font-size: 14px;">${post.body}</p>
-                            <c:if test="${not empty post.image_path}">
-                                <div>
-                                    <img src="assets/post_image/${post.image_path}">
-                                </div>
-                            </c:if>
+                                                            <small>${post.first_name} ${post.last_name} -- <fmt:formatDate value="${post.post_time}" pattern="yyyy-MM-dd HH:mm:ss" /></small>
                         </div>
-                        <hr>
-                    </c:forEach>
-                    <form action="logout" method="post">
-
-                    </form>
-                </main>
-                <aside class="col-2 py-3 bg-light friend-list">
-                    <h2>Yours Friends</h2>
-                    <ul class="list-group">
-                        <li class="list-group-item">Friend 1</li>
-                        <li class="list-group-item">Friend 2</li>
-                        <li class="list-group-item">Friend 3</li>
-                    </ul>
-                </aside>
-            </div>
+                        <p style="font-size: 14px;">${post.body}</p>
+                        <c:if test="${not empty post.image_path}">
+                            <div>
+                                <img src="assets/post_image/${post.image_path}">
+                            </div>
+                        </c:if>
+                        <div class="post-ratings-container">
+                            <div class="post-rating ${post.likedByCurrentUser ? 'post-rating-selected' : ''}">
+                                <span class="post-rating-button material-icons" style="cursor: pointer">thumb_up</span>
+                                <span class="post-rating-count">${post.like_count}</span>
+                            </div>
+                        </div>
+                        <div class="post-comments">
+                            <c:forEach var="comment" items="${post.comments}">
+                                <div class="comment mb-2" style="margin-left: 20px;">
+                                    <div class="comment-header">
+                                        <small><strong>>>${comment.first_name} ${comment.last_name}</strong></small>
+                                    </div>
+                                    <div class="comment-body">
+                                        <p style="margin-bottom: 0;">${comment.comment_text}</p>
+                                    </div>
+                                </div>
+                            </c:forEach>
+                        </div>
+                        <!-- Comment form -->
+                        <form action="/blahproject/commentServlet" method="post" class="mb-4 post-method">
+                            <div class="mb-3">
+                                <textarea class="form-control" id="body" name="commentContent" rows="2" placeholder="Reply"></textarea>
+                            </div>
+                            <input type="hidden" name="post_id" value="${post.post_id}">
+                            <button type="submit" class="btn btn-primary" style="padding: 5px 25px; margin-top: 5px">Comment</button>
+                        </form>
+                    </div>
+                    <br>
+                </c:forEach>
+            </main>
         </div>
-        <script src="assets/js/bootstrap.min.js"></script>
-        <script src="assets/js/jquery.min.js"></script>
     </body>
 </html>

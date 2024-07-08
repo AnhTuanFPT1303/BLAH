@@ -60,7 +60,6 @@ public class signupServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String param = request.getParameter("param");
-
         if ("hadaccount".equals(param)) {
             request.getRequestDispatcher("WEB-INF/welcome.jsp").forward(request, response);
         } else {

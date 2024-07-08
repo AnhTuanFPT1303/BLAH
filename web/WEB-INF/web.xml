@@ -25,6 +25,10 @@
         <servlet-class>controller.logoutServlet</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>settingServlet</servlet-name>
+        <servlet-class>controller.settingServlet</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>commentServlet</servlet-name>
         <servlet-class>controller.commentServlet</servlet-class>
     </servlet>
@@ -79,6 +83,10 @@
     <servlet-mapping>
         <servlet-name>commentServlet</servlet-name>
         <url-pattern>/commentServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>settingServlet</servlet-name>
+        <url-pattern>/settingServlet</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>/WEB-INF/welcome.jsp</welcome-file>

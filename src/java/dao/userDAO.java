@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package dao;
 
 import util.sqlConnect;
@@ -9,10 +5,6 @@ import java.sql.*;
 import model.User;
 import java.util.ArrayList;
 
-/**
- *
- * @author HELLO
- */
 public class userDAO {
 
     public boolean login(String email, String password) {
@@ -137,6 +129,21 @@ public class userDAO {
         return exists;
     }
 
+
+   public void updateUser(User user) {
+    String query = "UPDATE userAccount SET first_name =?, last_name =?, password =? WHERE user_id =?";
+    try (Connection conn = sqlConnect.getInstance().getConnection();
+         PreparedStatement stmt = conn.prepareStatement(query)) {
+        stmt.setString(1, user.getFirst_name());
+        stmt.setString(2, user.getLast_name());
+        stmt.setString(3, user.getPassword());
+        stmt.setInt(4, user.getUser_id());
+        stmt.executeUpdate();
+    } catch (Exception e) {
+        // log the error and exception
+        e.printStackTrace();
+    }
+}
     public static void main(String[] args) throws SQLException {
         userDAO test = new userDAO();
         ArrayList<User> userList = test.getAllUserByName("tu");
