@@ -141,10 +141,11 @@ public class postDAO {
             String query = "SELECT p.post_id, p.body, p.post_time, p.user_id, p.image_path, p.like_count, u.first_name, u.last_name "
                     + "FROM post p "
                     + "JOIN userAccount u ON p.user_id = u.user_id "
-                    + "JOIN friendship f ON (f.user_request = p.user_id OR f.user_accept = p.user_id) "
-                    + "WHERE f.status = 'accepted' "
-                    + "AND (f.user_request = " + sessionUserId + " OR f.user_accept = " + sessionUserId + ") "
+                    + "LEFT JOIN friendship f ON (f.user_request = p.user_id OR f.user_accept = p.user_id) "
+                    + "WHERE (f.status = 'accepted' AND (f.user_request = " + sessionUserId + " OR f.user_accept = " + sessionUserId + ")) "
+                    + "OR p.user_id = " + sessionUserId + " "
                     + "ORDER BY p.post_time DESC";
+
 
             rs = stmt.executeQuery(query);
 
