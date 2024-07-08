@@ -3,14 +3,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 package controller;
-
-import com.sun.jdi.connect.spi.Connection;
 import dao.postDAO;
-import dao.userDAO;
 import model.Post;
 import model.User;
-import java.sql.SQLException;
-
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
@@ -113,7 +108,7 @@ public class postServlet extends HttpServlet {
                 e.printStackTrace();
             }
 
-            if (body != null && !body.trim().isEmpty()) {
+            if (!body.trim().equals("") || !image_path.equals("")) {
                 Post post = new Post();
                 post.setUser_id(user.getUser_id());
                 post.setBody(body);
@@ -125,11 +120,14 @@ public class postServlet extends HttpServlet {
                 } catch (Exception e) {
                     e.printStackTrace();
                     request.setAttribute("errorMessage", "Error saving post");
-                    request.getRequestDispatcher("WEB-INF/home.jsp").forward(request, response);
+                    response.sendRedirect("home");
                 }
             }
+            else {
+                response.sendRedirect("home");
+            }
         } else {
-            request.getRequestDispatcher("WEB-INF/home.jsp").forward(request, response);
+            response.sendRedirect("home");  
         }
     }
 

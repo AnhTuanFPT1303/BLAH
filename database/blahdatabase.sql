@@ -24,8 +24,9 @@ CREATE TABLE userAccount (
 GO
 
 CREATE TABLE friendship (
-	user_request int IDENTITY(1,1),
-	user_accept int
+	user_request int,
+	user_accept int,
+	status nvarchar(10) not null
 	CONSTRAINT fk_user_request FOREIGN KEY (user_request) REFERENCES userAccount (user_id) ON DELETE NO ACTION ON UPDATE NO ACTION,
 	CONSTRAINT fk_user_accept FOREIGN KEY (user_accept) REFERENCES userAccount (user_id) ON DELETE NO ACTION ON UPDATE NO ACTION
 );
@@ -79,21 +80,21 @@ AS
 
 GO
 CREATE PROCEDURE getAllFriends
+    @userId INT
 AS
 BEGIN
-    -- Select users who have requested and accepted a friendship
-    SELECT u.first_name, u.last_name, u.profile_pic
+    SELECT u.first_name, u.last_name, u.profile_pic, f.status
     FROM userAccount u
     INNER JOIN friendship f ON f.user_request = u.user_id
-    WHERE f.user_accept = u.user_id
+    WHERE f.user_accept = @userId AND f.status = 'accepted'
     
     UNION
     
-    -- Select users who have accepted and requested a friendship
-    SELECT u.first_name, u.last_name, u.profile_pic
+    -- Select users who have accepted and requested a friendship with the specified user
+    SELECT u.first_name, u.last_name, u.profile_pic, f.status
     FROM userAccount u
     INNER JOIN friendship f ON f.user_accept = u.user_id
-    WHERE f.user_request = u.user_id;
+    WHERE f.user_request = @userId AND f.status = 'accepted';
 END;
 
 

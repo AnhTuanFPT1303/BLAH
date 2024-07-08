@@ -28,6 +28,14 @@
         <servlet-name>searchServlet</servlet-name>
         <servlet-class>controller.searchServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>inviteFriendServlet</servlet-name>
+        <servlet-class>controller.inviteFriendServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>friendRequestServlet</servlet-name>
+        <servlet-class>controller.friendRequestServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>loginServlet</servlet-name>
         <url-pattern>/login</url-pattern>
@@ -55,6 +63,14 @@
     <servlet-mapping>
         <servlet-name>searchServlet</servlet-name>
         <url-pattern>/searchServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>inviteFriendServlet</servlet-name>
+        <url-pattern>/inviteFriendServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>friendRequestServlet</servlet-name>
+        <url-pattern>/friendRequestServlet</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>/WEB-INF/welcome.jsp</welcome-file>

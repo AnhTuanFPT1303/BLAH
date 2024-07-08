@@ -69,6 +69,13 @@
                 </aside>
             </div>
         </div>
+                        <div>
+                            <c:choose> 
+                                <c:when test = "1==1">
+                                    <h1> hello </h1>
+                                </c:when>
+                            </c:choose>
+                        </div>
         <script src="assets/js/bootstrap.min.js"></script>
     </body>
 </html>
