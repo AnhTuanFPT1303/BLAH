@@ -58,13 +58,7 @@
                         <button id="myBtn" type="submit" class="btn btn-primary" style="padding: 5px 25px; margin-top: 5px;">Post</button>
                     </form>
 
-
                     <br>
-
-                    <%
-                        List<Post> posts = postDAO.getAllPosts();
-                        request.setAttribute("posts", posts);
-                    %>
 
                     <c:forEach var="post" items="${posts}">
                         <div class="post mb-4" style="overflow-wrap: break-word" data-post-id="${post.post_id}" data-liked="${post.likedByCurrentUser}">

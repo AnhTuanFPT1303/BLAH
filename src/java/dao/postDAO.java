@@ -18,10 +18,10 @@ import model.Post;
 import util.sqlConnect;
 
 public class postDAO {
-    
+
     public void addPost(Post p) {
         String query = "INSERT INTO post (user_id, body, image_path, post_time  ) VALUES (?, ?, ?, CURRENT_TIMESTAMP)";
-        
+
         try (Connection conn = sqlConnect.getInstance().getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, p.getUser_id());
             stmt.setString(2, p.getBody());
@@ -33,7 +33,7 @@ public class postDAO {
             e.printStackTrace();
         }
     }
-    
+
     public void addComment(Comment c) {
         String query = "INSERT INTO comment (post_id, user_id, comment_text ) VALUES (?, ?, ?)";
         try (Connection conn = sqlConnect.getInstance().getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -47,22 +47,22 @@ public class postDAO {
             e.printStackTrace();
         }
     }
-    
+
     public void addLike(int userId, int postId) throws SQLException {
         String insertLike = "INSERT INTO post_like (user_id, post_id) VALUES (?, ?)";
         String updatePostCount = "UPDATE post SET like_count = like_count + 1 WHERE post_id = ?";
-        
+
         try (Connection conn = sqlConnect.getInstance().getConnection()) {
             conn.setAutoCommit(false);
             try (PreparedStatement pstmt1 = conn.prepareStatement(insertLike); PreparedStatement pstmt2 = conn.prepareStatement(updatePostCount)) {
-                
+
                 pstmt1.setInt(1, userId);
                 pstmt1.setInt(2, postId);
                 pstmt1.executeUpdate();
-                
+
                 pstmt2.setInt(1, postId);
                 pstmt2.executeUpdate();
-                
+
                 conn.commit();
             } catch (SQLException e) {
                 conn.rollback();
@@ -72,22 +72,22 @@ public class postDAO {
             ex.printStackTrace();
         }
     }
-    
+
     public void removeLike(int userId, int postId) throws SQLException {
         String deleteLike = "DELETE FROM post_like WHERE user_id = ? AND post_id = ?";
         String updatePostCount = "UPDATE post SET like_count = like_count - 1 WHERE post_id = ?";
-        
+
         try (Connection conn = sqlConnect.getInstance().getConnection()) {
             conn.setAutoCommit(false);
             try (PreparedStatement pstmt1 = conn.prepareStatement(deleteLike); PreparedStatement pstmt2 = conn.prepareStatement(updatePostCount)) {
-                
+
                 pstmt1.setInt(1, userId);
                 pstmt1.setInt(2, postId);
                 pstmt1.executeUpdate();
-                
+
                 pstmt2.setInt(1, postId);
                 pstmt2.executeUpdate();
-                
+
                 conn.commit();
             } catch (SQLException e) {
                 conn.rollback();
@@ -97,7 +97,7 @@ public class postDAO {
             ex.printStackTrace();
         }
     }
-    
+
     public boolean hasUserLikedPost(int userId, int postId) throws SQLException {
         String query = "SELECT COUNT(*) FROM post_like WHERE user_id = ? AND post_id = ?";
         try (Connection conn = sqlConnect.getInstance().getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -113,7 +113,7 @@ public class postDAO {
         }
         return false;
     }
-    
+
     public int getLikeCount(int postId) throws SQLException {
         String query = "SELECT like_count FROM post WHERE post_id = ?";
         try (Connection conn = sqlConnect.getInstance().getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -128,8 +128,8 @@ public class postDAO {
         }
         return 0;
     }
-    
-    public static List<Post> getAllPosts() {
+
+    public static List<Post> getAllPosts(int sessionUserId) {
         List<Post> posts = new ArrayList<>();
         try {
             ResultSet rs = null;
@@ -137,9 +137,17 @@ public class postDAO {
             Statement stmt = null;
             conn = sqlConnect.getInstance().getConnection();
             stmt = conn.createStatement();
-            rs = stmt.executeQuery("SELECT p.post_id, p.body, p.post_time, p.user_id, p.image_path, p.like_count, u.first_name, u.last_name "
-                    + "FROM post p JOIN userAccount u ON p.user_id = u.user_id "
-                    + "ORDER BY p.post_time DESC");
+
+            String query = "SELECT p.post_id, p.body, p.post_time, p.user_id, p.image_path, p.like_count, u.first_name, u.last_name "
+                    + "FROM post p "
+                    + "JOIN userAccount u ON p.user_id = u.user_id "
+                    + "JOIN friendship f ON (f.user_request = p.user_id OR f.user_accept = p.user_id) "
+                    + "WHERE f.status = 'accepted' "
+                    + "AND (f.user_request = " + sessionUserId + " OR f.user_accept = " + sessionUserId + ") "
+                    + "ORDER BY p.post_time DESC";
+
+            rs = stmt.executeQuery(query);
+
             while (rs.next()) {
                 int post_id = rs.getInt("post_id");
                 int user_id = rs.getInt("user_id");
@@ -160,7 +168,7 @@ public class postDAO {
         }
         return posts;
     }
-    
+
     public static List<Comment> getComments(int postId) {
         List<Comment> comments = new ArrayList<>();
         try {
@@ -175,8 +183,8 @@ public class postDAO {
                     + "ORDER BY c.comment_id ASC;");
             stmt.setInt(1, postId);
             rs = stmt.executeQuery();
-            while(rs.next()){
-                int comment_id =rs.getInt("comment_id");
+            while (rs.next()) {
+                int comment_id = rs.getInt("comment_id");
                 int post_id = rs.getInt("post_id");
                 int user_id = rs.getInt("user_id");
                 String comment_text = rs.getString("comment_text");
@@ -185,14 +193,14 @@ public class postDAO {
                 Comment comment = new Comment(comment_id, post_id, user_id, first_name, last_name, comment_text);
                 comments.add(comment);
             }
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
         return comments;
     }
-    
+
     public static List<Post> getMyPosts(int userId) {
         List<Post> posts = new ArrayList<>();
         try {
@@ -225,11 +233,11 @@ public class postDAO {
         }
         return posts;
     }
-     public void deletePost(int postId) {
+
+    public void deletePost(int postId) {
         String deletePostQuery = "DELETE FROM post WHERE post_id = ?";
 
-        try (Connection conn = sqlConnect.getInstance().getConnection();
-             PreparedStatement stmt = conn.prepareStatement(deletePostQuery)) {
+        try (Connection conn = sqlConnect.getInstance().getConnection(); PreparedStatement stmt = conn.prepareStatement(deletePostQuery)) {
             stmt.setInt(1, postId);
             stmt.executeUpdate();
         } catch (SQLException e) {
@@ -238,5 +246,5 @@ public class postDAO {
             e.printStackTrace();
         }
 
-}
+    }
 }

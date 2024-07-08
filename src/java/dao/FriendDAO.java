@@ -60,14 +60,15 @@ public class FriendDAO {
     public ArrayList<String> getAllFriendRequest(int userId) throws Exception {
         ArrayList<String> requested_userId_List = new ArrayList<>();
         Connection conn = sqlConnect.getInstance().getConnection();
-        PreparedStatement st = conn.prepareStatement("SELECT u.user_id, u.first_name, u.last_name FROM friendship f JOIN userAccount u ON f.user_request = u.user_id WHERE f.user_accept = ? AND f.status = 'pending'");
+        PreparedStatement st = conn.prepareStatement("SELECT u.user_id, u.first_name, u.last_name, u.profile_pic FROM friendship f JOIN userAccount u ON f.user_request = u.user_id WHERE f.user_accept = ? AND f.status = 'pending'");
         st.setInt(1, userId); //userid in session
         ResultSet rs = st.executeQuery();
         while (rs.next()) {
             int userRequest = rs.getInt(1);
             String first_name = rs.getString(2);
             String last_name = rs.getString(3);
-            requested_userId_List.add(userRequest+"."+first_name+"."+last_name);
+            String profile_pic = rs.getString(4);
+            requested_userId_List.add(userRequest+"."+first_name+"."+last_name+"."+profile_pic);
         }
         return requested_userId_List;
     }

@@ -69,7 +69,7 @@ public class postServlet extends HttpServlet {
         HttpSession session = request.getSession(false);
         if (session != null && session.getAttribute("user") != null) {
             User currentUser = (User) session.getAttribute("user");
-            List<Post> posts = postDAO.getAllPosts();
+            List<Post> posts = postDAO.getAllPosts(currentUser.getUser_id());
             postDAO dao = new postDAO();
             for (Post post : posts) {
                 try {
@@ -83,8 +83,6 @@ public class postServlet extends HttpServlet {
         } else {
             response.sendRedirect("login");
         }
-    
-
     }
 
     /**
