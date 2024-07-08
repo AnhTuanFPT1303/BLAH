@@ -17,6 +17,7 @@ import jakarta.servlet.http.Part;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -67,12 +68,22 @@ public class postServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         if (session != null && session.getAttribute("user") != null) {
+            User currentUser = (User) session.getAttribute("user");
             List<Post> posts = postDAO.getAllPosts();
+            postDAO dao = new postDAO();
+            for (Post post : posts) {
+                try {
+                    post.setLikedByCurrentUser(dao.hasUserLikedPost(currentUser.getUser_id(), post.getPost_id()));
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
             request.setAttribute("posts", posts);
             request.getRequestDispatcher("WEB-INF/home.jsp").forward(request, response);
         } else {
             response.sendRedirect("login");
         }
+    
 
     }
 
@@ -88,7 +99,46 @@ public class postServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
+        
+        
+        //like fichua
+       String pathInfo = request.getPathInfo();
+        if (pathInfo != null && pathInfo.startsWith("/")) {
+            String[] pathParts = pathInfo.split("/");
+            if (pathParts.length == 3) {
+                int postId = Integer.parseInt(pathParts[1]);
+                String action = pathParts[2];
+                
+                if (session != null && session.getAttribute("user") != null) {
+                    User currentUser = (User) session.getAttribute("user");
+                    int userId = currentUser.getUser_id();
+                    
+                    postDAO dao = new postDAO();
+                    try {
+                        if ("like".equals(action)) {
+                            dao.addLike(userId, postId);
+                        } else if ("unlike".equals(action)) {
+                            dao.removeLike(userId, postId);
+                        }
+                        
+                        int newLikeCount = dao.getLikeCount(postId);
+                        response.setContentType("application/json");
+                        response.getWriter().write("{\"like_count\":" + newLikeCount + "}");
+                        return;
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                        response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                        return;
+                    }
+                }
+            }
+        }
 
+    
+        
+    // ------------------------------------------------------------------------------------------------- 
+
+    
         if (session != null && session.getAttribute("user") != null) {
             User user = (User) session.getAttribute("user");
             String body = request.getParameter("postContent");
@@ -96,6 +146,7 @@ public class postServlet extends HttpServlet {
             Part file = request.getPart("image");
             String image_path = file.getSubmittedFileName();
             String uploadPath = "E:/blahproject/BLAH/web/assets/post_image/" + image_path;
+            //E:\blahproject\BLAH\web\assets
             try {
                 FileOutputStream fos = new FileOutputStream(uploadPath);
                 InputStream is = file.getInputStream();

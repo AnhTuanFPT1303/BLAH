@@ -4,7 +4,7 @@
  */
 package controller;
 
-import dao.userDAO;
+import dao.postDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -12,14 +12,17 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.sql.SQLException;
+import java.util.List;
+import model.Comment;
+import model.Post;
 import model.User;
-import util.SmtpProtocol;
 
 /**
  *
- * @author HELLO
+ * @author bim26
  */
-public class signupServlet extends HttpServlet {
+public class commentServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,10 +41,10 @@ public class signupServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet signupServlet</title>");
+            out.println("<title>Servlet commentServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet signupServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet commentServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -59,12 +62,21 @@ public class signupServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String param = request.getParameter("param");
-
-        if ("hadaccount".equals(param)) {
-            request.getRequestDispatcher("WEB-INF/welcome.jsp").forward(request, response);
+        HttpSession session = request.getSession(false);
+        if (session != null && session.getAttribute("user") != null) {
+            String postIdStr = request.getParameter("post_id");
+            if (postIdStr != null) {
+                try {
+                    int postId = Integer.parseInt(postIdStr);
+                    List<Comment> comments = postDAO.getComments(postId);
+                    request.setAttribute("comments", comments);
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
+            }
+            request.getRequestDispatcher("WEB-INF/home.jsp").forward(request, response);
         } else {
-            request.getRequestDispatcher("WEB-INF/signup.jsp").forward(request, response);
+            response.sendRedirect("login");
         }
     }
 
@@ -79,36 +91,28 @@ public class signupServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String firstName = request.getParameter("firstName");
-        String lastName = request.getParameter("lastName");
-        String email = request.getParameter("userEmail");
-        String password = request.getParameter("passWord");
+        HttpSession session = request.getSession(false);
+        if (session != null && session.getAttribute("user") != null) {
+            int post_id = Integer.parseInt(request.getParameter("post_id"));
+            String commentContent = request.getParameter("commentContent");
+            postDAO postDAO = new postDAO();
+            User user = (User) session.getAttribute("user");
+            Comment comment = new Comment();
+            if (commentContent != null && !commentContent.trim().isEmpty()) {
 
-        boolean status = !(firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() || password.isEmpty());
-
-        if (!status) {
-            request.setAttribute("msg", "No empty fields allowed.");
-            request.getRequestDispatcher("WEB-INF/signup.jsp").forward(request, response);
-        } else {
-            userDAO dao = new userDAO();
-            if (!dao.checkEmail(email)) {
-                User user = new User();
-                user.setEmail(email);
-                user.setFirst_name(firstName);
-                user.setLast_name(lastName);
-                user.setPassword(password);
-                user.setProfile_pic("assets/profile_avt/default_avt.jpg");
-                SmtpProtocol smtpProtocol = new SmtpProtocol();
-                int verifyCode = smtpProtocol.sendMail(email);
-                HttpSession session = request.getSession();
-                session.setAttribute("email", email);
-                session.setAttribute("user", user);
-                session.setAttribute("otpCode", verifyCode);
-                request.getRequestDispatcher("WEB-INF/verify.jsp").forward(request, response);
-            } else {
-                request.setAttribute("msg", "Duplicated Email.");
-                request.getRequestDispatcher("WEB-INF/signup.jsp").forward(request, response);
+                comment.setPost_id(post_id);
+                comment.setUser_id(user.getUser_id());
+                comment.setComment_text(commentContent);
             }
+            try {
+                postDAO.addComment(comment);
+                request.getRequestDispatcher("WEB-INF/home.jsp").forward(request, response);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        } else {
+            request.getRequestDispatcher("WEB-INF/home.jsp").forward(request, response);
         }
     }
 
@@ -121,4 +125,5 @@ public class signupServlet extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+
 }

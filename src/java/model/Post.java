@@ -9,6 +9,7 @@ package model;
  * @author bim26
  */
 import java.sql.Timestamp;
+import java.util.List;
 
 public class Post {
     private int post_id;
@@ -18,6 +19,86 @@ public class Post {
     private String first_name;
     private String last_name;
     private String image_path;
+    private int like_count;
+    private boolean likedByCurrentUser;
+    private List<Comment> comments;
+
+    public Post(int post_id, int user_id, String body, Timestamp post_time, String first_name, String last_name, String image_path, int like_count, boolean likedByCurrentUser, List<Comment> comments) {
+        this.post_id = post_id;
+        this.user_id = user_id;
+        this.body = body;
+        this.post_time = post_time;
+        this.first_name = first_name;
+        this.last_name = last_name;
+        this.image_path = image_path;
+        this.like_count = like_count;
+        this.likedByCurrentUser = likedByCurrentUser;
+        this.comments = comments;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+    
+    
+    
+
+    public Post(int post_id, int user_id, String body, Timestamp post_time, String first_name, String last_name, String image_path, int like_count, boolean likedByCurrentUser) {
+        this.post_id = post_id;
+        this.user_id = user_id;
+        this.body = body;
+        this.post_time = post_time;
+        this.first_name = first_name;
+        this.last_name = last_name;
+        this.image_path = image_path;
+        this.like_count = like_count;
+        this.likedByCurrentUser = likedByCurrentUser;
+    }
+
+    public boolean isLikedByCurrentUser() {
+        return likedByCurrentUser;
+    }
+
+    public void setLikedByCurrentUser(boolean likedByCurrentUser) {
+        this.likedByCurrentUser = likedByCurrentUser;
+    }
+    
+    
+
+    public Post(int post_id, int user_id, String body, Timestamp post_time, String first_name, String last_name, String image_path, int like_count) {
+        this.post_id = post_id;
+        this.user_id = user_id;
+        this.body = body;
+        this.post_time = post_time;
+        this.first_name = first_name;
+        this.last_name = last_name;
+        this.image_path = image_path;
+        this.like_count = like_count;
+    }
+
+    public int getLike_count() {
+        return like_count;
+    }
+
+    public void setLike_count(int like_count) {
+        this.like_count = like_count;
+    }
+
+    
+    
+    
+    
+    public Post(int post_id, int user_id, String body, Timestamp post_time, String image_path) {
+        this.post_id = post_id;
+        this.user_id = user_id;
+        this.body = body;
+        this.post_time = post_time;
+        this.image_path = image_path;
+    }
 
     public Post(int post_id, int user_id, String body, Timestamp post_time, String first_name, String last_name, String image_path) {
         this.post_id = post_id;

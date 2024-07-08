@@ -63,9 +63,14 @@ header{
     border-top: 1px solid #ddd;
     padding-top: 10px;
 }
-
+.main-class{
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+}
 .post {
     height: auto;
+    border-top: 1px solid #ddd;
+    padding-top: 10px;
     border-bottom: 1px solid #ddd;
     padding-bottom: 10px;
     padding-top: 10px;
@@ -86,6 +91,32 @@ header{
     padding-left: 0;
 }
 
+
+.post-ratings-container {
+    display: flex;
+    justify-content: left;
+    padding: 12px 0;
+}
+
+.post-rating {
+    display: flex;
+    align-items: center;
+    cursor: default;
+}
+
+.post-rating-selected > .post-rating-button,
+.post-rating-selected > .post-rating-count {
+    color: #009578;
+}
+
+.post-rating-button {
+    margin-right: 6px;
+    color: #555555;
+}
+
+.post-rating:not(.post-rating-selected) > .post-rating-button:hover {
+    color: #009578;
+}
 
 
 @media screen and (max-width: 768px) {

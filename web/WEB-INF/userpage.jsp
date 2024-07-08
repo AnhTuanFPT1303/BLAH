@@ -45,50 +45,57 @@
             </div>
         </nav>
     </header>
-    <div class="container-fluid">
-        <div class="row all-post">
-            <nav class="col-2 py-3 bg-light">
-                <div class="profile-section mb-3 text-center">
-                    <a href="userpageServlet" class="text-decoration-none text-dark">
-                        <img src="${user.profile_pic}" class="img-fluid rounded-circle avatar">
-                    </a>
-    <p style="text-align: left;">Name: ${user.first_name} ${user.last_name}</p>
-                </div>
-            </nav>
-            <main class="col-8">
-                <h1 class="mt-3 text-primary home-logo">Welcome, ${user.first_name} ${user.last_name}!</h1>
-                <form action="userpageServlet" method="post" class="mb-4 post-method">
-                    <div class="mb-3">
-                        <textarea class="form-control" id="body" name="body" rows="4" placeholder="What ya thinking" required></textarea>
+        <div class="container-fluid">
+            <div class="row all-post">
+                <nav class="col-2 py-3 bg-light">
+                    <div class="profile-section mb-3 text-center">
+                        <a href="userpageServlet" class="text-decoration-none text-dark">
+                            <img src="${sessionScope.user['profile_pic']}" class="img-fluid rounded-circle avatar">
+                        </a>
+                        <p style="text-align: left;">Name: ${user.first_name} ${user.last_name}</p>
                     </div>
-                    <button type="submit" class="btn btn-primary" style="padding: 5px 25px">Post</button>
-                </form>
-                <hr>
-                <h2>Yours Timeline</h2>
-                <c:forEach items="${posts}" var="post">
-                    <div class="post mb-4" style="overflow-wrap: break-word; border: 1px solid #ddd; padding: 10px; border-radius: 10px;">
-                        <div class="post-header">
-                            <small>${post.first_name} ${post.last_name} -- <fmt:formatDate value="${post.post_time}" pattern="yyyy-MM-dd HH:mm:ss" /></small>
-                        </div>
-                        <p style="font-size: 14px;">${post.body}</p>
-                    </div>
+                </nav>
+                <main class="col-8">
+                    <h1 class="mt-3 text-primary home-logo">Welcome, ${user.first_name} ${user.last_name}!</h1>
+                    <form action="userpageServlet" method="post" class="mb-4 post-method">
+                        <div class="mb-3">
+                            <textarea class="form-control" id="body" name="body" rows="4" placeholder="What ya thinking" required></textarea>
+                        </div>    
+                        <input type="file" name="image">
+                        <br>
+                        <button type="submit" class="btn btn-primary" style="padding: 5px 25px">Post</button>
+                    </form>
                     <hr>
-                </c:forEach>
-                <form action="logout" method="post">
-                    
-                </form>
-            </main>
-            <aside class="col-2 py-3 bg-light friend-list">
-                <h2>Yours Friends</h2>
-                <ul class="list-group">
-                    <li class="list-group-item">Friend 1</li>
-                    <li class="list-group-item">Friend 2</li>
-                    <li class="list-group-item">Friend 3</li>
-                </ul>
-            </aside>
+                    <h2>Yours Timeline</h2>
+                    <c:forEach items="${posts}" var="post">
+                        <div class="post mb-4" style="overflow-wrap: break-word; border: 1px solid #ddd; padding: 10px; border-radius: 10px;">
+                            <div class="post-header">
+                                <small>${post.first_name} ${post.last_name} -- <fmt:formatDate value="${post.post_time}" pattern="yyyy-MM-dd HH:mm:ss" /></small>
+                            </div>
+                            <p style="font-size: 14px;">${post.body}</p>
+                            <c:if test="${not empty post.image_path}">
+                                <div>
+                                    <img src="assets/post_image/${post.image_path}">
+                                </div>
+                            </c:if>
+                        </div>
+                        <hr>
+                    </c:forEach>
+                    <form action="logout" method="post">
+
+                    </form>
+                </main>
+                <aside class="col-2 py-3 bg-light friend-list">
+                    <h2>Yours Friends</h2>
+                    <ul class="list-group">
+                        <li class="list-group-item">Friend 1</li>
+                        <li class="list-group-item">Friend 2</li>
+                        <li class="list-group-item">Friend 3</li>
+                    </ul>
+                </aside>
+            </div>
         </div>
-    </div>
-  <script src="assets/js/bootstrap.min.js"></script>
-    <script src="assets/js/jquery.min.js"></script>
-</body>
+        <script src="assets/js/bootstrap.min.js"></script>
+        <script src="assets/js/jquery.min.js"></script>
+    </body>
 </html>

@@ -15,6 +15,8 @@
         <title>Home Page</title>
         <link href="assets/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="assets/css/home.css">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
     </head>
     <body>
         <header id="header">
@@ -45,7 +47,7 @@
                     </div>
                 </nav>
 
-                <main class="col-8">
+                <main class="main-class col-8">
                     <h1 class="mt-3 text-primary home-logo">HOME</h1>
                     <form action="/blahproject/home" method="post" class="mb-4 post-method" enctype="multipart/form-data">
                         <div class="mb-3">
@@ -57,7 +59,7 @@
                         <button type="submit" class="btn btn-primary" style="padding: 5px 25px; margin-top: 5px ">Post</button>
                     </form>
 
-                    <hr>
+                    <br>
 
                     <%
                         List<Post> posts = postDAO.getAllPosts();
@@ -65,22 +67,54 @@
                     %>
 
                     <c:forEach var="post" items="${posts}">
-                        <div class="post mb-4" style="overflow-wrap: break-word">
+                        <div class="post mb-4" style="overflow-wrap: break-word" data-post-id="${post.post_id}" data-liked="${post.likedByCurrentUser}">
                             <div class="post-header">
                                 <small>${post.first_name} ${post.last_name} -- <fmt:formatDate value="${post.post_time}" pattern="yyyy-MM-dd HH:mm:ss" /></small>
                             </div>
                             <p>${post.body}</p>
                             <c:if test="${not empty post.image_path}">
                                 <div>
-                                    <img src="assets/post_image/${post.image_path}">
+                                    <img src="assets/post_image/${post.image_path}" style="width : 60%">
                                 </div>
                             </c:if>
 
+
+                            <div class="post-ratings-container">
+                                <div class="post-rating ${post.likedByCurrentUser ? 'post-rating-selected' : ''}">
+                                    <span class="post-rating-button material-icons" style="cursor: pointer">thumb_up</span>
+                                    <span class="post-rating-count">${post.like_count}</span>
+                                </div>
+                            </div>
+
+                            <div class="post-comments">
+                                <c:forEach var="comment" items="${post.comments}">
+                                    <div class="comment mb-2" style="margin-left: 20px;">
+                                        <div class="comment-header">
+                                            <small><strong>>>${comment.first_name} ${comment.last_name}</strong></small>
+                                        </div>
+                                        <div class="comment-body">
+                                            <p style="margin-bottom: 0;">${comment.comment_text}</p>
+                                        </div>
+                                    </div>
+                                </c:forEach>
+                            </div>
+
+                            <!-- Comment form -->
+                            <form action="/blahproject/commentServlet" method="post" class="mb-4 post-method">
+                                <div class="mb-3">
+                                    <textarea class="form-control" id="body" name="commentContent" rows="2" placeholder="Reply"></textarea>
+                                </div>
+                                <input type="hidden" name="post_id" value="${post.post_id}">
+                                <button type="submit" class="btn btn-primary" style="padding: 5px 25px; margin-top: 5px">Comment</button>
+                            </form>
+
+
+                            <%----%>
                         </div>
-                        <hr>
+                        <br>
                     </c:forEach>
                 </main>
-                <aside class="col-2 py-3 bg-light friend-list">
+                <aside class="col-2 py-3 bg-light friend-list" style="z-index: -5">
                     <h2>List Friends</h2>
                     <ul class="list-group">
                         <li class="list-group-item">Friend 1</li>
@@ -90,7 +124,7 @@
                 </aside>
             </div>
         </div>
-
+        <script src="assets/js/likeButton.js" defer></script>
         <script src="assets/js/bootstrap.min.js"></script>
     </body>
 </html>
