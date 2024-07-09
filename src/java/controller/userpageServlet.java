@@ -89,4 +89,30 @@ public class userpageServlet extends HttpServlet {
         req.setAttribute("posts", posts); // Set the posts list as an attribute
         req.getRequestDispatcher("/WEB-INF/userpage.jsp").forward(req, resp);
     }
+     @Override
+        protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+            HttpSession session = req.getSession(false);
+            User user = (User) session.getAttribute("user");
+            if (user == null) {
+                resp.sendRedirect("login.jsp");
+                return;
+            }
+
+            int postId = Integer.parseInt(req.getParameter("postId"));
+            postDAO postDAO = new postDAO();
+            try {
+                postDAO.deletePost(postId);
+            } catch (Exception ex) {
+                Logger.getLogger(userpageServlet.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            List<Post> posts = null;
+            try {
+                posts = postDAO.getMyPosts(user.getUser_id());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            req.setAttribute("posts", posts);
+            req.getRequestDispatcher("/WEB-INF/userpage.jsp").forward(req, resp);
+        }
 }

@@ -56,10 +56,10 @@
                         <input class="form-control" name="search-name" type="search" placeholder="Finding in BLAH" aria-label="Search">
                         <input type="submit" value="Submit">
                     </form>
-                <a class="navbar-brand text-primary log-out" href="/blahproject" style="font-weight: bold">Log out</a>
-            </div>
-        </nav>
-    </header>
+                    <a class="navbar-brand text-primary log-out" href="/blahproject" style="font-weight: bold">Log out</a>
+                </div>
+            </nav>
+        </header>
         <div class="container-fluid">
             <div class="row all-post">
                 <nav class="col-2 py-3 bg-light">
@@ -70,15 +70,17 @@
                         <p style="text-align: left;">Name: ${user.first_name} ${user.last_name}</p>
                     </div>
                     <hr>
-                    <div class="settings-section mb-3 text-center">
-                        <h2>Settings</h2>
-                        <form action="settingServlet" method="post">
-                            <button type="submit" name="action" value="changeInformation" class="btn btn-secondary mb-2">Change Information</button>
-                        </form>
-                    </div>
+                    <c:if test="${sessionScope.user['user_id'] == user.user_id}">
+                        <div class="settings-section mb-3 text-center">
+                            <h2>Settings</h2>
+                            <form action="settingServlet" method="post">
+                                <button type="submit" name="action" value="changeInformation" class="btn btn-secondary mb-2">Change Information</button>
+                            </form>
+                        </div>
+                    </c:if>
                 </nav>
                 <main class="col-8">
-                    <h1 class="mt-3 text-primary home-logo">Welcome, ${user.first_name} ${user.last_name}!</h1>
+                    <h1 class="mt-3 text-primary home-logo">Welcome to ${user.first_name} ${user.last_name} blog!</h1>
                     <form action="userpageServlet" method="post" class="mb-4 post-method">
                         <div class="mb-3">
                             <textarea class="form-control" id="body" name="body" rows="4" placeholder="What ya thinking" required></textarea>
@@ -92,44 +94,54 @@
                     <c:forEach items="${posts}" var="post">
                         <div class="post mb-4" style="overflow-wrap: break-word; border: 1px solid #ddd; padding: 10px; border-radius: 10px;" data-post-id="${post.post_id}" data-liked="${post.likedByCurrentUser}">
                             <div class="post-header">
-                                                            <small>${post.first_name} ${post.last_name} -- <fmt:formatDate value="${post.post_time}" pattern="yyyy-MM-dd HH:mm:ss" /></small>
-                        </div>
-                        <p style="font-size: 14px;">${post.body}</p>
-                        <c:if test="${not empty post.image_path}">
-                            <div>
-                                <img src="assets/post_image/${post.image_path}">
-                            </div>
-                        </c:if>
-                        <div class="post-ratings-container">
-                            <div class="post-rating ${post.likedByCurrentUser ? 'post-rating-selected' : ''}">
-                                <span class="post-rating-button material-icons" style="cursor: pointer">thumb_up</span>
-                                <span class="post-rating-count">${post.like_count}</span>
-                            </div>
-                        </div>
-                        <div class="post-comments">
-                            <c:forEach var="comment" items="${post.comments}">
-                                <div class="comment mb-2" style="margin-left: 20px;">
-                                    <div class="comment-header">
-                                        <small><strong>>>${comment.first_name} ${comment.last_name}</strong></small>
+                                <c:if test="${sessionScope.user['user_id'] == user.user_id}">
+                                    <!-- Delete form -->
+                                    <div class="delete-button">
+                                        <form action="userpageServlet" method="post">
+                                            <input type="hidden" name="_method" value="delete">
+                                            <input type="hidden" name="postId" value="${post.post_id}">
+                                            <button type="submit" class="btn btn-danger delete-button">Delete</button>
+                                        </form>
                                     </div>
-                                    <div class="comment-body">
-                                        <p style="margin-bottom: 0;">${comment.comment_text}</p>
-                                    </div>
+                                </c:if>
+                                <small>${post.first_name} ${post.last_name} -- <fmt:formatDate value="${post.post_time}" pattern="yyyy-MM-dd HH:mm:ss" /></small>
+                            </div>
+                            <p style="font-size: 14px;">${post.body}</p>
+                            <c:if test="${not empty post.image_path}">
+                                <div>
+                                    <img src="assets/post_image/${post.image_path}">
                                 </div>
-                            </c:forEach>
-                        </div>
-                        <!-- Comment form -->
-                        <form action="/blahproject/commentServlet" method="post" class="mb-4 post-method">
-                            <div class="mb-3">
-                                <textarea class="form-control" id="body" name="commentContent" rows="2" placeholder="Reply"></textarea>
+                            </c:if>
+                            <div class="post-ratings-container">
+                                <div class="post-rating ${post.likedByCurrentUser ? 'post-rating-selected' : ''}">
+                                    <span class="post-rating-button material-icons" style="cursor: pointer">thumb_up</span>
+                                    <span class="post-rating-count">${post.like_count}</span>
+                                </div>
                             </div>
-                            <input type="hidden" name="post_id" value="${post.post_id}">
-                            <button type="submit" class="btn btn-primary" style="padding: 5px 25px; margin-top: 5px">Comment</button>
-                        </form>
-                    </div>
-                    <br>
-                </c:forEach>
-            </main>
-        </div>
+                            <div class="post-comments">
+                                <c:forEach var="comment" items="${post.comments}">
+                                    <div class="comment mb-2" style="margin-left: 20px;">
+                                        <div class="comment-header">
+                                            <small><strong>>>${comment.first_name} ${comment.last_name}</strong></small>
+                                        </div>
+                                        <div class="comment-body">
+                                            <p style="margin-bottom: 0;">${comment.comment_text}</p>
+                                        </div>
+                                    </div>
+                                </c:forEach>
+                            </div>
+                            <!-- Comment form -->
+                            <form action="/blahproject/commentServlet" method="post" class="mb-4 post-method">
+                                <div class="mb-3">
+                                    <textarea class="form-control" id="body" name="commentContent" rows="2" placeholder="Reply"></textarea>
+                                </div>
+                                <input type="hidden" name="post_id" value="${post.post_id}">
+                                <button type="submit" class="btn btn-primary" style="padding: 5px 25px; margin-top: 5px">Comment</button>
+                            </form>
+                        </div>
+                        <br>
+                    </c:forEach>
+                </main>
+            </div>
     </body>
 </html>
