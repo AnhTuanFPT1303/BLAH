@@ -15,7 +15,7 @@
         <header id="header">
             <nav class="navbar custom-navbar">
                 <div class="container-fluid d-flex align-items-center">
-                    <a class="navbar-brand text-primary" href="/blahproject/login" style="font-weight: bold">BLAH</a>
+                    <a class="navbar-brand text-primary" href="/blahproject/home" style="font-weight: bold">BLAH</a>
                     <form class="d-flex ms-2 flex-grow-1" method="get" action="/blahproject/searchServlet">
                         <input class="form-control" name="search-name" type="search" placeholder="Finding in BLAH" aria-label="Search">
                         <input type="submit" value="Submit">
@@ -45,23 +45,34 @@
                     <hr>
                     <c:forEach var="userResult" items="${usersWithStatus}">
                         <c:set var="userSearched" value="${userResult.key}" />
-                        <c:set var="isInvited" value="${userResult.value}" />
+                        <c:set var="userStatus" value="${userResult.value}" />
                         <div class="post mb-4 d-flex align-items-center" style="overflow-wrap: break-word">
                             <a href="userpageServlet?userId=${userSearched.user_id}">
                                 <img src="${userSearched.profile_pic}" alt="avatar picture" class="img-thumbnail mr-3" style="width: 50px; height: 50px; object-fit: cover;">
                             </a>
                             <a href="userpageServlet?userId=${userSearched.user_id}" style="margin-left: 5px">${userSearched.first_name} ${userSearched.last_name}</a>
                             <c:choose>
-                                <c:when test="${isInvited}">
+                                <c:when test="${userStatus == 'pending'}">
                                     <button class="btn btn-secondary btn-sm" style="margin-left: auto;" disabled>Invited</button>
                                 </c:when>
+                                <c:when test="${userStatus == 'accepted'}">
+                                    <button class="btn btn-secondary btn-sm" style="margin-left: auto;" disabled>Friend</button>
+                                </c:when>
+                                <c:when test="${userStatus == 'reverse_pending'}">
+                                    <form style="margin-left: auto;" action="friendRequestServlet" method="post" style="display:inline;">
+                                        <input type="hidden" name="userRequest" value="${userSearched.user_id}">
+                                        <button class="btn btn-primary btn-sm response-request" onclick="ajaxInviteResponse(this)" data-user-id="${userSearched.user_id}" data-action="acceptFriend" type="button">Accept</button>
+                                        <button class="btn btn-primary btn-sm response-request" onclick="ajaxInviteResponse(this)" data-user-id="${userSearched.user_id}" data-action="rejectFriend" type="button">Reject</button>
+                                    </form>
+                                </c:when>
                                 <c:otherwise>
-                                    <button class="btn btn-primary btn-sm invite-friend" data-user-id="${userSearched.user_id}" style="margin-left: auto;">Add Friend</button>
+                                    <button class="btn btn-primary btn-sm invite-friend" onclick="ajaxInviteSend(this)" data-user-id="${userSearched.user_id}" style="margin-left: auto;">Add Friend</button>
                                 </c:otherwise>
                             </c:choose>
                         </div>
                         <hr>
                     </c:forEach>
+
                 </main>
 
                 <aside class="col-2 py-3 bg-light friend-list">
@@ -74,31 +85,8 @@
                 </aside>
             </div>
         </div>
+        <script src="jquery-3.7.1.min.js"></script>
         <script src="assets/js/bootstrap.min.js"></script>
-        <script>
-            $(document).ready(function () {
-                $('.invite-friend').click(function () {
-                    var button = $(this);
-                    var userId = button.data('user-id');
-                    $.ajax({
-                        type: 'POST',
-                        url: 'inviteFriendServlet',
-                        data: {userAccept: userId},
-                        success: function (response) {
-                            if (response.success) {
-                                button.text('Invited');
-                                button.prop('disabled', true);
-                            } else {
-                                alert('Failed to send friend request');
-                            }
-                        },
-                        error: function () {
-                            alert('Error sending request');
-                        }
-                    });
-                });
-            });
-        </script>
-
+        <script src="assets/js/ajaxInviteFriend.js"></script>
     </body>
 </html>

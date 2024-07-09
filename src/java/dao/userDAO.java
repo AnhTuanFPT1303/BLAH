@@ -64,7 +64,7 @@ public class userDAO {
         }
         return u;
     }
-    
+
     public User getUserById(int user_id) throws SQLException {
         User u = new User();
         try {
@@ -88,13 +88,14 @@ public class userDAO {
         return u;
     }
 
-    public static ArrayList<User> getAllUserByName(String name) throws SQLException {
+    public static ArrayList<User> getAllUserByName(String name, int current_userId) throws SQLException {
         ArrayList<User> userList = new ArrayList<>();
         try {
             Connection conn = sqlConnect.getInstance().getConnection();
-            PreparedStatement st = conn.prepareStatement("SELECT user_id, first_name, last_name, profile_pic FROM userAccount WHERE first_name LIKE ? OR last_name LIKE ?");
+            PreparedStatement st = conn.prepareStatement("SELECT user_id, first_name, last_name, profile_pic FROM userAccount WHERE (first_name LIKE ? OR last_name LIKE ?) AND NOT user_id = ? ");
             st.setString(1, "%" + name + "%");
             st.setString(2, "%" + name + "%");
+            st.setInt(3, current_userId);
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
                 User u = new User();
@@ -129,24 +130,17 @@ public class userDAO {
         return exists;
     }
 
-
-   public void updateUser(User user) {
-    String query = "UPDATE userAccount SET first_name =?, last_name =?, password =? WHERE user_id =?";
-    try (Connection conn = sqlConnect.getInstance().getConnection();
-         PreparedStatement stmt = conn.prepareStatement(query)) {
-        stmt.setString(1, user.getFirst_name());
-        stmt.setString(2, user.getLast_name());
-        stmt.setString(3, user.getPassword());
-        stmt.setInt(4, user.getUser_id());
-        stmt.executeUpdate();
-    } catch (Exception e) {
-        // log the error and exception
-        e.printStackTrace();
-    }
-}
-    public static void main(String[] args) throws SQLException {
-        userDAO test = new userDAO();
-        ArrayList<User> userList = test.getAllUserByName("tu");
-        System.out.println(userList.size());
+    public void updateUser(User user) {
+        String query = "UPDATE userAccount SET first_name =?, last_name =?, password =? WHERE user_id =?";
+        try (Connection conn = sqlConnect.getInstance().getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, user.getFirst_name());
+            stmt.setString(2, user.getLast_name());
+            stmt.setString(3, user.getPassword());
+            stmt.setInt(4, user.getUser_id());
+            stmt.executeUpdate();
+        } catch (Exception e) {
+            // log the error and exception
+            e.printStackTrace();
+        }
     }
 }

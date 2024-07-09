@@ -51,7 +51,7 @@
         <header id="header">
             <nav class="navbar custom-navbar">
                 <div class="container-fluid d-flex align-items-center">
-                    <a class="navbar-brand text-primary" href="/blahproject/login" style="font-weight: bold">BLAH</a>
+                    <a class="navbar-brand text-primary" href="/blahproject/home" style="font-weight: bold">BLAH</a>
                     <form class="d-flex ms-2 flex-grow-1" method="get" action="/blahproject/searchServlet">
                         <input class="form-control" name="search-name" type="search" placeholder="Finding in BLAH" aria-label="Search">
                         <input type="submit" value="Submit">
