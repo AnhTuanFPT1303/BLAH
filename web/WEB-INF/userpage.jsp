@@ -56,18 +56,22 @@
                         <input class="form-control" name="search-name" type="search" placeholder="Finding in BLAH" aria-label="Search">
                         <input type="submit" value="Submit">
                     </form>
-                <a class="navbar-brand text-primary log-out" href="/blahproject" style="font-weight: bold">Log out</a>
-            </div>
-        </nav>
-    </header>
+                    <a class="navbar-brand text-primary log-out" href="/blahproject" style="font-weight: bold">Log out</a>
+                </div>
+            </nav>
+        </header>
         <div class="container-fluid">
             <div class="row all-post">
                 <nav class="col-2 py-3 bg-light">
                     <div class="profile-section mb-3 text-center">
-                        <a href="userpageServlet?userId=${user.user_id}" class="text-decoration-none text-dark">
-                            <img src="${user.profile_pic}" class="img-fluid rounded-circle avatar">
+                        <a href="userpageServlet?userId=${user.user_id}" class="text-decoration-none text-dark d-flex align-items-center">
+                            <img src="assets/profile_avt/${user.profile_pic}" class="img-fluid rounded-circle avatar">
+                            <p class="ms-3" style="text-align: left;">Name: ${user.first_name} ${user.last_name}</p>
                         </a>
-                        <p style="text-align: left;">Name: ${user.first_name} ${user.last_name}</p>
+                        <form action="userpageServlet" method="post" class="mt-3 d-flex align-items-center" enctype="multipart/form-data">
+                            <input type="file" name="profile_pic" accept=".jpeg, .png, .jpg" class="form-control-file">
+                            <button type="submit" class="btn btn-primary ms-2">Change Avatar</button>
+                        </form>
                     </div>
                     <hr>
                     <div class="settings-section mb-3 text-center">
@@ -82,7 +86,7 @@
                     <form action="userpageServlet" method="post" class="mb-4 post-method">
                         <div class="mb-3">
                             <textarea class="form-control" id="body" name="body" rows="4" placeholder="What ya thinking" required></textarea>
-                        </div>    
+                        </div>
                         <input type="file" name="image">
                         <br>
                         <button type="submit" class="btn btn-primary" style="padding: 5px 25px">Post</button>
@@ -91,45 +95,48 @@
                     <h2>Your Timeline</h2>
                     <c:forEach items="${posts}" var="post">
                         <div class="post mb-4" style="overflow-wrap: break-word; border: 1px solid #ddd; padding: 10px; border-radius: 10px;" data-post-id="${post.post_id}" data-liked="${post.likedByCurrentUser}">
-                            <div class="post-header">
-                                                            <small>${post.first_name} ${post.last_name} -- <fmt:formatDate value="${post.post_time}" pattern="yyyy-MM-dd HH:mm:ss" /></small>
-                        </div>
-                        <p style="font-size: 14px;">${post.body}</p>
-                        <c:if test="${not empty post.image_path}">
-                            <div>
-                                <img src="assets/post_image/${post.image_path}">
+                            <div class="post-header d-flex align-items-center">
+                                <img src="assets/profile_avt/${user.profile_pic}" class="img-fluid rounded-circle avatar me-2" style="width: 40px; height: 40px;">
+                                <small>${post.first_name} ${post.last_name} -- <fmt:formatDate value="${post.post_time}" pattern="yyyy-MM-dd HH:mm:ss" /></small>
                             </div>
-                        </c:if>
-                        <div class="post-ratings-container">
-                            <div class="post-rating ${post.likedByCurrentUser ? 'post-rating-selected' : ''}">
-                                <span class="post-rating-button material-icons" style="cursor: pointer">thumb_up</span>
-                                <span class="post-rating-count">${post.like_count}</span>
-                            </div>
-                        </div>
-                        <div class="post-comments">
-                            <c:forEach var="comment" items="${post.comments}">
-                                <div class="comment mb-2" style="margin-left: 20px;">
-                                    <div class="comment-header">
-                                        <small><strong>>>${comment.first_name} ${comment.last_name}</strong></small>
-                                    </div>
-                                    <div class="comment-body">
-                                        <p style="margin-bottom: 0;">${comment.comment_text}</p>
-                                    </div>
+                            <p style="font-size: 14px;">${post.body}</p>
+                            <c:if test="${not empty post.image_path}">
+                                <div>
+                                    <img src="assets/post_image/${post.image_path}" class="img-fluid">
                                 </div>
-                            </c:forEach>
-                        </div>
-                        <!-- Comment form -->
-                        <form action="/blahproject/commentServlet" method="post" class="mb-4 post-method">
-                            <div class="mb-3">
-                                <textarea class="form-control" id="body" name="commentContent" rows="2" placeholder="Reply"></textarea>
+                            </c:if>
+                            <div class="post-ratings-container">
+                                <div class="post-rating ${post.likedByCurrentUser ? 'post-rating-selected' : ''}">
+                                    <span class="post-rating-button material-icons" style="cursor: pointer">thumb_up</span>
+                                    <span class="post-rating-count">${post.like_count}</span>
+                                </div>
                             </div>
-                            <input type="hidden" name="post_id" value="${post.post_id}">
-                            <button type="submit" class="btn btn-primary" style="padding: 5px 25px; margin-top: 5px">Comment</button>
-                        </form>
-                    </div>
-                    <br>
-                </c:forEach>
-            </main>
+                            <div class="post-comments">
+                                <c:forEach var="comment" items="${post.comments}">
+                                    
+                                            <div class="comment-header">
+                                                <small><strong>${comment.first_name} ${comment.last_name}</strong></small>
+                                            </div>
+                                            <div class="comment-body">
+                                                <p style="margin-bottom: 0;">${comment.comment_text}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </c:forEach>
+                            </div>
+                            <!-- Comment form -->
+                            <form action="/blahproject/commentServlet" method="post" class="mb-4 post-method">
+                                <div class="mb-3">
+                                    <textarea class="form-control" id="body" name="commentContent" rows="2" placeholder="Reply"></textarea>
+                                </div>
+                                <input type="hidden" name="post_id" value="${post.post_id}">
+                                <button type="submit" class="btn btn-primary" style="padding: 5px 25px; margin-top: 5px">Comment</button>
+                            </form>
+                        </div>
+                        <br>
+                    </c:forEach>
+                </main>
+            </div>
         </div>
     </body>
 </html>

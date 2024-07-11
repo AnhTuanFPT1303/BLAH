@@ -138,7 +138,7 @@ public class postDAO {
             conn = sqlConnect.getInstance().getConnection();
             stmt = conn.createStatement();
 
-            String query = "SELECT p.post_id, p.body, p.post_time, p.user_id, p.image_path, p.like_count, u.first_name, u.last_name "
+            String query = "SELECT p.post_id, p.body, p.post_time, p.user_id, p.image_path, p.like_count, u.first_name, u.last_name, u.profile_pic "
                     + "FROM post p "
                     + "JOIN userAccount u ON p.user_id = u.user_id "
                     + "LEFT JOIN friendship f ON (f.user_request = p.user_id OR f.user_accept = p.user_id) "
@@ -158,7 +158,8 @@ public class postDAO {
                 String last_name = rs.getString("last_name");
                 String image_path = rs.getString("image_path");
                 int like_count = rs.getInt("like_count");
-                Post post = new Post(post_id, user_id, body, post_time, first_name, last_name, image_path, like_count);
+                String profile_pic = rs.getString("profile_pic");
+                Post post = new Post(post_id, user_id, body, post_time, first_name, last_name, image_path, profile_pic, like_count);
                 post.setComments(getComments(post.getPost_id()));
                 posts.add(post);
             }
@@ -177,7 +178,7 @@ public class postDAO {
             Connection conn = null;
             PreparedStatement stmt = null;
             conn = sqlConnect.getInstance().getConnection();
-            stmt = conn.prepareStatement("SELECT c.comment_id, c.post_id, c.user_id, c.comment_text, u.first_name, u.last_name "
+            stmt = conn.prepareStatement("SELECT c.comment_id, c.post_id, c.user_id, c.comment_text, u.first_name, u.last_name, u.profile_pic "
                     + "FROM comment c "
                     + "JOIN userAccount u ON c.user_id = u.user_id "
                     + "WHERE c.post_id = ? "
@@ -191,7 +192,8 @@ public class postDAO {
                 String comment_text = rs.getString("comment_text");
                 String first_name = rs.getString("first_name");
                 String last_name = rs.getString("last_name");
-                Comment comment = new Comment(comment_id, post_id, user_id, first_name, last_name, comment_text);
+                String profile_pic = rs.getString("profile_pic");
+                Comment comment = new Comment(comment_id, post_id, user_id, first_name, last_name, comment_text, profile_pic);
                 comments.add(comment);
             }
         } catch (SQLException e) {

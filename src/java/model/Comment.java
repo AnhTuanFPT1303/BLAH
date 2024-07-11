@@ -15,6 +15,19 @@ public class Comment {
     private String first_name;
     private String last_name;
     private String comment_text;
+    private String profile_pic;
+
+    public Comment(int comment_id, int post_id, int user_id, String first_name, String last_name, String comment_text, String profile_pic) {
+        this.comment_id = comment_id;
+        this.post_id = post_id;
+        this.user_id = user_id;
+        this.first_name = first_name;
+        this.last_name = last_name;
+        this.comment_text = comment_text;
+        this.profile_pic = profile_pic;
+    }
+    
+    
 
     public Comment(int comment_id, int post_id, int user_id, String first_name, String last_name, String comment_text) {
         this.comment_id = comment_id;
@@ -27,8 +40,15 @@ public class Comment {
 
     public Comment() {
     }
-    
 
+    public String getProfile_pic() {
+        return profile_pic;
+    }
+
+    public void setProfile_pic(String profile_pic) {
+        this.profile_pic = profile_pic;
+    }
+    
     public int getComment_id() {
         return comment_id;
     }
