@@ -3,18 +3,18 @@ package model;
 import java.util.Date;
 
 public class Message {
-    private int chatId;
+
     private int fromUser;
     private int toUser;
     private String message;
-    private Date chatTime;
 
-    public int getChatId() {
-        return chatId;
+    public Message(int fromUser, int toUser, String message) {
+        this.fromUser = fromUser;
+        this.toUser = toUser;
+        this.message = message;
     }
 
-    public void setChatId(int chatId) {
-        this.chatId = chatId;
+    public Message() {
     }
 
     public int getFromUser() {
@@ -39,13 +39,5 @@ public class Message {
 
     public void setMessage(String message) {
         this.message = message;
-    }
-
-    public Date getChatTime() {
-        return chatTime;
-    }
-
-    public void setChatTime(Date chatTime) {
-        this.chatTime = chatTime;
     }
 }

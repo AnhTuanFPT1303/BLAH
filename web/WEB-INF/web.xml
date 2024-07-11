@@ -45,8 +45,12 @@
         <servlet-class>controller.friendRequestServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>ChatServlet</servlet-name>
-        <servlet-class>controller.ChatServlet</servlet-class>
+        <servlet-name>ChatController</servlet-name>
+        <servlet-class>controller.ChatController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>MessageServlet</servlet-name>
+        <servlet-class>controller.MessageServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>loginServlet</servlet-name>
@@ -93,8 +97,12 @@
         <url-pattern>/settingServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>ChatServlet</servlet-name>
-        <url-pattern>/ChatServlet</url-pattern>
+        <servlet-name>ChatController</servlet-name>
+        <url-pattern>/chat</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>MessageServlet</servlet-name>
+        <url-pattern>/MessageServlet</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>/WEB-INF/welcome.jsp</welcome-file>

@@ -143,4 +143,54 @@ public class userDAO {
             e.printStackTrace();
         }
     }
+    
+    public ArrayList<User> getAllUsers() throws Exception {
+        ArrayList<User> users = new ArrayList<>();
+        try {
+            Connection conn = sqlConnect.getInstance().getConnection();
+            PreparedStatement st = conn.prepareStatement("SELECT * FROM userAccount");
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                User u = new User();
+                u.setUser_id(rs.getInt("user_id"));
+                u.setFirst_name(rs.getString("first_name"));
+                u.setLast_name(rs.getString("last_name"));
+                u.setEmail(rs.getString("email"));
+                u.setProfile_pic(rs.getString("profile_pic"));
+                users.add(u);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error fetching all users: " + e.getMessage());
+        }
+        return users;
+    }
+
+    public ArrayList<User> getUserFriends(int userId) throws Exception {
+        ArrayList<User> friends = new ArrayList<>();
+        try {
+            Connection conn = sqlConnect.getInstance().getConnection();
+            PreparedStatement st = conn.prepareStatement(
+                    "SELECT u.user_id, u.first_name, u.last_name, u.email, u.profile_pic "
+                    + "FROM userAccount u "
+                    + "INNER JOIN friendship f ON (u.user_id = f.user_request OR u.user_id = f.user_accept) "
+                    + "WHERE ((f.user_request = ? OR f.user_accept = ?) AND u.user_id != ? AND f.status = 'accepted')"
+            );
+            st.setInt(1, userId);
+            st.setInt(2, userId);
+            st.setInt(3, userId);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                User u = new User();
+                u.setUser_id(rs.getInt("user_id"));
+                u.setFirst_name(rs.getString("first_name"));
+                u.setLast_name(rs.getString("last_name"));
+                u.setEmail(rs.getString("email"));
+                u.setProfile_pic(rs.getString("profile_pic"));
+                friends.add(u);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error fetching user friends: " + e.getMessage());
+        }
+        return friends;
+    }
 }

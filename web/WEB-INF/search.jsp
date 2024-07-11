@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.util.HashMap" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -41,7 +41,7 @@
                 </nav>
 
                 <main class="col-8">
-                    <h1 class="mt-3 text-primary home-logo">HOME</h1>
+                    <h1 class="mt-3 text-primary home-logo">Search Result</h1>
                     <hr>
                     <c:forEach var="userResult" items="${usersWithStatus}">
                         <c:set var="userSearched" value="${userResult.key}" />
@@ -85,7 +85,7 @@
                 </aside>
             </div>
         </div>
-        <script src="jquery-3.7.1.min.js"></script>
+        <script src="assets/js/jquery-3.7.1.min.js"></script>
         <script src="assets/js/bootstrap.min.js"></script>
         <script src="assets/js/ajaxInviteFriend.js"></script>
     </body>

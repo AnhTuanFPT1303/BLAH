@@ -6,8 +6,8 @@ package dao;
 
 import util.sqlConnect;
 import java.sql.*;
-import model.User;
 import java.util.ArrayList;
+import model.User;
 
 /**
  *
@@ -106,4 +106,24 @@ public class FriendDAO {
         return status;
     }
 
+    public ArrayList<User> findFriend(int currUser) throws Exception {
+        ArrayList<User> friendList= new ArrayList<>();
+        Connection conn = sqlConnect.getInstance().getConnection();
+        PreparedStatement st = conn.prepareStatement("SELECT u.user_id, u.first_name, u.last_name, u.profile_pic, f.status"
+                + "    FROM userAccount u"
+                + "    INNER JOIN friendship f ON f.user_request = u.user_id"
+                + "    WHERE f.user_accept = ? AND f.status = 'accepted'"
+                + "    UNION"
+                + "    SELECT u.user_id, u.first_name, u.last_name, u.profile_pic, f.status"
+                + "    FROM userAccount u"
+                + "    INNER JOIN friendship f ON f.user_accept = u.user_id"
+                + "    WHERE f.user_request = ? AND f.status = 'accepted';");
+     st.setInt(1, currUser);
+     st.setInt(2, currUser);
+     ResultSet rs = st.executeQuery();
+     while(rs.next()) {
+         friendList.add(new User(rs.getInt(1), rs.getString(2), rs.getString(3), null, null, rs.getString(4)));
+     } 
+     return friendList;
+    }
 }
