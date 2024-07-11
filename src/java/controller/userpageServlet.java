@@ -3,11 +3,15 @@ package controller;
 import dao.postDAO;
 import dao.userDAO;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Part;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Level;
@@ -15,6 +19,8 @@ import java.util.logging.Logger;
 import model.Post;
 import model.User;
 
+
+@MultipartConfig
 public class userpageServlet extends HttpServlet {
 
     @Override
@@ -25,6 +31,38 @@ public class userpageServlet extends HttpServlet {
             resp.sendRedirect("login.jsp");
             return;
         }
+        
+        Part file = req.getPart("profile_pic");
+            String profile_pic = file.getSubmittedFileName();
+            String uploadPath = "D:/fpt/prj301/project/BLAH_L11/BLAH/web/assets/profile_avt/" + profile_pic;
+            try {
+                FileOutputStream fos = new FileOutputStream(uploadPath);
+                InputStream is = file.getInputStream();
+
+                byte[] data = new byte[is.available()];
+                is.read(data);
+                fos.write(data);
+                fos.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            
+            if (!profile_pic.isEmpty()) {
+                //user.setUser_id(user.getUser_id());
+                user.setProfile_pic(profile_pic);
+                
+                userDAO UserDAO = new userDAO();
+                try {
+                    UserDAO.changeAvatar(user);
+                    session.setAttribute("user", user);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    req.setAttribute("errorMessage", "Error");
+                }
+            }
+
+            
+            
         int userId = user.getUser_id(); // Get the userId from the session
         String body = req.getParameter("body"); // You didn't have a title field in your form, so I removed it
 

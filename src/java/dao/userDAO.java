@@ -143,4 +143,15 @@ public class userDAO {
             e.printStackTrace();
         }
     }
+    
+    public void changeAvatar(User u){
+        String query = "UPDATE userAccount SET profile_pic =? WHERE user_id =?";
+        try (Connection conn = sqlConnect.getInstance().getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, u.getProfile_pic());
+            stmt.setInt(2, u.getUser_id());
+            stmt.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

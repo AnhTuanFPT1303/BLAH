@@ -19,9 +19,25 @@ public class Post {
     private String first_name;
     private String last_name;
     private String image_path;
+    private String profile_pic;
     private int like_count;
     private boolean likedByCurrentUser;
     private List<Comment> comments;
+
+    public Post(int post_id, int user_id, String body, Timestamp post_time, String first_name, String last_name, String image_path, String profile_pic, int like_count, boolean likedByCurrentUser, List<Comment> comments) {
+        this.post_id = post_id;
+        this.user_id = user_id;
+        this.body = body;
+        this.post_time = post_time;
+        this.first_name = first_name;
+        this.last_name = last_name;
+        this.image_path = image_path;
+        this.profile_pic = profile_pic;
+        this.like_count = like_count;
+        this.likedByCurrentUser = likedByCurrentUser;
+        this.comments = comments;
+    }
+    
 
     public Post(int post_id, int user_id, String body, Timestamp post_time, String first_name, String last_name, String image_path, int like_count, boolean likedByCurrentUser, List<Comment> comments) {
         this.post_id = post_id;
@@ -110,6 +126,28 @@ public class Post {
         this.image_path = image_path;
     }
 
+    public Post(int post_id, int user_id, String body, Timestamp post_time, String first_name, String last_name, String image_path, String profile_pic, int like_count) {
+        this.post_id = post_id;
+        this.user_id = user_id;
+        this.body = body;
+        this.post_time = post_time;
+        this.first_name = first_name;
+        this.last_name = last_name;
+        this.image_path = image_path;
+        this.profile_pic = profile_pic;
+        this.like_count = like_count;
+    }
+
+    
+    public String getProfile_pic() {
+        return profile_pic;
+    }
+
+    public void setProfile_pic(String profile_pic) {
+        this.profile_pic = profile_pic;
+    }
+
+    
     public String getImage_path() {
         return image_path;
     }
