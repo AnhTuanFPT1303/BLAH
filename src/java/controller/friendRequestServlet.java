@@ -15,6 +15,7 @@ import dao.FriendDAO;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.ArrayList;
+import org.json.JSONObject;
 
 /**
  *
@@ -68,7 +69,7 @@ public class friendRequestServlet extends HttpServlet {
             pendingList = friendDAO.getAllFriendRequest(userId);
         } catch (Exception ex) {
             Logger.getLogger(friendRequestServlet.class.getName()).log(Level.SEVERE, null, ex);
-       }
+        }
         request.setAttribute("pendingList", pendingList);
         request.getRequestDispatcher("WEB-INF/friendRequest.jsp").forward(request, response);
     }
@@ -86,17 +87,34 @@ public class friendRequestServlet extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         int userRequest = Integer.parseInt(request.getParameter("userRequest"));
-        int userAccept = (int)session.getAttribute("user_id");
+        int userAccept = (int) session.getAttribute("user_id");
         FriendDAO friendDAO = new FriendDAO();
-        switch (request.getParameter("action")) {
-            case "acceptFriend":
-                friendDAO.acceptFriendRequest(userRequest, userAccept);
-                break;
-            case "rejectFriend": 
-                friendDAO.rejectFriendRequest(userRequest, userAccept);
-                break;
+        JSONObject jsonResponse = new JSONObject();
+        try {
+            switch (request.getParameter("action")) {
+                case "acceptFriend":
+                    friendDAO.acceptFriendRequest(userRequest, userAccept);
+                    jsonResponse.put("feedback", "accept");
+                    jsonResponse.put("success", true); // Indicate success
+                    break;
+                case "rejectFriend":
+                    friendDAO.rejectFriendRequest(userRequest, userAccept);
+                    jsonResponse.put("feedback", "reject");
+                    jsonResponse.put("success", true); // Indicate success
+                    break;
+                default:
+                    jsonResponse.put("feedback", "failed");
+                    jsonResponse.put("success", false); // Indicate failure
+                    break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            jsonResponse.put("success", false); // Indicate failure
         }
-        request.getRequestDispatcher("WEB-INF/friendRequest.jsp").forward(request, response);
+
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write(jsonResponse.toString());
     }
 
     /**

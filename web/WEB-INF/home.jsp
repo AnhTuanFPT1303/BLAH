@@ -22,7 +22,7 @@
         <header id="header">
             <nav class="navbar custom-navbar">
                 <div class="container-fluid d-flex align-items-center">
-                    <a class="navbar-brand text-primary" href="/blahproject/login" style="font-weight: bold">BLAH</a>
+                    <a class="navbar-brand text-primary" href="/blahproject/home" style="font-weight: bold">BLAH</a>
                     <form class="d-flex ms-2 flex-grow-1" method="get" action="/blahproject/searchServlet">
                         <input class="form-control" name="search-name" type="search" placeholder="Finding in BLAH" aria-label="Search">
                         <input type="submit" value="Submit">
@@ -38,7 +38,7 @@
                 <nav class="col-2 py-3 bg-light">   
                     <div class="profile-section mb-3 d-flex align-items-center">
                         <a href="userpageServlet?userId=${sessionScope.user['user_id']}" class="d-flex align-items-center text-decoration-none text-dark">
-                            <img src="${sessionScope.user['profile_pic']}" class="img-fluid rounded-circle avatar">
+                            <img src="assets/profile_avt/${user.profile_pic}" class="img-fluid rounded-circle avatar">
                             <p class="mb-0 ms-2 ava-name">${sessionScope.user['first_name']} ${sessionScope.user['last_name']}</p>
                         </a>
                     </div>
@@ -66,6 +66,7 @@
                     <c:forEach var="post" items="${posts}">
                         <div class="post mb-4" style="overflow-wrap: break-word" data-post-id="${post.post_id}" data-liked="${post.likedByCurrentUser}">
                             <div class="post-header">
+                                <img src="assets/profile_avt/${post.profile_pic}" class="img-fluid rounded-circle avatar me-2" style="width: 40px; height: 40px;">
                                 <small>${post.first_name} ${post.last_name} -- <fmt:formatDate value="${post.post_time}" pattern="yyyy-MM-dd HH:mm:ss" /></small>
                             </div>
                             <p>${post.body}</p> 
@@ -87,7 +88,8 @@
                                 <c:forEach var="comment" items="${post.comments}">
                                     <div class="comment mb-2" style="margin-left: 20px;">
                                         <div class="comment-header">
-                                            <small><strong>>>${comment.first_name} ${comment.last_name}</strong></small>
+                                            <img src="assets/profile_avt/${comment.profile_pic}" class="img-fluid rounded-circle avatar me-2" style="width: 30px; height: 30px;">
+                                            <small><strong>${comment.first_name} ${comment.last_name}</strong></small>
                                         </div>
                                         <div class="comment-body">
                                             <p style="margin-bottom: 0;">${comment.comment_text}</p>

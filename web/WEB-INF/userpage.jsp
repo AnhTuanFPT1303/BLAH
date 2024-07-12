@@ -51,7 +51,7 @@
         <header id="header">
             <nav class="navbar custom-navbar">
                 <div class="container-fluid d-flex align-items-center">
-                    <a class="navbar-brand text-primary" href="/blahproject/login" style="font-weight: bold">BLAH</a>
+                    <a class="navbar-brand text-primary" href="/blahproject/home" style="font-weight: bold">BLAH</a>
                     <form class="d-flex ms-2 flex-grow-1" method="get" action="/blahproject/searchServlet">
                         <input class="form-control" name="search-name" type="search" placeholder="Finding in BLAH" aria-label="Search">
                         <input type="submit" value="Submit">
@@ -64,10 +64,14 @@
             <div class="row all-post">
                 <nav class="col-2 py-3 bg-light">
                     <div class="profile-section mb-3 text-center">
-                        <a href="userpageServlet?userId=${user.user_id}" class="text-decoration-none text-dark">
-                            <img src="${user.profile_pic}" class="img-fluid rounded-circle avatar">
+                        <a href="userpageServlet?userId=${user.user_id}" class="text-decoration-none text-dark d-flex align-items-center">
+                            <img src="assets/profile_avt/${user.profile_pic}" class="img-fluid rounded-circle avatar">
+                            <p class="ms-3" style="text-align: left;">Name: ${user.first_name} ${user.last_name}</p>
                         </a>
-                        <p style="text-align: left;">Name: ${user.first_name} ${user.last_name}</p>
+                        <form action="userpageServlet" method="post" class="mt-3 d-flex align-items-center" enctype="multipart/form-data">
+                            <input type="file" name="profile_pic" accept=".jpeg, .png, .jpg" class="form-control-file">
+                            <button type="submit" class="btn btn-primary ms-2">Change Avatar</button>
+                        </form>
                     </div>
                     <hr>
                     <c:if test="${sessionScope.user['user_id'] == user.user_id}">
@@ -84,7 +88,7 @@
                     <form action="userpageServlet" method="post" class="mb-4 post-method">
                         <div class="mb-3">
                             <textarea class="form-control" id="body" name="body" rows="4" placeholder="What ya thinking" required></textarea>
-                        </div>    
+                        </div>
                         <input type="file" name="image">
                         <br>
                         <button type="submit" class="btn btn-primary" style="padding: 5px 25px">Post</button>

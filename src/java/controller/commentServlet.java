@@ -106,7 +106,7 @@ public class commentServlet extends HttpServlet {
             }
             try {
                 postDAO.addComment(comment);
-                request.getRequestDispatcher("WEB-INF/home.jsp").forward(request, response);
+                response.sendRedirect("home");
             } catch (Exception e) {
                 e.printStackTrace();
             }

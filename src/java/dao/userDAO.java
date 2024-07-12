@@ -64,7 +64,7 @@ public class userDAO {
         }
         return u;
     }
-    
+
     public User getUserById(int user_id) throws SQLException {
         User u = new User();
         try {
@@ -88,13 +88,14 @@ public class userDAO {
         return u;
     }
 
-    public static ArrayList<User> getAllUserByName(String name) throws SQLException {
+    public static ArrayList<User> getAllUserByName(String name, int current_userId) throws SQLException {
         ArrayList<User> userList = new ArrayList<>();
         try {
             Connection conn = sqlConnect.getInstance().getConnection();
-            PreparedStatement st = conn.prepareStatement("SELECT user_id, first_name, last_name, profile_pic FROM userAccount WHERE first_name LIKE ? OR last_name LIKE ?");
+            PreparedStatement st = conn.prepareStatement("SELECT user_id, first_name, last_name, profile_pic FROM userAccount WHERE (first_name LIKE ? OR last_name LIKE ?) AND NOT user_id = ? ");
             st.setString(1, "%" + name + "%");
             st.setString(2, "%" + name + "%");
+            st.setInt(3, current_userId);
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
                 User u = new User();
@@ -129,24 +130,78 @@ public class userDAO {
         return exists;
     }
 
-
-   public void updateUser(User user) {
-    String query = "UPDATE userAccount SET first_name =?, last_name =?, password =? WHERE user_id =?";
-    try (Connection conn = sqlConnect.getInstance().getConnection();
-         PreparedStatement stmt = conn.prepareStatement(query)) {
-        stmt.setString(1, user.getFirst_name());
-        stmt.setString(2, user.getLast_name());
-        stmt.setString(3, user.getPassword());
-        stmt.setInt(4, user.getUser_id());
-        stmt.executeUpdate();
-    } catch (Exception e) {
-        // log the error and exception
-        e.printStackTrace();
+    public void updateUser(User user) {
+        String query = "UPDATE userAccount SET first_name =?, last_name =?, password =? WHERE user_id =?";
+        try (Connection conn = sqlConnect.getInstance().getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, user.getFirst_name());
+            stmt.setString(2, user.getLast_name());
+            stmt.setString(3, user.getPassword());
+            stmt.setInt(4, user.getUser_id());
+            stmt.executeUpdate();
+        } catch (Exception e) {
+            // log the error and exception
+            e.printStackTrace();
+        }
     }
-}
-    public static void main(String[] args) throws SQLException {
-        userDAO test = new userDAO();
-        ArrayList<User> userList = test.getAllUserByName("tu");
-        System.out.println(userList.size());
+    
+    public ArrayList<User> getAllUsers() throws Exception {
+        ArrayList<User> users = new ArrayList<>();
+        try {
+            Connection conn = sqlConnect.getInstance().getConnection();
+            PreparedStatement st = conn.prepareStatement("SELECT * FROM userAccount");
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                User u = new User();
+                u.setUser_id(rs.getInt("user_id"));
+                u.setFirst_name(rs.getString("first_name"));
+                u.setLast_name(rs.getString("last_name"));
+                u.setEmail(rs.getString("email"));
+                u.setProfile_pic(rs.getString("profile_pic"));
+                users.add(u);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error fetching all users: " + e.getMessage());
+        }
+        return users;
+    }
+
+    public ArrayList<User> getUserFriends(int userId) throws Exception {
+        ArrayList<User> friends = new ArrayList<>();
+        try {
+            Connection conn = sqlConnect.getInstance().getConnection();
+            PreparedStatement st = conn.prepareStatement(
+                    "SELECT u.user_id, u.first_name, u.last_name, u.email, u.profile_pic "
+                    + "FROM userAccount u "
+                    + "INNER JOIN friendship f ON (u.user_id = f.user_request OR u.user_id = f.user_accept) "
+                    + "WHERE ((f.user_request = ? OR f.user_accept = ?) AND u.user_id != ? AND f.status = 'accepted')"
+            );
+            st.setInt(1, userId);
+            st.setInt(2, userId);
+            st.setInt(3, userId);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                User u = new User();
+                u.setUser_id(rs.getInt("user_id"));
+                u.setFirst_name(rs.getString("first_name"));
+                u.setLast_name(rs.getString("last_name"));
+                u.setEmail(rs.getString("email"));
+                u.setProfile_pic(rs.getString("profile_pic"));
+                friends.add(u);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error fetching user friends: " + e.getMessage());
+        }
+        return friends;
+    }
+    
+    public void changeAvatar(User u){
+        String query = "UPDATE userAccount SET profile_pic =? WHERE user_id =?";
+        try (Connection conn = sqlConnect.getInstance().getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, u.getProfile_pic());
+            stmt.setInt(2, u.getUser_id());
+            stmt.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
