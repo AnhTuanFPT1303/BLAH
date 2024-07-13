@@ -94,11 +94,8 @@ public class postServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession(false);
-        
-        
+        HttpSession session = request.getSession(false);  
         //like fichua
        String pathInfo = request.getPathInfo();
         if (pathInfo != null && pathInfo.startsWith("/")) {

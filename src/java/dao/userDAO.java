@@ -194,7 +194,6 @@ public class userDAO {
         return friends;
     }
     
-    
     public void changeAvatar(User u){
         String query = "UPDATE userAccount SET profile_pic =? WHERE user_id =?";
         try (Connection conn = sqlConnect.getInstance().getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {

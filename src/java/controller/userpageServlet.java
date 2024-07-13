@@ -24,17 +24,54 @@ import model.User;
 public class userpageServlet extends HttpServlet {
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        HttpSession session = req.getSession(false);
-        User user = (User) session.getAttribute("user");
-        if (user == null) {
-            resp.sendRedirect("login.jsp");
-            return;
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession(false);  
+        //like fichua
+       String pathInfo = request.getPathInfo();
+        if (pathInfo != null && pathInfo.startsWith("/")) {
+            String[] pathParts = pathInfo.split("/");
+            if (pathParts.length == 3) {
+                int postId = Integer.parseInt(pathParts[1]);
+                String action = pathParts[2];
+                
+                if (session != null && session.getAttribute("user") != null) {
+                    User currentUser = (User) session.getAttribute("user");
+                    int userId = currentUser.getUser_id();
+                    
+                    postDAO dao = new postDAO();
+                    try {
+                        if ("like".equals(action)) {
+                            dao.addLike(userId, postId);
+                        } else if ("unlike".equals(action)) {
+                            dao.removeLike(userId, postId);
+                        }
+                        
+                        int newLikeCount = dao.getLikeCount(postId);
+                        response.setContentType("application/json");
+                        response.getWriter().write("{\"like_count\":" + newLikeCount + "}");
+                        return;
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                        response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                        return;
+                    }
+                }
+            }
         }
+
+    
         
-        Part file = req.getPart("profile_pic");
-            String profile_pic = file.getSubmittedFileName();
-            String uploadPath = "D:/fpt/prj301/project/BLAH_L11/BLAH/web/assets/profile_avt/" + profile_pic;
+    // ------------------------------------------------------------------------------------------------- 
+
+    
+        if (session != null && session.getAttribute("user") != null) {
+            User user = (User) session.getAttribute("user");
+            String body = request.getParameter("postContent");
+
+            Part file = request.getPart("image");
+            String image_path = file.getSubmittedFileName();
+            String uploadPath = "E:/blahproject/BLAH/web/assets/post_image/" + image_path;
+            //E:\blahproject\BLAH\web\assets
             try {
                 FileOutputStream fos = new FileOutputStream(uploadPath);
                 InputStream is = file.getInputStream();
@@ -46,41 +83,28 @@ public class userpageServlet extends HttpServlet {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            
-            if (!profile_pic.isEmpty()) {
-                //user.setUser_id(user.getUser_id());
-                user.setProfile_pic(profile_pic);
-                
-                userDAO UserDAO = new userDAO();
+
+            if (!body.trim().equals("") || !image_path.equals("")) {
+                Post post = new Post();
+                post.setUser_id(user.getUser_id());
+                post.setBody(body);
+                post.setImage_path(image_path);
+                postDAO PostDao = new postDAO();
                 try {
-                    UserDAO.changeAvatar(user);
-                    session.setAttribute("user", user);
+                    PostDao.addPost(post);
+                    response.sendRedirect("userpageServlet");
                 } catch (Exception e) {
                     e.printStackTrace();
-                    req.setAttribute("errorMessage", "Error");
+                    request.setAttribute("errorMessage", "Error saving post");
+                    response.sendRedirect("userpageServlet");
                 }
             }
-
-            
-            
-        int userId = user.getUser_id(); // Get the userId from the session
-        String body = req.getParameter("body"); // You didn't have a title field in your form, so I removed it
-
-        postDAO postDAO = new postDAO();
-        try {
-            postDAO.addPost(new Post(0, userId, body, null)); // Create a new Post object and add it
-        } catch (Exception ex) {
-            Logger.getLogger(userpageServlet.class.getName()).log(Level.SEVERE, null, ex);
+            else {
+                response.sendRedirect("userpageServlet");
+            }
+        } else {
+            response.sendRedirect("userpageServlet");  
         }
-
-        List<Post> posts = null;
-        try {
-            posts = postDAO.getMyPosts(userId); // Get posts of the current user
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        req.setAttribute("posts", posts); // Set the posts list as an attribute
-        req.getRequestDispatcher("/WEB-INF/userpage.jsp").forward(req, resp);
     }
 
     @Override
@@ -127,4 +151,6 @@ public class userpageServlet extends HttpServlet {
         req.setAttribute("posts", posts); // Set the posts list as an attribute
         req.getRequestDispatcher("/WEB-INF/userpage.jsp").forward(req, resp);
     }
+    
+     
 }

@@ -1,6 +1,10 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
+ */
 package controller;
 
-import dao.userDAO;
+import dao.postDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -8,15 +12,17 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.sql.SQLException;
-
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import model.Post;
 import model.User;
 
 /**
  *
  * @author HELLO
  */
-public class loginServlet extends HttpServlet {
+public class deleteServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -35,10 +41,10 @@ public class loginServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet loginServlet</title>");
+            out.println("<title>Servlet deleteServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet loginServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet deleteServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -56,12 +62,7 @@ public class loginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession(false);
-        if (session != null && session.getAttribute("user") != null) {
-            request.getRequestDispatcher("WEB-INF/home.jsp").forward(request, response);
-        } else {
-            request.getRequestDispatcher("WEB-INF/welcome.jsp").forward(request, response);
-        }
+        processRequest(request, response);
     }
 
     /**
@@ -72,47 +73,32 @@ public class loginServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        String email = request.getParameter("userEmail");
-        String passWord = request.getParameter("passWord");
-        boolean status = true;
-        request.removeAttribute("msg");
-
-        if (email.trim().isEmpty()) {
-            status = false;
-        }
-        if (passWord.trim().isEmpty()) {
-            status = false;
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            response.sendRedirect("login.jsp");
+            return;
         }
 
-        if (!status) {
-            request.setAttribute("msg", "Re-enter Email & password.");
-            request.getRequestDispatcher("WEB-INF/welcome.jsp").forward(request, response);
-        } else {
-            userDAO userDao = new userDAO();
-            boolean verify = userDao.login(email, passWord);
-
-            if (verify) {
-                try {
-                    User user = userDao.getUserByEmail(email);
-                    HttpSession session = request.getSession(true);
-                    session.setMaxInactiveInterval(1800);
-                    session.setAttribute("user", user);
-                    session.setAttribute("user_id", user.getUser_id());
-                    session.setAttribute("last_name", user.getLast_name());
-                    session.setAttribute("first_name", user.getFirst_name());
-                    response.sendRedirect("home");
-                } catch (SQLException e) {
-                    request.setAttribute("msg", "Login Failed.");
-                    request.getRequestDispatcher("WEB-INF/welcome.jsp").forward(request, response);
-                }
-            } else {
-                request.setAttribute("msg", "Wrong username or password.");
-                request.getRequestDispatcher("WEB-INF/welcome.jsp").forward(request, response);
-            }
+        int postId = Integer.parseInt(request.getParameter("postId"));
+        postDAO postDAO = new postDAO();
+        try {
+            postDAO.deletePost(postId);
+        } catch (Exception ex) {
+            Logger.getLogger(userpageServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+        List<Post> posts = null;
+        try {
+            posts = postDAO.getMyPosts(user.getUser_id());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        request.setAttribute("posts", posts);
+        request.getRequestDispatcher("/WEB-INF/userpage.jsp").forward(request, response);
     }
 
     /**
@@ -124,4 +110,5 @@ public class loginServlet extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+
 }

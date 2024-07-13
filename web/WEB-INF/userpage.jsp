@@ -65,7 +65,7 @@
                 <nav class="col-2 py-3 bg-light">
                     <div class="profile-section mb-3 text-center">
                         <a href="userpageServlet?userId=${user.user_id}" class="text-decoration-none text-dark d-flex align-items-center">
-                            <img src="assets/profile_avt/${user.profile_pic}" class="img-fluid rounded-circle avatar">
+                            <img src="${user.profile_pic}" class="img-fluid rounded-circle avatar">
                             <p class="ms-3" style="text-align: left;">Name: ${user.first_name} ${user.last_name}</p>
                         </a>
                         <form action="userpageServlet" method="post" class="mt-3 d-flex align-items-center" enctype="multipart/form-data">
@@ -74,35 +74,46 @@
                         </form>
                     </div>
                     <hr>
-                    <div class="settings-section mb-3 text-center">
-                        <h2>Settings</h2>
-                        <form action="settingServlet" method="post">
-                            <button type="submit" name="action" value="changeInformation" class="btn btn-secondary mb-2">Change Information</button>
-                        </form>
-                    </div>
+                    <c:if test="${sessionScope.user['user_id'] == user.user_id}">
+                        <div class="settings-section mb-3 text-center">
+                            <h2>Settings</h2>
+                            <form action="settingServlet" method="get">
+                                <button type="submit" name="action" value="changeInformation" class="btn btn-secondary mb-2">Change Information</button>
+                            </form>
+                        </div>
+                    </c:if>
                 </nav>
                 <main class="col-8">
-                    <h1 class="mt-3 text-primary home-logo">Welcome, ${user.first_name} ${user.last_name}!</h1>
-                    <form action="userpageServlet" method="post" class="mb-4 post-method">
+                    <h1 class="mt-3 text-primary home-logo">Welcome to ${user.first_name} ${user.last_name} blog!</h1>
+                    <form action="/blahproject/userpageServlet" method="post" class="mb-4 post-method" enctype="multipart/form-data" onsubmit="document.getElementById('myBtn').disabled = true;">
                         <div class="mb-3">
-                            <textarea class="form-control" id="body" name="body" rows="4" placeholder="What ya thinking" required></textarea>
+                            <textarea class="form-control" id="body" name="postContent" rows="2" placeholder="What ya thinking" maxlength="300"></textarea>
                         </div>
-                        <input type="file" name="image">
+                        <input type="file" name="image" accept=".jpeg, .png, .jpg">
                         <br>
-                        <button type="submit" class="btn btn-primary" style="padding: 5px 25px">Post</button>
+                        <button id="myBtn" type="submit" class="btn btn-primary" style="padding: 5px 25px; margin-top: 5px;">Post</button>
                     </form>
                     <hr>
                     <h2>Your Timeline</h2>
                     <c:forEach items="${posts}" var="post">
                         <div class="post mb-4" style="overflow-wrap: break-word; border: 1px solid #ddd; padding: 10px; border-radius: 10px;" data-post-id="${post.post_id}" data-liked="${post.likedByCurrentUser}">
-                            <div class="post-header d-flex align-items-center">
-                                <img src="assets/profile_avt/${user.profile_pic}" class="img-fluid rounded-circle avatar me-2" style="width: 40px; height: 40px;">
+                            <div class="post-header">
+                                <c:if test="${sessionScope.user['user_id'] == user.user_id}">
+                                    <!-- Delete form -->
+                                    <div class="delete-button">
+                                        <form action="deleteServlet" method="post">
+                                            <input type="hidden" name="_method" value="delete">
+                                            <input type="hidden" name="postId" value="${post.post_id}">
+                                            <button type="submit" class="btn btn-danger delete-button">Delete</button>
+                                        </form>
+                                    </div>
+                                </c:if>
                                 <small>${post.first_name} ${post.last_name} -- <fmt:formatDate value="${post.post_time}" pattern="yyyy-MM-dd HH:mm:ss" /></small>
                             </div>
                             <p style="font-size: 14px;">${post.body}</p>
                             <c:if test="${not empty post.image_path}">
                                 <div>
-                                    <img src="assets/post_image/${post.image_path}" class="img-fluid">
+                                    <img src="${post.image_path}">
                                 </div>
                             </c:if>
                             <div class="post-ratings-container">
@@ -113,13 +124,12 @@
                             </div>
                             <div class="post-comments">
                                 <c:forEach var="comment" items="${post.comments}">
-                                    
-                                            <div class="comment-header">
-                                                <small><strong>${comment.first_name} ${comment.last_name}</strong></small>
-                                            </div>
-                                            <div class="comment-body">
-                                                <p style="margin-bottom: 0;">${comment.comment_text}</p>
-                                            </div>
+                                    <div class="comment mb-2" style="margin-left: 20px;">
+                                        <div class="comment-header">
+                                            <small><strong>>>${comment.first_name} ${comment.last_name}</strong></small>
+                                        </div>
+                                        <div class="comment-body">
+                                            <p style="margin-bottom: 0;">${comment.comment_text}</p>
                                         </div>
                                     </div>
                                 </c:forEach>
@@ -137,6 +147,5 @@
                     </c:forEach>
                 </main>
             </div>
-        </div>
     </body>
 </html>
