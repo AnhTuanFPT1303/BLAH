@@ -65,10 +65,10 @@
                 <nav class="col-2 py-3 bg-light">
                     <div class="profile-section mb-3 text-center">
                         <a href="userpageServlet?userId=${user.user_id}" class="text-decoration-none text-dark d-flex align-items-center">
-                            <img src="${user.profile_pic}" class="img-fluid rounded-circle avatar">
+                            <img src="assets/profile_avt/${user.profile_pic}" class="img-fluid rounded-circle avatar">
                             <p class="ms-3" style="text-align: left;">Name: ${user.first_name} ${user.last_name}</p>
                         </a>
-                        <form action="userpageServlet" method="post" class="mt-3 d-flex align-items-center" enctype="multipart/form-data">
+                        <form action="changeAvatarServlet" method="post" class="mt-3 d-flex align-items-center" enctype="multipart/form-data">
                             <input type="file" name="profile_pic" accept=".jpeg, .png, .jpg" class="form-control-file">
                             <button type="submit" class="btn btn-primary ms-2">Change Avatar</button>
                         </form>
@@ -108,6 +108,7 @@
                                         </form>
                                     </div>
                                 </c:if>
+                                    <img src="assets/profile_avt/${user.profile_pic}" class="img-fluid rounded-circle avatar me-2" style="width: 30px; height: 30px; margin-top: 5px">
                                 <small>${post.first_name} ${post.last_name} -- <fmt:formatDate value="${post.post_time}" pattern="yyyy-MM-dd HH:mm:ss" /></small>
                             </div>
                             <p style="font-size: 14px;">${post.body}</p>

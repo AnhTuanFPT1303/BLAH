@@ -134,7 +134,7 @@ header {
     text-align: right;
     margin-left: auto; /* add this line */
     float: right; /* add this line */
-    margin-bottom: 0; /* add this line */
+    margin-bottom: 10px; /* add this line */
 }
 
 .received-message {
