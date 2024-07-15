@@ -94,7 +94,7 @@ public class VerifyServlet extends HttpServlet {
             request.setAttribute("msg", result);
             request.getRequestDispatcher("WEB-INF/welcome.jsp").forward(request, response);
         } else {
-            // Handle invalid OTP case
+           request.getRequestDispatcher("WEB-INF/verify.jsp").forward(request, response);
         }
     }
 

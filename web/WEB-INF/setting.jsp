@@ -60,6 +60,16 @@
                     </div>
                 </div>
             </form>
+                        
+                              
+                        <form action="changeAvatarServlet" method="post" class="mt-3 d-flex align-items-center" enctype="multipart/form-data">
+                            <div class="card mb-3">
+                            <input type="file" name="profile_pic" accept=".jpeg, .png, .jpg" class="form-control-file">
+                            <div>
+                            <button type="submit" class="btn btn-primary ms-2">Change Avatar</button>
+                            </div>
+                        </form>
+                        </div>
         </div>
     </body>
     </html>
