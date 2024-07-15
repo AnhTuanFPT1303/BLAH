@@ -120,7 +120,7 @@
 
                             <form action="/blahproject/commentServlet" method="post" class="mb-4 post-method">
                                 <div class="mb-3">
-                                    <textarea class="form-control" id="body" name="commentContent" rows="2" placeholder="Reply"></textarea>
+                                    <textarea class="form-control" id="body" name="commentContent" maxlength="300" rows="2" placeholder="Reply"></textarea>
                                 </div>
                                 <input type="hidden" name="post_id" value="${post.post_id}">
                                 <button type="submit" class="btn btn-primary" style="padding: 5px 25px; margin-top: 5px">Comment</button>
