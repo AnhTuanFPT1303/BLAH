@@ -10,6 +10,8 @@
         <title>Search Result</title>
         <link href="assets/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="assets/css/search.css">
+        <link rel="stylesheet" href="assets/css/home.css">
+        
     </head>
     <body>
         <header id="header">
@@ -31,7 +33,7 @@
                 <nav class="col-2 py-3 bg-light">
                     <div class="profile-section mb-3 d-flex align-items-center">
                         <a href="userpageServlet" class="d-flex align-items-center text-decoration-none text-dark">
-                            <img src="${user.profile_pic}" class="img-fluid rounded-circle avatar">
+                            <img src="assets/profile_avt/${user.profile_pic}" class="img-fluid rounded-circle avatar">
                             <p class="mb-0 ms-2 ava-name">${sessionScope.user['first_name']} ${sessionScope.user['last_name']}</p>
                         </a>
                     </div>
@@ -48,7 +50,7 @@
                         <c:set var="userStatus" value="${userResult.value}" />
                         <div class="post mb-4 d-flex align-items-center" style="overflow-wrap: break-word">
                             <a href="userpageServlet?userId=${userSearched.user_id}">
-                                <img src="${userSearched.profile_pic}" class="img-fluid rounded-circle avatar me-2" style="width: 30px; height: 30px;">
+                                <img src="assets/profile_avt/${userSearched.profile_pic}" class="img-fluid rounded-circle avatar me-2" style="width: 30px; height: 30px; object-fit: cover;">
                             </a>
                             <a href="userpageServlet?userId=${userSearched.user_id}" style="margin-left: 5px">${userSearched.first_name} ${userSearched.last_name}</a>
                             <c:choose>

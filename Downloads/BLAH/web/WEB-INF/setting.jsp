@@ -60,6 +60,23 @@
                     </div>
                 </div>
             </form>
+                    <div class="card mb-3">
+            <h5 class="card-header">Change Avatar</h5>
+            <div class="card-body">
+                <form action="changeAvatarServlet" method="post" class="d-flex align-items-center" enctype="multipart/form-data">
+                    <div class="avatar-preview">
+                        <img src="assets/profile_avt/${user.profile_pic}" alt="Current Avatar" id="avatar-preview-img">
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="mb-3">
+                            <label for="profile_pic" class="form-label">Choose new avatar</label>
+                            <input type="file" name="profile_pic" id="profile_pic" accept=".jpeg, .png, .jpg" class="form-control" onchange="previewImage(this);">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Change Avatar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
         </div>
     </body>
     </html>

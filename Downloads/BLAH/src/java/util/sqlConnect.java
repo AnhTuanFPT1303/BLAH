@@ -26,6 +26,7 @@ public class sqlConnect {
     private String driverClass = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
     private String sqlUrl = "jdbc:sqlserver://LAPTOP-5D2CNVK4;databaseName=Blah;encrypt=false;trustServerCertificate=false";
 
+
     private sqlConnect() throws Exception {
         try {
             Class.forName(driverClass);

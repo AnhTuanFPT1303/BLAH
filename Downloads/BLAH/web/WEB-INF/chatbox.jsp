@@ -36,7 +36,7 @@
                         <c:forEach var="friend" items="${friends}">
                             <div class="post mb-4 d-flex align-items-center" style="overflow-wrap: break-word">
                                 <a href="#" class="user-link friend" data-user-id="${friend.user_id}">
-                                    <img src="${friend.profile_pic}" alt="avatar picture" class="img-thumbnail mr-3" style="width: 50px; height: 50px; object-fit: cover;">
+                                    <img src="assets/profile_avt/${friend.profile_pic}" alt="avatar picture" class="img-thumbnail mr-3" style="width: 50px; height: 50px; object-fit: cover;">
                                 </a>
                                 <a href="#" class="user-link friend-name" data-user-id="${friend.user_id}" style="margin-left: 5px">${friend.first_name} ${friend.last_name}</a>
                             </div>
