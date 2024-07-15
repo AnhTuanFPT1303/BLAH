@@ -108,7 +108,7 @@
                                         </form>
                                     </div>
                                 </c:if>
-                                    <img src="assets/profile_avt/${user.profile_pic}" class="img-fluid rounded-circle avatar me-2" style="width: 30px; height: 30px; margin-top: 5px">
+                                <img src="assets/profile_avt/${user.profile_pic}" class="img-fluid rounded-circle avatar me-2" style="width: 30px; height: 30px; margin-top: 5px">
                                 <small>${post.first_name} ${post.last_name} -- <fmt:formatDate value="${post.post_time}" pattern="yyyy-MM-dd HH:mm:ss" /></small>
                             </div>
                             <p style="font-size: 14px;">${post.body}</p>
@@ -119,7 +119,11 @@
                             </c:if>
                             <div class="post-ratings-container">
                                 <div class="post-rating ${post.likedByCurrentUser ? 'post-rating-selected' : ''}">
-                                    <span class="post-rating-button material-icons" style="cursor: pointer">thumb_up</span>
+                                    <button type="button" style="background: none; border: none; cursor: pointer; padding: 0;">
+                                        <span class="material-icons" style="color: ${post.likedByCurrentUser ? '#1877f2' : '#65676b'};">
+                                            thumb_up
+                                        </span>
+                                    </button>
                                     <span class="post-rating-count">${post.like_count}</span>
                                 </div>
                             </div>
@@ -148,5 +152,6 @@
                     </c:forEach>
                 </main>
             </div>
+            <script src="assets/js/likeButton.js" defer></script>
     </body>
 </html>

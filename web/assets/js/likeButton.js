@@ -4,41 +4,39 @@
  */
 
 
-document.querySelectorAll(".post").forEach(post => {
-    const post_id = post.dataset.postId;
-    const rating = post.querySelector(".post-rating");
-    const button = rating.querySelector(".post-rating-button");
-    const count = rating.querySelector(".post-rating-count");
-    let isLiked = post.dataset.liked === 'true';
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.post-rating').forEach(function(element) {
+        element.addEventListener('click', function(e) {
+            e.preventDefault();
+            var postId = this.closest('.post').dataset.postId;
+            var likeButton = this.querySelector('.material-icons');
+            var likeCountElement = this.querySelector('.post-rating-count');
 
-    if (isLiked) {
-        rating.classList.add("post-rating-selected");
-    }
-
-    button.addEventListener("click", async () => {
-        const action = isLiked ? 'unlike' : 'like';
-        try {
-            const url = `/blahproject/home/${post_id}/${action}`;
-            const response = await fetch(url, {
+            fetch('likeServlet', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
+                    'Content-Type': 'application/x-www-form-urlencoded',
                 },
-                credentials: 'same-origin'
+                body: 'postId=' + postId
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    if (data.action === 'liked') {
+                        likeButton.style.color = '#1877f2';
+                        this.classList.add('post-rating-selected');
+                    } else {
+                        likeButton.style.color = '#65676b';
+                        this.classList.remove('post-rating-selected');
+                    }
+                    likeCountElement.textContent = data.likeCount;
+                } else {
+                    console.error('Error:', data.error);
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
             });
-            
-            if (response.ok) {
-                const data = await response.json();
-                count.textContent = data.like_count;
-                isLiked = !isLiked;
-                rating.classList.toggle("post-rating-selected");
-                post.dataset.liked = isLiked.toString();
-            } else {
-                console.error('Failed to update likes');
-            }
-        } catch (error) {
-            console.error('Error:', error);
-        }
+        });
     });
 });

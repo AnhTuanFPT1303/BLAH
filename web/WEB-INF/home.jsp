@@ -49,9 +49,7 @@
 
                 <main class="main-class col-8">
                     <h1 class="mt-3 text-primary home-logo">HOME</h1>
-                      <c:if test="${not empty param.notification}">
-                        <div class="alert alert-danger">${param.notification}</div>
-                    </c:if> 
+
                     <form action="/blahproject/home" method="post" class="mb-4 post-method" enctype="multipart/form-data" onsubmit="document.getElementById('myBtn').disabled = true;">
                         <div class="mb-3">
                             <textarea class="form-control" id="body" name="postContent" rows="2" placeholder="What ya thinking" maxlength="300"></textarea>
@@ -79,7 +77,11 @@
 
                             <div class="post-ratings-container">
                                 <div class="post-rating ${post.likedByCurrentUser ? 'post-rating-selected' : ''}">
-                                    <span class="post-rating-button material-icons" style="cursor: pointer">thumb_up</span>
+                                    <button type="button" style="background: none; border: none; cursor: pointer; padding: 0;">
+                                        <span class="material-icons" style="color: ${post.likedByCurrentUser ? '#1877f2' : '#65676b'};">
+                                            thumb_up
+                                        </span>
+                                    </button>
                                     <span class="post-rating-count">${post.like_count}</span>
                                 </div>
                             </div>
@@ -98,8 +100,8 @@
                                 </c:forEach>
                             </div>
 
-                            <!-- Comment form -->
-                            <form action="/blahproject/commentServlet" method="post" class="mb-4 post-method">
+
+                           <form action="/blahproject/commentServlet" method="post" class="mb-4 post-method">
                                 <div class="mb-3">
                                     <textarea class="form-control" id="body" name="commentContent" rows="2" placeholder="Reply"></textarea>
                                 </div>

@@ -11,8 +11,6 @@ package dao;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import model.Comment;
 import model.Post;
 import util.sqlConnect;

@@ -13,17 +13,17 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.util.List;
-import model.Comment;
+import java.sql.SQLException;
 import model.User;
 import java.util.HashMap;
 import java.util.Map;
 
+
 /**
  *
- * @author bim26
+ * @author HELLO
  */
-public class commentServlet extends HttpServlet {
+public class likeServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -42,10 +42,10 @@ public class commentServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet commentServlet</title>");
+            out.println("<title>Servlet likeServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet commentServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet likeServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -63,22 +63,7 @@ public class commentServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession(false);
-        if (session != null && session.getAttribute("user") != null) {
-            String postIdStr = request.getParameter("post_id");
-            if (postIdStr != null) {
-                try {
-                    int postId = Integer.parseInt(postIdStr);
-                    List<Comment> comments = postDAO.getComments(postId);
-                    request.setAttribute("comments", comments);
-                } catch (NumberFormatException e) {
-                    e.printStackTrace();
-                }
-            }
-            request.getRequestDispatcher("WEB-INF/home.jsp").forward(request, response);
-        } else {
-            response.sendRedirect("login");
-        }
+        processRequest(request, response);
     }
 
     /**
@@ -92,39 +77,47 @@ public class commentServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-         HttpSession session = request.getSession(false);
-        if (session != null && session.getAttribute("user") != null) {
-            int post_id = Integer.parseInt(request.getParameter("post_id"));
-            String commentContent = request.getParameter("commentContent");
-            postDAO postDAO = new postDAO();
-            User user = (User) session.getAttribute("user");
-            Comment comment = new Comment();
-            if (commentContent != null && !commentContent.trim().isEmpty()) {
+        HttpSession session = request.getSession(false);
+        User currentUser = (User) session.getAttribute("user");
+        int postId = Integer.parseInt(request.getParameter("postId"));
+        int userId = currentUser.getUser_id();
 
-                comment.setPost_id(post_id);
-                comment.setUser_id(user.getUser_id());
-                comment.setComment_text(commentContent);
-            }
-            try {
-                postDAO.addComment(comment);
-                response.sendRedirect("home");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        postDAO dao = new postDAO();
+        Map<String, Object> jsonResponse = new HashMap<>();
 
-        } else {
-            request.getRequestDispatcher("WEB-INF/home.jsp").forward(request, response);
+        try {
+            boolean hasLiked = dao.hasUserLikedPost(userId, postId);
+            if (hasLiked) {
+                dao.removeLike(userId, postId);
+                jsonResponse.put("action", "unliked");
+            } else {
+                dao.addLike(userId, postId);
+                jsonResponse.put("action", "liked");
+            }
+            int newLikeCount = dao.getLikeCount(postId);
+            jsonResponse.put("likeCount", newLikeCount);
+            jsonResponse.put("success", true);
+        } catch (SQLException e) {
+            jsonResponse.put("success", false);
+            jsonResponse.put("error", e.getMessage());
+            e.printStackTrace();
         }
 
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        PrintWriter out = response.getWriter();
+        out.print(new Gson().toJson(jsonResponse));
+        out.flush();
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
+
+/**
+ * Returns a short description of the servlet.
+ *
+ * @return a String containing servlet description
+ */
+@Override
+public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
 
