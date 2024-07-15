@@ -99,20 +99,23 @@ public class commentServlet extends HttpServlet {
             User user = (User) session.getAttribute("user");
             Comment comment = new Comment();
             if (commentContent != null && !commentContent.trim().isEmpty()) {
-
                 comment.setPost_id(post_id);
                 comment.setUser_id(user.getUser_id());
                 comment.setComment_text(commentContent);
             }
             try {
                 postDAO.addComment(comment);
-                response.sendRedirect("home");
+                String referer = request.getHeader("Referer");
+                if (referer != null && referer.contains("userpageServlet")) {
+                    response.sendRedirect("userpageServlet");
+                } else {
+                    response.sendRedirect("home");
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
         } else {
-            request.getRequestDispatcher("WEB-INF/home.jsp").forward(request, response);
+            response.sendRedirect("login"); // Redirect to login if not logged in
         }
     }
 

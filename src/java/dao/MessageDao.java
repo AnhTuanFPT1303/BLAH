@@ -26,15 +26,19 @@ public class MessageDao {
 
     public List<Message> findAllMessagesBySenderAndReceiver(int sender, int receiver) throws Exception {
         Connection conn = sqlConnect.getInstance().getConnection();
-        PreparedStatement st = conn.prepareStatement("select m1.from_user, m1.message, m1.to_user from message m1 inner join(select chat_id from message where from_user = ? or to_user = ? ) m2 on m1.chat_id = m2.chat_id where m1.from_user = ? or m1.to_user = ? order by chat_time asc");
+        String query = "SELECT from_user, message, to_user FROM message "
+                + "WHERE (from_user = ? AND to_user = ?) "
+                + "OR (from_user = ? AND to_user = ?) "
+                + "ORDER BY chat_time ASC";
+        PreparedStatement st = conn.prepareStatement(query);
         st.setInt(1, sender);
-        st.setInt(2, sender);
+        st.setInt(2, receiver);
         st.setInt(3, receiver);
-        st.setInt(4, receiver);
+        st.setInt(4, sender);
         ResultSet rs = st.executeQuery();
         List<Message> listMessages = new ArrayList<>();
         while (rs.next()) {
-            Message msg = new Message(sender, receiver, rs.getString(2));
+            Message msg = new Message(rs.getInt("from_user"), rs.getInt("to_user"), rs.getString("message"));
             listMessages.add(msg);
         }
         return listMessages;
@@ -50,5 +54,5 @@ public class MessageDao {
         st.setInt(2, receiver);
         st.setString(3, msg);
         st.executeUpdate();
-    }   
+    }
 }

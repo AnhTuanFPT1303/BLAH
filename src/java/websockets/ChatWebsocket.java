@@ -32,7 +32,6 @@ public class ChatWebsocket {
     public void onMessage(String messageJson, Session session) throws DecodeException, Exception {
         Message message = messageDecoder.decode(messageJson);
         chatService.sendMessageToOneUser(message);
-        messageDao.saveMessage(message);
     }
 
     @OnClose

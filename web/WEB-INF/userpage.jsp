@@ -10,43 +10,8 @@
         <link href="assets/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="assets/css/home.css">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <script src="https://kit.fontawesome.com/7f80ec1f7e.js" crossorigin="anonymous"></script>
-        <style>
-            /* Add some decorative elements */
-            body {
-                background-image: linear-gradient(to bottom, #f8f9fa, #fff);
-            }
-            .custom-navbar {
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            }
-            .profile-section, .settings-section {
-                background-color: #f7f7f7;
-                padding: 10px;
-                border-radius: 10px;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            }
-            .post {
-                background-color: #fff;
-                padding: 15px;
-                border-radius: 10px;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            }
-            .post-header {
-                color: #337ab7;
-            }
-            .post-rating-selected > .post-rating-button,
-            .post-rating-selected > .post-rating-count {
-                color: #337ab7; /* blue color for liked posts */
-            }
-            .post-rating-button {
-                font-size: 18px;
-                margin-right: 5px;
-            }
-            .post-rating-count {
-                font-size: 14px;
-                margin-left: 5px;
-            }
-        </style>
     </head>
     <body>
         <header id="header">
@@ -75,16 +40,13 @@
         </header>
         <div class="container-fluid">
             <div class="row all-post">
-                <nav class="col-2 py-3 bg-light">
+                <nav class="col-2 py-3 bg-light sticky-sidebar">
                     <div class="profile-section mb-3 text-center">
                         <a href="userpageServlet?userId=${user.user_id}" class="text-decoration-none text-dark d-flex align-items-center">
                             <img src="assets/profile_avt/${user.profile_pic}" class="img-fluid rounded-circle avatar">
                             <p class="ms-3" style="text-align: left;">Name: ${user.first_name} ${user.last_name}</p>
                         </a>
-                        <form action="changeAvatarServlet" method="post" class="mt-3 d-flex align-items-center" enctype="multipart/form-data">
-                            <input type="file" name="profile_pic" accept=".jpeg, .png, .jpg" class="form-control-file">
-                            <button type="submit" class="btn btn-primary ms-2">Change Avatar</button>
-                        </form>
+
                     </div>
                     <hr>
                     <c:if test="${sessionScope.user['user_id'] == user.user_id}">
@@ -102,9 +64,14 @@
                         <div class="mb-3">
                             <textarea class="form-control" id="body" name="postContent" rows="2" placeholder="What ya thinking" maxlength="300"></textarea>
                         </div>
-                        <input type="file" name="image" accept=".jpeg, .png, .jpg">
-                        <br>
-                        <button id="myBtn" type="submit" class="btn btn-primary" style="padding: 5px 25px; margin-top: 5px;">Post</button>
+                        <div class="mb-3">
+                            <label for="file-upload" class="custom-file-upload">
+                                <i class="fas fa-cloud-upload-alt"></i> Choose Image
+                            </label>
+                            <input id="file-upload" type="file" name="image" accept=".jpeg, .png, .jpg" style="display:none;" onchange="updateFileName(this)">
+                            <span id="file-name"></span>
+                        </div>
+                        <button id="myBtn" type="submit" class="btn btn-primary" style="padding: 5px 25px;">Post</button>
                     </form>
                     <hr>
                     <h2>Your Timeline</h2>
@@ -121,18 +88,22 @@
                                         </form>
                                     </div>
                                 </c:if>
-                                <img src="assets/profile_avt/${user.profile_pic}" class="img-fluid rounded-circle avatar me-2" style="width: 30px; height: 30px; margin-top: 5px">
+                                <img src="assets/profile_avt/${user.profile_pic}" class="img-fluid rounded-circle avatar me-2" style="width: 30px; height: 30px; margin-top: 5px; object-fit: cover; ">
                                 <small>${post.first_name} ${post.last_name} -- <fmt:formatDate value="${post.post_time}" pattern="yyyy-MM-dd HH:mm:ss" /></small>
                             </div>
                             <p style="font-size: 14px;">${post.body}</p>
                             <c:if test="${not empty post.image_path}">
                                 <div>
-                                    <img src="assets/post_image/${post.image_path}">
+                                    <img src="${post.image_path}" style="max-width : 60%">
                                 </div>
                             </c:if>
                             <div class="post-ratings-container">
                                 <div class="post-rating ${post.likedByCurrentUser ? 'post-rating-selected' : ''}">
-                                    <span class="post-rating-button material-icons" style="cursor: pointer">thumb_up</span>
+                                    <button type="button" style="background: none; border: none; cursor: pointer; padding: 0;">
+                                        <span class="material-icons" style="color: ${post.likedByCurrentUser ? '#1877f2' : '#65676b'};">
+                                            thumb_up
+                                        </span>
+                                    </button>
                                     <span class="post-rating-count">${post.like_count}</span>
                                 </div>
                             </div>
@@ -140,7 +111,8 @@
                                 <c:forEach var="comment" items="${post.comments}">
                                     <div class="comment mb-2" style="margin-left: 20px;">
                                         <div class="comment-header">
-                                            <small><strong>>>${comment.first_name} ${comment.last_name}</strong></small>
+                                            <img src="assets/profile_avt/${comment.profile_pic}" class="img-fluid rounded-circle avatar me-2" style="width: 30px; height: 30px; object-fit: cover;">
+                                            <small><strong>${comment.first_name} ${comment.last_name}</strong></small>
                                         </div>
                                         <div class="comment-body">
                                             <p style="margin-bottom: 0;">${comment.comment_text}</p>
@@ -151,7 +123,7 @@
                             <!-- Comment form -->
                             <form action="/blahproject/commentServlet" method="post" class="mb-4 post-method">
                                 <div class="mb-3">
-                                    <textarea class="form-control" id="body" name="commentContent" rows="2" placeholder="Reply"></textarea>
+                                    <textarea class="form-control" id="body" name="commentContent" rows="2" placeholder="Reply" maxlength="300"></textarea>
                                 </div>
                                 <input type="hidden" name="post_id" value="${post.post_id}">
                                 <button type="submit" class="btn btn-primary" style="padding: 5px 25px; margin-top: 5px">Comment</button>
@@ -160,6 +132,25 @@
                         <br>
                     </c:forEach>
                 </main>
+                <aside class="col-2 py-3 bg-light friend-list sticky-sidebar">
+                    <h2 style="color: #0d6efd">List Friends</h2>
+                    <hr>
+                    <c:forEach var="friend" items="${friends}">
+                        <div class="post mb-4 d-flex align-items-center" style="overflow-wrap: break-word">
+                            <a href="#" class="user-link friend" data-user-id="${friend.user_id}">
+                                <img src="assets/profile_avt/${friend.profile_pic}" alt="avatar picture" class="img-fluid rounded-circle avatar me-2" style="width: 50px; height: 50px; object-fit: cover;">
+                            </a>
+                            <small>${friend.first_name} ${friend.last_name}</small>
+                        </div>
+                    </c:forEach>
+                </aside>
             </div>
+            <script>
+                function updateFileName(input) {
+                    var fileName = input.files[0].name;
+                    document.getElementById('file-name').textContent = fileName;
+                }
+            </script>
+            <script src="assets/js/likeButton.js" defer></script>
     </body>
 </html>

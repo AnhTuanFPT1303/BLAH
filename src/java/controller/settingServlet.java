@@ -21,7 +21,6 @@ public class settingServlet extends HttpServlet {
         User sessionUser = (User) session.getAttribute("user");
 
         if (sessionUser == null) {
-            // No user in session, redirect to homepage
             response.sendRedirect(request.getContextPath() + "/homepage.jsp?notification=You%20cant%20do%20that");
             return;
         }
@@ -39,7 +38,7 @@ public class settingServlet extends HttpServlet {
                         sessionUser.setLast_name(lastName);
                         userDao.updateUser(sessionUser);
                         request.setAttribute("notification", "Your name has been changed to: " + firstName + " " + lastName);
-                        request.getRequestDispatcher("/WEB-INF/userpage.jsp").forward(request, response);
+                        response.sendRedirect("userpageServlet");
                     }
                     case "changePassword" -> {
                         String oldPassword = request.getParameter("oldPassword");
@@ -55,7 +54,7 @@ public class settingServlet extends HttpServlet {
                             sessionUser.setPassword(newPassword);
                             userDao.updateUser(sessionUser);
                             request.setAttribute("notification", "Your password has been changed successfully. You will be logged out now.");
-                            request.getRequestDispatcher("/WEB-INF/userpage.jsp").forward(request, response);
+                            request.getRequestDispatcher("WEB-INF/welcome.jsp").forward(request, response);
                             session.invalidate();
                             response.sendRedirect(request.getContextPath() + "/login");
                         }
