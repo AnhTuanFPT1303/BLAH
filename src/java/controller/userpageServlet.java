@@ -151,6 +151,4 @@ public class userpageServlet extends HttpServlet {
         req.setAttribute("posts", posts); // Set the posts list as an attribute
         req.getRequestDispatcher("/WEB-INF/userpage.jsp").forward(req, resp);
     }
-    
-    
 }

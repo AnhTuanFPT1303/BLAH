@@ -86,15 +86,31 @@ public class VerifyServlet extends HttpServlet {
             session.setAttribute("user", user);
             request.getRequestDispatcher("WEB-INF/verify.jsp").forward(request, response);
         }
+        if ("forgot".equals(act)) {
+            String email = request.getParameter("email");
+            SmtpProtocol smtpProtocol = new SmtpProtocol();
+            otp = smtpProtocol.sendMail(email);
+            session.setAttribute("otpCode", otp);
+            session.setAttribute("email", email);
+            session.setAttribute("action", "changePass");
+            request.getRequestDispatcher("WEB-INF/verify.jsp").forward(request, response);
+        }
 
         int inputOtp = Integer.parseInt(request.getParameter("otp-code"));
         if (otp == inputOtp) {
-            userDAO userDao = new userDAO();
-            String result = userDao.register(user);
-            request.setAttribute("msg", result);
-            request.getRequestDispatcher("WEB-INF/welcome.jsp").forward(request, response);
+            if (((String) session.getAttribute("action")).equals("changePass")) {
+                request.getRequestDispatcher("WEB-INF/changePassword.jsp").forward(request, response);
+            } else {
+                session.removeAttribute("otpCode");
+                session.removeAttribute("email");
+                userDAO userDao = new userDAO();
+                String result = userDao.register(user);
+                request.setAttribute("msg", result);
+                session.invalidate();
+                request.getRequestDispatcher("WEB-INF/welcome.jsp").forward(request, response);
+            }
         } else {
-            // Handle invalid OTP case
+            request.getRequestDispatcher("WEB-INF/verify.jsp").forward(request, response);
         }
     }
 

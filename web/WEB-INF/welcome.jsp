@@ -36,17 +36,11 @@
                     <input type="checkbox" id="rememberMe" name="rememberMe">
                     <label for="rememberMe">Remember Me</label>
                 </div>
-                <a href="#" class="forgot-password">Forgot Password?</a>
+                <a href="forgotPassword" class="forgot-password">Forgot Password?</a>
             </div>
             <div class="buttons">
                 <button type="submit" name="action" class="login-button">Login</button>
                 <a href="signup" class="signup-button">Sign Up</a>
-            </div>
-            <div class="social-login">
-                <p>Or login with</p>
-                <a href="#" class="social-login-button">Facebook</a>
-                <a href="#" class="social-login-button">LinkedIn</a>
-                <a href="#" class="social-login-button">Google</a>
             </div>
         </form>
     </div>

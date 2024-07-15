@@ -100,7 +100,7 @@
                 var messageContainer = document.getElementById('message-container');
                 var newMessage = document.createElement('div');
                 newMessage.className = content.fromUser === '<%= session.getAttribute("user_id") %>' ? 'my-message' : 'received-message';
-                newMessage.textContent = content.fromUser + ': ' + content.message;
+                newMessage.textContent = content.message;
                 messageContainer.appendChild(newMessage);
             }
 
