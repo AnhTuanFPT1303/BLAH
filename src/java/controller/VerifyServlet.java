@@ -98,17 +98,13 @@ public class VerifyServlet extends HttpServlet {
 
         int inputOtp = Integer.parseInt(request.getParameter("otp-code"));
         if (otp == inputOtp) {
-            if (((String) session.getAttribute("action")).equals("changePass")) {
-                request.getRequestDispatcher("WEB-INF/changePassword.jsp").forward(request, response);
-            } else {
-                session.removeAttribute("otpCode");
-                session.removeAttribute("email");
-                userDAO userDao = new userDAO();
-                String result = userDao.register(user);
-                request.setAttribute("msg", result);
-                session.invalidate();
-                request.getRequestDispatcher("WEB-INF/welcome.jsp").forward(request, response);
-            }
+            session.removeAttribute("otpCode");
+            session.removeAttribute("email");
+            userDAO userDao = new userDAO();
+            String result = userDao.register(user);
+            request.setAttribute("msg", result);
+            request.getRequestDispatcher("WEB-INF/welcome.jsp").forward(request, response);
+
         } else {
             request.getRequestDispatcher("WEB-INF/verify.jsp").forward(request, response);
         }

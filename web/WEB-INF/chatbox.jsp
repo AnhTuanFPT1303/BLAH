@@ -75,7 +75,7 @@
 
             function connectSessionUserSocket() {
                 var sessionId = '<%= session.getAttribute("user_id") %>';
-                socket = new WebSocket('ws://' + 'localhost:80/blahproject/chat/' + sessionId);
+                socket = new WebSocket('ws://' + window.location.host + '/blahproject/chat/' + sessionId);
 
                 socket.onopen = function () {
                     console.log('WebSocket connection opened for session user');
