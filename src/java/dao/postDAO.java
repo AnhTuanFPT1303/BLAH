@@ -11,8 +11,6 @@ package dao;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import model.Comment;
 import model.Post;
 import util.sqlConnect;
@@ -100,7 +98,8 @@ public class postDAO {
 
     public boolean hasUserLikedPost(int userId, int postId) throws SQLException {
         String query = "SELECT COUNT(*) FROM post_like WHERE user_id = ? AND post_id = ?";
-        try (Connection conn = sqlConnect.getInstance().getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
+        try (Connection conn = sqlConnect.getInstance().getConnection(); 
+             PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, userId);
             stmt.setInt(2, postId);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -134,20 +133,30 @@ public class postDAO {
         try {
             ResultSet rs = null;
             Connection conn = null;
-            Statement stmt = null;
+            PreparedStatement  stmt = null;
             conn = sqlConnect.getInstance().getConnection();
-            stmt = conn.createStatement();
 
-            String query = "SELECT p.post_id, p.body, p.post_time, p.user_id, p.image_path, p.like_count, u.first_name, u.last_name, u.profile_pic "
+            String query = "SELECT DISTINCT p.post_id, p.body, p.post_time, p.user_id, p.image_path, p.like_count, u.first_name, u.last_name, u.profile_pic "
                     + "FROM post p "
                     + "JOIN userAccount u ON p.user_id = u.user_id "
-                    + "LEFT JOIN friendship f ON (f.user_request = p.user_id OR f.user_accept = p.user_id) "
-                    + "WHERE (f.status = 'accepted' AND (f.user_request = " + sessionUserId + " OR f.user_accept = " + sessionUserId + ")) "
-                    + "OR p.user_id = " + sessionUserId + " "
+                    + "WHERE p.user_id = ? "
+                    + "OR p.user_id IN ( "
+                    + "    SELECT CASE "
+                    + "        WHEN f.user_request = ? THEN f.user_accept "
+                    + "        ELSE f.user_request "
+                    + "    END "
+                    + "    FROM friendship f "
+                    + "    WHERE f.status = 'accepted' "
+                    + "    AND (? IN (f.user_request, f.user_accept)) "
+                    + ") "
                     + "ORDER BY p.post_time DESC";
 
+            stmt = conn.prepareStatement(query);
+            stmt.setInt(1, sessionUserId);
+            stmt.setInt(2, sessionUserId);
+            stmt.setInt(3, sessionUserId);
 
-            rs = stmt.executeQuery(query);
+            rs = stmt.executeQuery();
 
             while (rs.next()) {
                 int post_id = rs.getInt("post_id");
@@ -214,7 +223,8 @@ public class postDAO {
             stmt = conn.prepareStatement("SELECT p.post_id, p.body, p.post_time, p.user_id, p.like_count, p.image_path, u.first_name, u.last_name "
                     + "FROM post p JOIN userAccount u ON p.user_id = u.user_id "
                     + "WHERE p.user_id =? "
-                    + "ORDER BY p.post_time DESC");
+                    + "ORDER BY p.post_time DESC"
+                    + "offset 20 rows fetch next 20 rows only");
             stmt.setInt(1, userId);
             rs = stmt.executeQuery();
             while (rs.next()) {

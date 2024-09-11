@@ -60,7 +60,7 @@ public class loginServlet extends HttpServlet {
         if (session != null && session.getAttribute("user") != null) {
             request.getRequestDispatcher("WEB-INF/home.jsp").forward(request, response);
         } else {
-            request.getRequestDispatcher("WEB-INF/welcome.jsp").forward(request, response);
+            request.getRequestDispatcher("WEB-INF/login.jsp").forward(request, response);
         }
     }
 
@@ -89,7 +89,7 @@ public class loginServlet extends HttpServlet {
 
         if (!status) {
             request.setAttribute("msg", "Re-enter Email & password.");
-            request.getRequestDispatcher("WEB-INF/welcome.jsp").forward(request, response);
+            request.getRequestDispatcher("WEB-INF/login.jsp").forward(request, response);
         } else {
             userDAO userDao = new userDAO();
             boolean verify = userDao.login(email, passWord);
@@ -106,11 +106,11 @@ public class loginServlet extends HttpServlet {
                     response.sendRedirect("home");
                 } catch (SQLException e) {
                     request.setAttribute("msg", "Login Failed.");
-                    request.getRequestDispatcher("WEB-INF/welcome.jsp").forward(request, response);
+                    request.getRequestDispatcher("WEB-INF/login.jsp").forward(request, response);
                 }
             } else {
                 request.setAttribute("msg", "Wrong username or password.");
-                request.getRequestDispatcher("WEB-INF/welcome.jsp").forward(request, response);
+                request.getRequestDispatcher("WEB-INF/login.jsp").forward(request, response);
             }
         }
     }

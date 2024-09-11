@@ -103,7 +103,7 @@ public class VerifyServlet extends HttpServlet {
             userDAO userDao = new userDAO();
             String result = userDao.register(user);
             request.setAttribute("msg", result);
-            request.getRequestDispatcher("WEB-INF/welcome.jsp").forward(request, response);
+            request.getRequestDispatcher("WEB-INF/login.jsp").forward(request, response);
 
         } else {
             request.getRequestDispatcher("WEB-INF/verify.jsp").forward(request, response);

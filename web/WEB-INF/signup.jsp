@@ -43,7 +43,7 @@
                 </div>
                 <div class="buttons">
                     <button type="submit" id="signupButton" class="signup-button" name="action">Sign Up</button>
-                    <a href="signup?param=hadaccount" name="login-back" class="login-button">Already have an account?</a>
+                    <a href="login" name="login-back" class="login-button">Already have an account?</a>
                 </div>
                 <div>
                     <span id="emailWarning"></span>

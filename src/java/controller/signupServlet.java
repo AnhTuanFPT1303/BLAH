@@ -61,7 +61,7 @@ public class signupServlet extends HttpServlet {
             throws ServletException, IOException {
         String param = request.getParameter("param");
         if ("hadaccount".equals(param)) {
-            request.getRequestDispatcher("WEB-INF/welcome.jsp").forward(request, response);
+            request.getRequestDispatcher("WEB-INF/login.jsp").forward(request, response);
         } else {
             request.getRequestDispatcher("WEB-INF/signup.jsp").forward(request, response);
         }

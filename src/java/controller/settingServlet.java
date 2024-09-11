@@ -54,7 +54,7 @@ public class settingServlet extends HttpServlet {
                             sessionUser.setPassword(newPassword);
                             userDao.updateUser(sessionUser);
                             request.setAttribute("notification", "Your password has been changed successfully. You will be logged out now.");
-                            request.getRequestDispatcher("WEB-INF/welcome.jsp").forward(request, response);
+                            request.getRequestDispatcher("WEB-INF/login.jsp").forward(request, response);
                             session.invalidate();
                             response.sendRedirect(request.getContextPath() + "/login");
                         }
@@ -69,8 +69,6 @@ public class settingServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String action = request.getParameter("action");
-
         HttpSession session = request.getSession(false);
         User sessionUser = (User) session.getAttribute("user");
 

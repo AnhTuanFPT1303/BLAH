@@ -83,7 +83,7 @@
 
                 socket.onmessage = function (event) {
                     var content = JSON.parse(event.data);
-                    displayMessage(content);
+                    displayMessage(content, currentChatUserId);
                     console.log('Message received: ', content);
                 };
 
@@ -105,12 +105,15 @@
                 loadMessages(currentChatUserId);
             });
 
-            function displayMessage(content) {
+            function displayMessage(content, currentChatUserId) {
+                var currentChatUser = currentChatUserId;
                 var messageContainer = document.getElementById('message-container');
                 var newMessage = document.createElement('div');
-                newMessage.className = content.fromUser === '<%= session.getAttribute("user_id") %>' ? 'my-message' : 'received-message';
-                newMessage.textContent = content.message;
-                messageContainer.appendChild(newMessage);
+                if (currentChatUser !== null) {
+                    newMessage.className = content.fromUser === '<%= session.getAttribute("user_id") %>' ? 'my-message' : 'received-message';
+                    newMessage.textContent = content.message;
+                    messageContainer.appendChild(newMessage);
+                }
             }
 
             function loadMessages(currentChatUserId) {
