@@ -11,15 +11,14 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import model.User;
 import jakarta.servlet.http.HttpSession;
-import util.SmtpProtocol;
+import model.User;
 
 /**
  *
  * @author HELLO
  */
-public class VerifyServlet extends HttpServlet {
+public class GoogleValidate extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,10 +37,10 @@ public class VerifyServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet VerifyServlet</title>");
+            out.println("<title>Servlet GoogleValidate</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet VerifyServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet GoogleValidate at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -59,7 +58,25 @@ public class VerifyServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        userDAO dao = new userDAO();
+        String code = request.getParameter("code");
+        GoogleLogin ggLogin = new GoogleLogin();
+        User user = ggLogin.getUserInfo(ggLogin.getToken(code));
+        if (dao.checkEmail(user.getEmail())) {
+            // Email exists, log the user in
+            HttpSession session = request.getSession(true);
+            session.setMaxInactiveInterval(1800);
+            session.setAttribute("user", user);
+            session.setAttribute("user_id", user.getUser_id());
+            session.setAttribute("last_name", user.getLast_name());
+            session.setAttribute("first_name", user.getFirst_name());
+            response.sendRedirect("home");
+        } else {
+            // Email doesn't exist, redirect to LoginSubmit to set password
+            HttpSession session = request.getSession(true);
+            session.setAttribute("user", user);
+            response.sendRedirect("login-submit");
+        }
     }
 
     /**
@@ -73,40 +90,7 @@ public class VerifyServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String act = request.getParameter("action");
-        HttpSession session = request.getSession(false);
-        Integer otp = (Integer) session.getAttribute("otpCode");
-        User user = (User) session.getAttribute("user");
-        if ("resend".equals(act)) {
-            String email = (String) session.getAttribute("email");
-            SmtpProtocol smtpProtocol = new SmtpProtocol();
-            otp = smtpProtocol.sendMail(email);
-            session.setAttribute("otpCode", otp);
-            session.setAttribute("email", email);
-            session.setAttribute("user", user);
-            request.getRequestDispatcher("WEB-INF/verify.jsp").forward(request, response);
-        }
-        if ("forgot".equals(act)) {
-            String email = request.getParameter("email");
-            SmtpProtocol smtpProtocol = new SmtpProtocol();
-            otp = smtpProtocol.sendMail(email);
-            session.setAttribute("otpCode", otp);
-            session.setAttribute("email", email);
-            session.setAttribute("action", "changePass");
-            request.getRequestDispatcher("WEB-INF/verify.jsp").forward(request, response);
-        }
-
-        int inputOtp = Integer.parseInt(request.getParameter("otp-code"));
-        if (otp == inputOtp) {
-            userDAO userDao = new userDAO();
-            String result = userDao.register(user);
-            session.invalidate();
-            request.setAttribute("msg", result);
-            request.getRequestDispatcher("WEB-INF/login.jsp").forward(request, response);
-
-        } else {
-            request.getRequestDispatcher("WEB-INF/verify.jsp").forward(request, response);
-        }
+        processRequest(request, response);
     }
 
     /**

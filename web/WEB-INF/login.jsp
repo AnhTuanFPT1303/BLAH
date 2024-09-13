@@ -46,7 +46,7 @@
                     <p>Or login with</p>
                     <a href="#" class="social-login-button">Facebook</a>
                     <a href="#" class="social-login-button">LinkedIn</a>
-                    <a href="https://accounts.google.com/o/oauth2/auth?scope=email profile openid&redirect_uri=http://localhost/blahproject/settingServlet&response_type=code&client_id=141463377028-7grc9ri1n2peprn9fhuucjamiudeopcs.apps.googleusercontent.com&approval_prompt=force" class="social-login-button">Google</a>
+                    <a href="https://accounts.google.com/o/oauth2/auth?scope=email profile openid&redirect_uri=http://localhost/blahproject/GoogleValidate&response_type=code&client_id=141463377028-7grc9ri1n2peprn9fhuucjamiudeopcs.apps.googleusercontent.com&approval_prompt=force" class="social-login-button">Google</a>
                 </div>
             </form>
         </div>
