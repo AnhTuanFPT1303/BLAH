@@ -17,7 +17,7 @@
     </head>
     <body>
         <div class="wrapper">
-            <h2>Enter Profile</h2>
+            <h2>Create Password</h2>
             <form action="/blahproject/login-submit" method="POST">
                 <div class="input-box">
                     <input name="password" type="password" placeholder="Create password" required>

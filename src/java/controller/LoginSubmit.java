@@ -59,9 +59,10 @@ public class LoginSubmit extends HttpServlet {
     throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         if (session != null && session.getAttribute("user") != null) {
-            request.getRequestDispatcher("WEB-INF/login-submit.jsp").forward(request, response);
+            response.sendRedirect("login");
         } else {
-            response.sendRedirect("login");  // Redirect to login page if no new user in session
+            request.getRequestDispatcher("WEB-INF/login-submit.jsp").forward(request, response);
+              // Redirect to login page if no new user in session
         }
     } 
 
@@ -77,8 +78,12 @@ public class LoginSubmit extends HttpServlet {
     throws ServletException, IOException {
         String password = request.getParameter("password");
         HttpSession session = request.getSession(false);
-        User user = (User) session.getAttribute("user");
+        User user = new User();
+        user.setEmail((String)session.getAttribute("userEmail"));
         user.setPassword(password);
+        user.setFirst_name((String)session.getAttribute("first_name"));
+        user.setLast_name((String)session.getAttribute("last_name"));
+        user.setProfile_pic("default_avt.jpg");
         userDAO dao = new userDAO();
         dao.register(user);
         

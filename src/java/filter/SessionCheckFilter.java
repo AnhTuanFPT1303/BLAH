@@ -26,18 +26,22 @@ public class SessionCheckFilter implements Filter {
         
         HttpSession session = httpRequest.getSession(false);
         
+        String googleURI = "/GoogleValidate";
         String loginURI = "/login";
         String homepageURI = "/home";
         String signupURI = "/signup";
+        String gLoginSubmit = "/login-submit";
         String contextPath = httpRequest.getContextPath();
         
-        boolean isLoginRequest = httpRequest.getRequestURI().endsWith(loginURI);
         boolean isResourceRequest = httpRequest.getRequestURI().startsWith(contextPath + "/assets/");
+        boolean isLoginRequest = httpRequest.getRequestURI().endsWith(loginURI);
         boolean isSignupRequest = httpRequest.getRequestURI().endsWith(signupURI);
+        boolean isGLoginRequest = httpRequest.getRequestURI().endsWith(googleURI);
+        boolean isGLoginSubmit = httpRequest.getRequestURI().endsWith(gLoginSubmit);
         
         if (session != null && session.getAttribute("user") != null) {
             // User is logged in
-            if (isLoginRequest || isSignupRequest) {
+            if (isLoginRequest || isSignupRequest || isGLoginRequest || isGLoginSubmit)  {
                 // Redirect to homepage if trying to access login or signup page
                 httpResponse.sendRedirect(contextPath + homepageURI);
             } else {
@@ -46,8 +50,8 @@ public class SessionCheckFilter implements Filter {
             }
         } else {
             // User is not logged in
-            if (isLoginRequest || isResourceRequest || isSignupRequest) {
-                // Allow access to login page, resources
+            if (isLoginRequest || isSignupRequest || isGLoginRequest || isGLoginSubmit || isResourceRequest) {
+                // Allow access to login, register page
                 chain.doFilter(request, response);
             } else {
                 // Redirect to login page for all other requests

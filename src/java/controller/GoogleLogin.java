@@ -64,10 +64,8 @@ public class GoogleLogin {
         if (googleUserData.has("email")) {
             user.setEmail(googleUserData.get("email").getAsString());
         }
-        if (googleUserData.has("picture")) {
-            user.setProfile_pic(googleUserData.get("picture").getAsString());
-        }
-        user.setPassword(null); // Set password to null or a default value
+        user.setProfile_pic("default_avt.jpg");
+        user.setPassword(null);
         return user;
     }
 }
